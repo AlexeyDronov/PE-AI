@@ -1,0 +1,235 @@
+- name: Northvale Compliance
+  segment: Compliance
+  hq: London
+  description: Regulatory reporting and financial-crime compliance services for UK banks and insurers.
+  ownership: Founder-owned
+  moat: Embedded in client regulatory workflows; deep FCA expertise
+  code_name: Project Linden
+  process: Banker-led auction, second round
+  stage: CIM
+  ask_multiple: 15.5
+  revenue: 61
+  ebitda: 14.6
+  growth: 0.22
+  recurring_pct: 0.71
+  capex_pct: 0.03
+  da_pct: 0.04
+  nwc_pct: 0.06
+  top_customer_pct: 0.09
+  gross_retention: 0.93
+  cyclicality: Low
+  ai_resilience: 72
+  fragmentation: 78
+  key_person_risk: false
+  risks:
+    - {severity: m, text: Entry multiple above segment median, mitigant: Price protection through earn-out on FY27 EBITDA}
+    - {severity: l, text: Founder holds key regulator relationships, mitigant: Two-year rollover and transition plan}
+  questions:
+    - How much of recurring revenue is multi-year contracted?
+    - What share of growth came from price rises versus new logos?
+- name: Veritest Group
+  segment: TIC
+  hq: Leeds
+  description: Accredited materials testing and calibration labs serving construction and energy clients.
+  ownership: Private equity (year 6)
+  moat: UKAS accreditation and multi-site lab network
+  code_name: Project Oak
+  process: Exclusive approach, pre-NDA
+  stage: NDA
+  ask_multiple: 13.5
+  revenue: 142
+  ebitda: 31.0
+  growth: 0.11
+  recurring_pct: 0.64
+  capex_pct: 0.07
+  da_pct: 0.08
+  nwc_pct: 0.09
+  top_customer_pct: 0.06
+  gross_retention: 0.9
+  cyclicality: Medium
+  ai_resilience: 80
+  fragmentation: 85
+  key_person_risk: false
+  risks:
+    - {severity: m, text: Lab capex needs rising with new accreditations, mitigant: Phase capex against signed contract wins}
+    - {severity: m, text: Construction exposure on roughly 40% of revenue, mitigant: Mix shift toward energy and rail testing}
+    - {severity: l, text: Secondary buyout with limited upside narrative, mitigant: Add-on pipeline of six regional labs}
+  questions:
+    - What is the maintenance versus growth split of capex?
+    - Which labs hold single-point accreditation risk?
+- name: Corvid Cyber Services
+  segment: IT & cyber
+  hq: Madrid
+  description: Managed detection and response provider for mid-market European enterprises.
+  ownership: Founder and minority VC
+  moat: Proprietary SOC tooling and 24/7 analyst bench
+  code_name: Project Rowan
+  process: Banker-led auction, final round
+  stage: IOI
+  ask_multiple: 14.0
+  revenue: 96
+  ebitda: 17.3
+  growth: 0.19
+  recurring_pct: 0.78
+  capex_pct: 0.04
+  da_pct: 0.05
+  nwc_pct: 0.05
+  top_customer_pct: 0.08
+  gross_retention: 0.95
+  cyclicality: Low
+  ai_resilience: 64
+  fragmentation: 82
+  key_person_risk: true
+  risks:
+    - {severity: h, text: Analyst attrition above 25% a year, mitigant: Retention pool and academy hiring programme}
+    - {severity: m, text: Reliance on two technology vendors, mitigant: Vendor-neutral roadmap in the value creation plan}
+  questions:
+    - What are fully loaded analyst costs as a share of revenue?
+    - How many clients are on contracts longer than 24 months?
+- name: Ledgerline
+  segment: Payroll BPO
+  hq: Amsterdam
+  description: Outsourced payroll and finance operations for multi-country mid-market employers.
+  ownership: Family-owned
+  moat: Multi-country payroll licences and integration depth
+  code_name: Project Alder
+  process: Teaser circulated by adviser
+  stage: Teaser
+  ask_multiple: 12.5
+  revenue: 88
+  ebitda: 19.0
+  growth: 0.14
+  recurring_pct: 0.82
+  capex_pct: 0.03
+  da_pct: 0.04
+  nwc_pct: 0.04
+  top_customer_pct: 0.07
+  gross_retention: 0.94
+  cyclicality: Low
+  ai_resilience: 45
+  fragmentation: 60
+  key_person_risk: false
+  risks:
+    - {severity: h, text: Automation could compress per-employee pricing, mitigant: Test pricing resilience with customer calls}
+    - {severity: m, text: Family shareholders may resist control transfer, mitigant: Structured minority rollover}
+  questions:
+    - What is the revenue split between payroll processing and advisory?
+    - How is pricing indexed in multi-year contracts?
+- name: Atlas DataOps
+  segment: Data services
+  hq: Berlin
+  description: Data engineering and managed analytics platform operations for industrial clients.
+  ownership: Founder-owned
+  moat: Proprietary pipeline accelerators and client data estates
+  code_name: Project Birch
+  process: Banker-led auction, first round
+  stage: CIM
+  ask_multiple: 16.0
+  revenue: 74
+  ebitda: 12.2
+  growth: 0.28
+  recurring_pct: 0.48
+  capex_pct: 0.03
+  da_pct: 0.03
+  nwc_pct: 0.08
+  top_customer_pct: 0.14
+  gross_retention: 0.85
+  cyclicality: Medium
+  ai_resilience: 52
+  fragmentation: 70
+  key_person_risk: true
+  risks:
+    - {severity: h, text: Ask multiple well above fund entry ceiling, mitigant: Walk-away price set at 14x}
+    - {severity: m, text: Under half of revenue is recurring, mitigant: Convert project work to managed service contracts}
+    - {severity: m, text: Top customer at 14% of revenue, mitigant: Customer reference calls before IOI}
+  questions:
+    - How much revenue is repeat project work with the same clients?
+    - What is the roadmap for AI-driven pipeline automation?
+- name: Brightwater Assurance
+  segment: Compliance
+  hq: Bristol
+  description: Product safety assurance and regulatory consulting for consumer goods manufacturers.
+  ownership: Management-owned
+  moat: Notified-body status and regulatory expertise
+  code_name: Project Hazel
+  process: Teaser circulated by adviser
+  stage: Teaser
+  ask_multiple: 17.0
+  revenue: 39
+  ebitda: 7.1
+  growth: 0.31
+  recurring_pct: 0.58
+  capex_pct: 0.02
+  da_pct: 0.03
+  nwc_pct: 0.07
+  top_customer_pct: 0.11
+  gross_retention: 0.88
+  cyclicality: Low
+  ai_resilience: 68
+  fragmentation: 75
+  key_person_risk: true
+  risks:
+    - {severity: h, text: EBITDA below fund minimum of £10m, mitigant: Only viable as a platform with committed add-ons}
+    - {severity: m, text: Premium ask multiple, mitigant: Seek structured consideration}
+  questions:
+    - What drove 31% growth and is it repeatable?
+    - How dependent is revenue on a single notified-body licence?
+- name: Meridian Legal Ops
+  segment: Legal ops
+  hq: London
+  description: Managed legal operations and contract lifecycle outsourcing for corporate legal teams.
+  ownership: Private equity (year 5)
+  moat: Embedded legal workflow and client-specific playbooks
+  code_name: Project Willow
+  process: Teaser circulated by adviser
+  stage: Teaser
+  ask_multiple: 11.0
+  revenue: 54
+  ebitda: 9.8
+  growth: 0.09
+  recurring_pct: 0.60
+  capex_pct: 0.02
+  da_pct: 0.03
+  nwc_pct: 0.06
+  top_customer_pct: 0.1
+  gross_retention: 0.86
+  cyclicality: Low
+  ai_resilience: 30
+  fragmentation: 65
+  key_person_risk: false
+  risks:
+    - {severity: h, text: Generative AI directly substitutes core document review work, mitigant: Underwrite flat revenue and pass if unconvinced}
+    - {severity: m, text: EBITDA just under fund minimum, mitigant: Treat as add-on to a larger legal platform}
+  questions:
+    - What share of revenue is document review versus advisory?
+    - Have any clients insourced work using AI tools?
+- name: Kestrel FM Tech
+  segment: Engineering
+  hq: Lyon
+  description: Facilities management technology and building systems maintenance across France and Benelux.
+  ownership: Corporate carve-out
+  moat: Long-dated service contracts with public sector landlords
+  code_name: Project Cedar
+  process: Banker-led auction, second round
+  stage: CIM
+  ask_multiple: 9.0
+  revenue: 210
+  ebitda: 18.0
+  growth: 0.04
+  recurring_pct: 0.55
+  capex_pct: 0.05
+  da_pct: 0.05
+  nwc_pct: 0.12
+  top_customer_pct: 0.18
+  gross_retention: 0.87
+  cyclicality: High
+  ai_resilience: 74
+  fragmentation: 80
+  key_person_risk: false
+  risks:
+    - {severity: h, text: Carve-out separation costs and stranded overhead, mitigant: Transition services agreement and price adjustment}
+    - {severity: m, text: Public sector customer at 18% of revenue, mitigant: Review renewal terms and termination rights}
+    - {severity: m, text: Low growth and thin margin, mitigant: Procurement and route-density savings plan}
+  questions:
+    - What are standalone cost estimates versus carve-out allocations?
+    - What is the contract renewal calendar for the top ten customers?

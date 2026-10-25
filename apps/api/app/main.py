@@ -1,0 +1,54 @@
+from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
+from typing import Any
+
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+from app.compute.spec import ComputeCache
+from app.core.config import Settings
+from app.core.errors import install_error_handlers
+from app.core.events import EventBus
+from app.jobs.agent_client import AgentClient
+from app.resources import RESOURCES
+from app.routers import commands, compute, internal, pipeline
+from app.routers.events import stream_events
+from app.routers.factory import make_resource_router
+
+
+def create_app(settings: Settings | None = None, agent_client: Any = None) -> FastAPI:
+    """Application factory; engines are created lazily on first request."""
+
+    @asynccontextmanager
+    async def lifespan(app: FastAPI) -> AsyncIterator[None]:
+        yield
+        await app.state.events.close()
+
+    app = FastAPI(title="Harrowgate Deal Copilot API", lifespan=lifespan)
+    app.state.settings = settings or Settings()
+    app.state.agent_client = agent_client or AgentClient(
+        app.state.settings.agent_url, app.state.settings.agent_service_token
+    )
+    app.state.events = EventBus()
+    app.state.compute_cache = ComputeCache()
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=app.state.settings.cors_origins,
+        allow_methods=["GET", "POST"],
+        allow_headers=["content-type"],
+    )
+    install_error_handlers(app)
+
+    @app.get("/api/health")
+    def health() -> dict[str, str]:
+        return {"status": "ok"}
+
+    for spec in RESOURCES:
+        app.include_router(make_resource_router(spec))
+    app.add_api_route("/api/events", stream_events, tags=["events"])
+    for module in (commands, compute, internal, pipeline):
+        app.include_router(module.router)
+    return app
+
+
+app = create_app()

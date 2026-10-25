@@ -1,0 +1,132 @@
+- name: Halden Group
+  segment: TIC
+  hq: Manchester
+  description: Inspection and certification services for industrial lifting and pressure equipment.
+  ownership: Harrowgate Fund VII
+  moat: Statutory inspection mandates and trained engineer base
+  invest_year: 2022
+  invested: 96
+  fair_value: 178
+  revenue: 188
+  ebitda_ltm: 39.5
+  ebitda_budget: 37.0
+  net_leverage: 3.6
+  status: good
+  debt: {type: Unitranche, pricing: "SONIA + 5.25%", covenant: "Net leverage below 5.0x", test_level: 5.0, actual: 3.6, interest_cover: 3.1, cov_lite: false}
+  value_creation:
+    - {lever: Revenue growth, amount: 38}
+    - {lever: Margin expansion, amount: 21}
+    - {lever: Multiple, amount: 6}
+    - {lever: Deleveraging, amount: 12}
+    - {lever: Add-ons, amount: 14}
+  exit: {route: Sponsor sale, buyers: "Large-cap TIC platforms, infrastructure funds", window: 2027-2028}
+- name: Paragon Payroll
+  segment: Payroll BPO
+  hq: Birmingham
+  description: Payroll outsourcing for UK mid-market employers.
+  ownership: Harrowgate Fund VII
+  moat: Integrated payroll and HR data across 900 employers
+  invest_year: 2021
+  invested: 82
+  fair_value: 131
+  revenue: 121
+  ebitda_ltm: 26.1
+  ebitda_budget: 27.4
+  net_leverage: 4.1
+  status: warn
+  debt: {type: Senior term loan, pricing: "SONIA + 4.75%", covenant: "Net leverage below 4.75x", test_level: 4.75, actual: 4.1, interest_cover: 2.4, cov_lite: false}
+  value_creation:
+    - {lever: Revenue growth, amount: 17}
+    - {lever: Margin expansion, amount: 8}
+    - {lever: Multiple, amount: -5}
+    - {lever: Deleveraging, amount: 9}
+    - {lever: Add-ons, amount: 20}
+  exit: {route: Strategic sale, buyers: "Global HR and payroll software groups", window: 2027-2029}
+- name: Sentinel MSP
+  segment: IT & cyber
+  hq: Dublin
+  description: Managed IT and security services for regulated mid-market firms.
+  ownership: Harrowgate Fund VII
+  moat: Security accreditations and 24/7 operations centre
+  invest_year: 2023
+  invested: 118
+  fair_value: 149
+  revenue: 164
+  ebitda_ltm: 24.8
+  ebitda_budget: 24.0
+  net_leverage: 4.4
+  status: good
+  debt: {type: Unitranche, pricing: "SONIA + 5.50%", covenant: "Cov-lite; springing at 40% RCF drawn", test_level: 5.5, actual: 4.4, interest_cover: 2.2, cov_lite: true}
+  value_creation:
+    - {lever: Revenue growth, amount: 14}
+    - {lever: Margin expansion, amount: 5}
+    - {lever: Multiple, amount: 2}
+    - {lever: Deleveraging, amount: 3}
+    - {lever: Add-ons, amount: 7}
+  exit: {route: Sponsor sale, buyers: "Pan-European cyber consolidators", window: 2029-2030}
+- name: Lumen Risk
+  segment: Compliance
+  hq: Edinburgh
+  description: Regulatory risk advisory and software-enabled compliance services.
+  ownership: Harrowgate Fund VII
+  moat: Proprietary risk models and long-standing regulator trust
+  invest_year: 2020
+  invested: 64
+  fair_value: 203
+  revenue: 97
+  ebitda_ltm: 26.0
+  ebitda_budget: 25.1
+  net_leverage: 2.1
+  status: acc
+  debt: {type: Senior term loan, pricing: "SONIA + 4.25%", covenant: "Net leverage below 4.0x", test_level: 4.0, actual: 2.1, interest_cover: 5.4, cov_lite: false}
+  value_creation:
+    - {lever: Revenue growth, amount: 52}
+    - {lever: Margin expansion, amount: 31}
+    - {lever: Multiple, amount: 29}
+    - {lever: Deleveraging, amount: 22}
+    - {lever: Add-ons, amount: 5}
+  exit: {route: Strategic sale, buyers: "Global risk and data analytics groups", window: 2026-2027}
+- name: Cobalt Engineering Data
+  segment: Engineering
+  hq: Glasgow
+  description: Engineering data management and asset information services.
+  ownership: Harrowgate Fund VII
+  moat: Client asset registers and sector data standards
+  invest_year: 2024
+  invested: 140
+  fair_value: 146
+  revenue: 112
+  ebitda_ltm: 17.9
+  ebitda_budget: 19.5
+  net_leverage: 4.9
+  status: warn
+  debt: {type: Senior term loan, pricing: "SONIA + 5.00%", covenant: "Net leverage below 5.25x", test_level: 5.25, actual: 4.9, interest_cover: 2.0, cov_lite: false}
+  value_creation:
+    - {lever: Revenue growth, amount: 4}
+    - {lever: Margin expansion, amount: -3}
+    - {lever: Multiple, amount: 0}
+    - {lever: Deleveraging, amount: 2}
+    - {lever: Add-ons, amount: 3}
+  exit: {route: Sponsor sale, buyers: "Engineering software and services sponsors", window: 2030-2031}
+- name: Orbis Language Tech
+  segment: Legal ops
+  hq: Cambridge
+  description: Language and translation technology services for legal and regulatory documents.
+  ownership: Harrowgate Fund VII
+  moat: Domain-specific translation memory
+  invest_year: 2021
+  invested: 71
+  fair_value: 58
+  revenue: 76
+  ebitda_ltm: 9.2
+  ebitda_budget: 12.6
+  net_leverage: 5.6
+  status: bad
+  debt: {type: Senior term loan, pricing: "SONIA + 5.75%", covenant: "Net leverage below 5.5x", test_level: 5.5, actual: 5.6, interest_cover: 1.5, cov_lite: false}
+  value_creation:
+    - {lever: Revenue growth, amount: -4}
+    - {lever: Margin expansion, amount: -9}
+    - {lever: Multiple, amount: -8}
+    - {lever: Deleveraging, amount: -2}
+    - {lever: Add-ons, amount: 6}
+  exit: {route: Strategic sale, buyers: "Language service groups and legal technology vendors", window: 2028-2029}

@@ -1,0 +1,40 @@
+fund:
+  name: Harrowgate Fund VII
+  vintage: 2019
+  committed: 1400
+  ebitda_min: 10
+  ebitda_max: 60
+  irr_hurdle: 0.20
+  max_leverage: 4.5
+  hold_years_min: 5
+  hold_years_max: 7
+  verdict_advance: 68
+  verdict_watch: 55
+
+criteria:
+  - {key: scale, label: Scale, weight: 0.10, metric: ebitda, kind: band, target_text: "£10–60m LTM EBITDA", floor: 10, ceiling: 60}
+  - {key: cash_conversion, label: Cash conversion, weight: 0.15, metric: cash_conversion, kind: linear, target_text: "≥ 85% of EBITDA", floor: 0.60, ceiling: 0.95}
+  - {key: recurring, label: Recurring revenue, weight: 0.15, metric: recurring_pct, kind: linear, target_text: "≥ 70% of revenue", floor: 0.40, ceiling: 0.85}
+  - {key: margin, label: EBITDA margin, weight: 0.15, metric: margin, kind: linear, target_text: "≥ 18%", floor: 0.08, ceiling: 0.25}
+  - {key: growth, label: Revenue growth, weight: 0.10, metric: growth, kind: linear, target_text: "≥ 8% a year", floor: 0.02, ceiling: 0.22}
+  - {key: moat, label: Moat / AI resilience, weight: 0.15, metric: ai_resilience, kind: linear, target_text: "≥ 65 / 100", floor: 0, ceiling: 100}
+  - {key: buy_and_build, label: Buy-and-build, weight: 0.10, metric: fragmentation, kind: linear, target_text: "≥ 70 / 100", floor: 0, ceiling: 100}
+  - {key: entry_price, label: Entry price, weight: 0.10, metric: price_discount, kind: linear, target_text: "At or below segment median", floor: -0.20, ceiling: 0.20}
+
+benchmarks:
+  - {key: total_leverage, label: Total leverage, low: 5.0, high: 7.0, unit: x, source_note: "Mid-market buyout lender survey"}
+  - {key: senior_leverage, label: Senior leverage, low: 2.0, high: 3.0, unit: x, source_note: "Mid-market buyout lender survey"}
+  - {key: interest_cover, label: Interest cover floor, low: 2.0, high: null, unit: x, source_note: "Fund credit policy"}
+  - {key: stress_ebitda_drop, label: Stress EBITDA drop, low: 0.225, high: null, unit: fraction, source_note: "Fund downside case"}
+  - {key: hurdle_irr, label: Hurdle IRR, low: 0.20, high: 0.25, unit: fraction, source_note: "Investment committee policy"}
+  - {key: hold_period, label: Hold period, low: 5, high: 7, unit: years, source_note: "Fund mandate"}
+  - {key: mgmt_pool, label: Management incentive pool, low: 0.03, high: 0.20, unit: fraction, source_note: "Typical sweet equity range"}
+  - {key: customer_concentration, label: Top customer concentration, low: 0.05, high: 0.10, unit: fraction, source_note: "Fund risk policy"}
+  - {key: gross_retention, label: Gross retention, low: 0.90, high: 0.93, unit: fraction, source_note: "Fund risk policy"}
+  - {key: senior_spread, label: Senior spread over SONIA, low: 0.0475, high: null, unit: fraction, source_note: "Mid-market buyout lender survey"}
+  - {key: sub_rate, label: Subordinated debt rate, low: 0.11, high: null, unit: fraction, source_note: "Mid-market buyout lender survey"}
+
+macro_rates:
+  - {key: SONIA, value: 0.04, as_of: 2026-09-30}
+
+segment_attributes: [Non-cyclical, Contracted / recurring, Technical moat, Synergy potential, Industry tailwinds, Fragmented / local]

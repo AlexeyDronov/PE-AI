@@ -1,0 +1,105 @@
+- name: Testing, inspection & certification
+  short: TIC
+  market_size: 28
+  cagr: 0.06
+  avg_margin: 0.18
+  fragmentation: High
+  ai_exposure: Low
+  median_multiple: 14.5
+  addon_multiple: 7.5
+  typical_leverage: 5.5
+  deal_count_24m: 41
+  view: Regulation-led, non-discretionary demand with accreditation moats. Our strongest hunting ground for platforms with add-on depth.
+  white_space: Regional lab networks and niche certification bodies below £5m EBITDA remain largely unconsolidated.
+  scores: [3, 3, 3, 2, 2, 3]
+  exit: [45, 45, 10]
+- name: Compliance & regulatory services
+  short: Compliance
+  market_size: 9
+  cagr: 0.11
+  avg_margin: 0.24
+  fragmentation: High
+  ai_exposure: Medium
+  median_multiple: 16.0
+  addon_multiple: 8.0
+  typical_leverage: 5.0
+  deal_count_24m: 23
+  view: Rising regulatory load drives sticky, subscription-like revenue. Pricing is full, so entry discipline matters.
+  white_space: Sector-specific advisory boutiques in financial crime and ESG reporting.
+  scores: [3, 3, 2, 2, 3, 3]
+  exit: [55, 40, 5]
+- name: Payroll & finance outsourcing
+  short: Payroll BPO
+  market_size: 14
+  cagr: 0.07
+  avg_margin: 0.20
+  fragmentation: Medium
+  ai_exposure: High
+  median_multiple: 12.0
+  addon_multiple: 7.0
+  typical_leverage: 5.0
+  deal_count_24m: 18
+  view: Highly contracted but exposed to automation. Back only platforms already investing in their own tooling.
+  white_space: Mid-sized payroll bureaux in the Nordics and Benelux.
+  scores: [3, 3, 1, 2, 1, 2]
+  exit: [40, 55, 5]
+- name: Managed IT & cyber
+  short: IT & cyber
+  market_size: 41
+  cagr: 0.10
+  avg_margin: 0.15
+  fragmentation: High
+  ai_exposure: Medium
+  median_multiple: 13.0
+  addon_multiple: 7.0
+  typical_leverage: 5.0
+  deal_count_24m: 57
+  view: Large and busy market with strong recurring revenue but thin margins. Security specialists earn a premium over generalist MSPs.
+  white_space: Managed detection and response providers serving regulated mid-market firms.
+  scores: [2, 3, 2, 3, 3, 3]
+  exit: [35, 55, 10]
+- name: Data & analytics services
+  short: Data services
+  market_size: 12
+  cagr: 0.14
+  avg_margin: 0.17
+  fragmentation: Medium
+  ai_exposure: High
+  median_multiple: 15.0
+  addon_multiple: 8.5
+  typical_leverage: 4.0
+  deal_count_24m: 26
+  view: Fastest growing segment but the AI disruption debate cuts both ways. Underwrite lower leverage and pay for proprietary data assets only.
+  white_space: Data engineering consultancies with embedded platform revenue.
+  scores: [2, 2, 1, 2, 3, 2]
+  exit: [50, 35, 15]
+- name: Engineering & FM technology
+  short: Engineering
+  market_size: 22
+  cagr: 0.05
+  avg_margin: 0.12
+  fragmentation: High
+  ai_exposure: Low
+  median_multiple: 10.5
+  addon_multiple: 6.0
+  typical_leverage: 4.0
+  deal_count_24m: 19
+  view: Cheap entry multiples reflect cyclical, project-heavy revenue. Selective interest where service contracts dominate.
+  white_space: Building-systems maintenance contractors with recurring service books.
+  scores: [1, 2, 2, 2, 1, 3]
+  exit: [60, 35, 5]
+- name: Legal & professional outsourcing
+  short: Legal ops
+  market_size: 6
+  cagr: 0.08
+  avg_margin: 0.16
+  fragmentation: High
+  ai_exposure: High
+  median_multiple: 9.5
+  addon_multiple: 5.5
+  typical_leverage: 3.5
+  deal_count_24m: 9
+  view: Small segment with heavy generative AI exposure. Low multiples are a fair reflection of disruption risk.
+  white_space: Specialist e-discovery and contract management providers.
+  scores: [2, 2, 1, 1, 1, 3]
+  exit: [55, 40, 5]
