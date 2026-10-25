@@ -4,7 +4,7 @@ export COREPACK_ENABLE_DOWNLOAD_PROMPT := 0
 
 API := apps/api
 
-.PHONY: setup seed test test-api lint-api snapshot-tests verify-tests dev-api codegen codegen-check
+.PHONY: setup seed test test-api lint-api snapshot-tests verify-tests dev-api dev-agent test-agent codegen codegen-check
 
 setup:
 	cd $(API) && uv sync
@@ -30,6 +30,12 @@ snapshot-tests:
 verify-tests:
 	python3 scripts/test_lock.py verify
 
+dev-agent:
+	cd apps/agent && pnpm dev
+
+test-agent:
+	cd apps/agent && npx vitest run
+
 dev-web:
 	cd apps/web && pnpm dev
 
@@ -46,3 +52,7 @@ codegen-check:
 	  && diff -u packages/contracts/openapi.json $$tmp/openapi.json \
 	  && diff -u packages/contracts/src/openapi.ts $$tmp/src/openapi.ts \
 	  && echo "contracts up to date"; status=$$?; rm -rf $$tmp; exit $$status
+
+# The running agent server must load both agents with their playbooks (bundled code, which vitest can't exercise).
+smoke-agent:
+	sh scripts/smoke-agent.sh
