@@ -1,0 +1,8 @@
+{
+  "query": "UK compliance outsourcing market size 2026",
+  "results": [
+    {"title": "UK RegTech and compliance services market report 2026", "url": "https://example-research.co.uk/regtech-2026", "content": "The UK compliance outsourcing market reached £9.1bn in 2025 and is forecast to grow 11% a year to 2030.", "score": 0.91, "published_date": "2026-03-14"},
+    {"title": "KYC outsourcing demand rises after APP fraud rules", "url": "https://news.example.com/kyc-outsourcing", "content": "Mid-tier lenders are outsourcing KYC remediation to specialists.", "score": 0.77},
+    {"title": "Compliance services M&A tracker", "url": "https://deals.example.com/compliance-tracker", "content": "Sponsors completed 23 compliance services deals in the last 24 months.", "score": 0.64, "published_date": "2026-08-02"}
+  ]
+}

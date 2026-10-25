@@ -1,0 +1,4 @@
+{"total_results": 2, "items": [
+  {"title": "NORTHVALE COMPLIANCE LIMITED", "company_number": "09876543", "company_status": "active", "date_of_creation": "2014-05-02", "address_snippet": "1 Example Street, London, EC2A 1AA", "company_type": "ltd"},
+  {"title": "NORTHVALE HOLDINGS LIMITED", "company_number": "11223344", "company_status": "dissolved", "date_of_creation": "2018-01-15", "address_snippet": "2 Example Road, Leeds, LS1 1AA", "company_type": "ltd"}
+]}

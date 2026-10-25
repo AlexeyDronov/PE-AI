@@ -1,0 +1,4 @@
+{"hits": {"total": {"value": 2}, "hits": [
+  {"_id": "0001234567-26-000012:filing.htm", "_source": {"display_names": ["Example Compliance Corp (CIK 0001234567)"], "form": "10-K", "file_date": "2026-02-28", "ciks": ["0001234567"], "adsh": "0001234567-26-000012"}},
+  {"_id": "0007654321-26-000003:q.htm", "_source": {"display_names": ["Other RegTech Inc (CIK 0007654321)"], "form": "10-Q", "file_date": "2026-05-09", "ciks": ["0007654321"], "adsh": "0007654321-26-000003"}}
+]}}
