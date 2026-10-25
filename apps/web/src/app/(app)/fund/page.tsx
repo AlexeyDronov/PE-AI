@@ -1,5 +1,5 @@
-import { PlaceholderPage } from "@/components/shell/PlaceholderPage";
+import { FundView } from "@/features/fund/FundView";
 
 export default function FundPerformancePage() {
-  return <PlaceholderPage title="Fund performance" question="How is the fund doing for LPs?" />;
+  return <FundView />;
 }

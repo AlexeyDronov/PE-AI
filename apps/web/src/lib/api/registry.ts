@@ -3,6 +3,9 @@ type ResourceDef = { path: string; resource: string; method?: "GET" | "POST" };
 /** The only place endpoints are named. `resource` is the server's name for live invalidation. */
 export const resources = {
   segments: { path: "/segments", resource: "segments" },
+  segment: { path: "/segments/{id}", resource: "segments" },
+  marketSummary: { path: "/market-summary", resource: "segments" },
+  overviewSummary: { path: "/overview-summary", resource: "deals" },
   deals: { path: "/deals", resource: "deals" },
   deal: { path: "/deals/{id}", resource: "deals" },
   companies: { path: "/companies", resource: "companies" },
@@ -20,6 +23,8 @@ export const resources = {
   debtFacilities: { path: "/debt-facilities", resource: "debt-facilities" },
   valueCreationItems: { path: "/value-creation-items", resource: "value-creation-items" },
   exitPlans: { path: "/exit-plans", resource: "exit-plans" },
+  exitSummary: { path: "/exit-summary", resource: "exit-plans" },
+  exitRouteMixes: { path: "/exit-route-mixes", resource: "exit-route-mixes" },
   researchReports: { path: "/research-reports", resource: "research-reports" },
   researchFindings: { path: "/research-findings", resource: "research-findings" },
   sources: { path: "/sources", resource: "sources" },

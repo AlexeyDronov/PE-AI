@@ -27,6 +27,20 @@ import {
   TestCalendar,
   ValueCreationChart,
 } from "@/components/domain/portfolio";
+import {
+  AttractivenessTable,
+  CompetitiveLandscape,
+  GrowthMarginChart,
+  MultipleArbitrageChart,
+  ResearchEvidence,
+  type Segment,
+  type SegmentDetail,
+  SegmentProfile,
+  SegmentShortlist,
+} from "@/components/domain/markets";
+import { ActivityFeed, AttentionAlerts, AwaitingDecision } from "@/components/domain/overview";
+import { ExitPlanner, ExitRoutesChart } from "@/components/domain/exits";
+import { CashFlowTable, DistributionWaterfall, JCurveChart } from "@/components/domain/fund";
 import { type Deal, PipelineTable, SegmentScores, StageFunnel } from "@/components/domain/pipeline";
 import { VERDICT_TONE } from "@/components/domain/verdict";
 import {
@@ -57,6 +71,7 @@ import {
   Textarea,
   TextField,
 } from "@/components/ui";
+import type { Job } from "@/lib/api/types";
 import { fmt } from "@/lib/format";
 import styles from "./gallery.module.css";
 
@@ -430,6 +445,9 @@ export default function ComponentGallery() {
       <ChartGroup />
       <PipelineGroup />
       <PortfolioGroup />
+      <ExitsFundGroup />
+      <MarketsGroup />
+      <OverviewGroup />
       <ModelGroup />
 
       <Group title="Page layout">
@@ -449,6 +467,86 @@ export default function ComponentGallery() {
 
       <DealGroup />
     </main>
+  );
+}
+
+const ATTRIBUTES = ["Non-cyclical", "Contracted / recurring", "Technical moat", "Synergy potential", "Industry tailwinds", "Fragmented / local"];
+const mockSegment = (id: string, short: string, scores: number[], cagr: number): Segment =>
+  ({
+    id, short, name: short, created_at: "", market_size: 9, cagr, avg_margin: 0.24, fragmentation: "High", ai_exposure: "Medium",
+    median_multiple: 16, addon_multiple: 8, typical_leverage: 5, deal_count_24m: 23, view: "", white_space: "",
+    attributes: ATTRIBUTES.map((attribute, i) => ({ attribute, score: scores[i] ?? 0 })),
+    attractiveness: scores.reduce((a, b) => a + b, 0), attractiveness_max: 18,
+  }) as Segment;
+const MOCK_MARKET_SEGMENTS = [mockSegment("s1", "Compliance", [3, 2, 2, 2, 3, 3], 0.11), mockSegment("s2", "Legal ops", [2, 1, 0, 1, 0, 2], 0.08)];
+
+function MarketsGroup() {
+  const detail = {
+    ...MOCK_MARKET_SEGMENTS[0],
+    view: "Regulatory load keeps rising.",
+    white_space: "Financial crime outsourcing for payments firms.",
+    matching_deals: MOCK_DEALS.slice(0, 2),
+    transactions: [{ id: "t1", date: "2026-08-01", target: "Clearmark", acquirer: "Big Four arm", segment_id: "s1", ev: 180, ev_ebitda: 15.2, route: "strategic" }],
+    players: [{ id: "p2", name: "Lumen Risk", kind: "portfolio" }, { id: "d1", name: "Northvale Compliance", kind: "pipeline" }, { id: "x", name: "Big Four arm", kind: "competitor" }],
+    reports: [],
+  } as unknown as SegmentDetail;
+  const job = { id: "j1", kind: "market_research", status: "running", progress: [{ step: "search", message: "Running 6 queries" }], input: {}, result_ref: null, error: null, created_at: "", updated_at: "", source: "user" } as unknown as Job;
+  return (
+    <PageSection id="markets" title="Markets and segments">
+      <div className={styles.stack}>
+        <div className={styles.grid}>
+          <Variant name="GrowthMarginChart">
+            <GrowthMarginChart segments={MOCK_MARKET_SEGMENTS} onOpen={() => undefined} />
+          </Variant>
+          <Variant name="SegmentShortlist">
+            <SegmentShortlist segments={MOCK_MARKET_SEGMENTS} />
+          </Variant>
+          <Variant name="MultipleArbitrageChart">
+            <MultipleArbitrageChart segments={MOCK_MARKET_SEGMENTS} />
+          </Variant>
+        </div>
+        <Variant name="AttractivenessTable">
+          <AttractivenessTable segments={MOCK_MARKET_SEGMENTS} />
+        </Variant>
+        <Variant name="SegmentProfile">
+          <SegmentProfile segment={detail} />
+        </Variant>
+        <Variant name="CompetitiveLandscape">
+          <CompetitiveLandscape transactions={detail.transactions} players={detail.players} />
+        </Variant>
+        <div className={styles.grid}>
+          <Variant name="ResearchEvidence empty">
+            <ResearchEvidence reports={[]} onRun={() => undefined} />
+          </Variant>
+          <Variant name="ResearchEvidence running">
+            <ResearchEvidence reports={[]} job={job} onRun={() => undefined} />
+          </Variant>
+        </div>
+      </div>
+    </PageSection>
+  );
+}
+
+function OverviewGroup() {
+  const alert = { id: "a1", company_id: "c1", severity: "bad", label: "Action", text: "Net leverage of 5.6x leaves 7% headroom.", action: "Open lender dialogue.", created_at: "", company: { name: "Orbis Language Tech", hq: "", description: "", segment_id: null } };
+  const job = (id: string, status: string, message: string) => ({ id, kind: "market_research", status, progress: [{ step: "s", message }], input: {}, result_ref: null, error: null, created_at: "", updated_at: "", source: "user" }) as unknown as Job;
+  return (
+    <PageSection id="overview" title="Overview">
+      <div className={styles.grid}>
+        <Variant name="AttentionAlerts">
+          <AttentionAlerts alerts={[alert]} />
+        </Variant>
+        <Variant name="AwaitingDecision">
+          <AwaitingDecision deals={MOCK_DEALS.slice(0, 1)} thresholds={{ good: 68, warn: 55 }} />
+        </Variant>
+        <Variant name="ActivityFeed">
+          <ActivityFeed jobs={[job("j1", "running", "Running 6 queries"), job("j2", "succeeded", "Report ready")]} />
+        </Variant>
+        <Variant name="ActivityFeed empty">
+          <ActivityFeed jobs={[]} />
+        </Variant>
+      </div>
+    </PageSection>
   );
 }
 
@@ -582,6 +680,62 @@ function PortfolioGroup() {
         </Variant>
         <Variant name="TestCalendar">
           <TestCalendar facilities={MOCK_FACILITIES} />
+        </Variant>
+      </div>
+    </PageSection>
+  );
+}
+
+const MOCK_FUND_SERIES = [
+  { period: "2019", calls: 200, distributions: 0, nav: 200, cumulative_net: -200, projected: false },
+  { period: "2020", calls: 300, distributions: 0, nav: 520, cumulative_net: -500, projected: false },
+  { period: "2021", calls: 0, distributions: 100, nav: 600, cumulative_net: -400, projected: false },
+  { period: "2022", calls: 0, distributions: 150, nav: 560, cumulative_net: -250, projected: true },
+  { period: "2023", calls: 0, distributions: 400, nav: 400, cumulative_net: 150, projected: true },
+];
+
+function ExitsFundGroup() {
+  const plan = {
+    id: "e1",
+    company_id: "c1",
+    created_at: "",
+    route: "Strategic",
+    buyers: "Global TIC groups",
+    window: "H1 2027",
+    company: { name: "Lumen Risk", hq: "London", description: "", segment_id: "s1" },
+    platform: { id: "p1", moic: 3.17, fair_value: 203, status: "acc", status_label: "Exit prep" },
+  };
+  const mix = { id: "m1", segment_id: "s1", created_at: "", strategic_pct: 45, sponsor_pct: 50, ipo_pct: 5, segment: { id: "s1", name: "Testing, inspection & certification", short: "TIC", median_multiple: 14.5 } };
+  return (
+    <PageSection id="exits-fund" title="Exits and fund">
+      <div className={styles.stack}>
+        <Variant name="ExitPlanner">
+          <ExitPlanner plans={[plan]} />
+        </Variant>
+        <div className={styles.grid}>
+          <Variant name="ExitRoutesChart">
+            <ExitRoutesChart mixes={[mix]} />
+          </Variant>
+          <Variant name="JCurveChart">
+            <JCurveChart series={MOCK_FUND_SERIES} asOfPeriod="2021" />
+          </Variant>
+          <Variant name="DistributionWaterfall">
+            <DistributionWaterfall
+              tiers={[
+                { label: "Return of capital", lp: 500, gp: 0 },
+                { label: "Preferred return", lp: 180, gp: 0 },
+                { label: "GP catch-up", lp: 0, gp: 45 },
+                { label: "Carried interest split", lp: 68, gp: 17 },
+              ]}
+              prefRate={0.08}
+              carry={0.2}
+              gpCarry={62}
+              lpTotal={748}
+            />
+          </Variant>
+        </div>
+        <Variant name="CashFlowTable">
+          <CashFlowTable series={MOCK_FUND_SERIES} />
         </Variant>
       </div>
     </PageSection>

@@ -5,6 +5,11 @@ export type Severity = "bad" | "warn" | "good" | "info" | "neutral";
 
 const TONE: Record<Severity, Tone> = { bad: "bad", warn: "warn", good: "good", info: "accent", neutral: "neutral" };
 
+const SEVERITIES: readonly string[] = ["bad", "warn", "good", "info", "neutral"];
+
+/** Narrows a server severity string to one the component can draw. */
+export const toSeverity = (value: string): Severity => (SEVERITIES.includes(value) ? (value as Severity) : "neutral");
+
 type Props = {
   severity: Severity;
   label: string;

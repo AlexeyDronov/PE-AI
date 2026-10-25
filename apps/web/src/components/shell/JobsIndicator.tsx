@@ -2,14 +2,9 @@
 
 import * as Popover from "@radix-ui/react-popover";
 import { Loader } from "lucide-react";
+import { jobKindLabel } from "@/components/domain/jobs";
 import { useResource } from "@/hooks/useResource";
 import styles from "./JobsIndicator.module.css";
-
-const KIND_LABELS: Record<string, string> = {
-  market_research: "Market research",
-  teaser_screen: "Teaser screen",
-  memo_draft: "IC memo draft",
-};
 
 export function JobsIndicator() {
   const jobs = useResource("jobs", { status: "running" }).data?.items ?? [];
@@ -28,7 +23,7 @@ export function JobsIndicator() {
           <ul className={styles.list}>
             {jobs.map((job) => (
               <li key={job.id} className={styles.job}>
-                <b>{KIND_LABELS[job.kind] ?? job.kind}</b>
+                <b>{jobKindLabel(job.kind)}</b>
                 <span>{job.progress.at(-1)?.message ?? "Starting"}</span>
               </li>
             ))}

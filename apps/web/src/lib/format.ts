@@ -36,6 +36,10 @@ function pct(v: Missing, opts: { dp?: number; input?: "fraction" | "percent"; si
   return opts.signed && value > 0 ? `+${body}` : body;
 }
 
+function bn(v: Missing, opts: { dp?: number } = {}): string {
+  return missing(v) ? DASH : `£${group(v, opts.dp ?? 0)}bn`;
+}
+
 function bp(v: Missing): string {
   if (missing(v)) return DASH;
   const body = `${group(Math.abs(v), 0)}bp`;
@@ -61,4 +65,4 @@ function quarter(key: string | null | undefined): string {
   return m && m[1] ? `Q${m[2]} ${m[1].slice(2)}` : DASH;
 }
 
-export const fmt = { money, multiple, pct, bp, int, date, quarter };
+export const fmt = { money, multiple, pct, bn, bp, int, date, quarter };

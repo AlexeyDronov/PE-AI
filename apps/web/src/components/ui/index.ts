@@ -1,4 +1,4 @@
-export { AlertItem, type Severity } from "./AlertItem";
+export { AlertItem, type Severity, toSeverity } from "./AlertItem";
 export { Badge, type Tone } from "./Badge";
 export { Breadcrumb, type Crumb } from "./Breadcrumb";
 export { Button, ButtonLink, type ButtonProps } from "./Button";

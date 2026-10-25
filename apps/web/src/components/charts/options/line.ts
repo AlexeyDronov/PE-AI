@@ -3,9 +3,9 @@ import { baseOption, cartesianAxes, type ChartOption, type Role, seriesColor, ty
 import type { ChartTheme } from "../theme";
 
 export type LineSeries = { name: string; values: number[]; role?: Role; area?: boolean };
-export type LineInput = { categories: string[]; series: LineSeries[]; zeroLine?: boolean; valueFormat?: ValueFormat; unit?: Unit };
+export type LineInput = { categories: string[]; series: LineSeries[]; zeroLine?: boolean; /** Index of the first projected category; shades from there to the end. */ projectedFrom?: number; valueFormat?: ValueFormat; unit?: Unit };
 
-export function lineOption({ categories, series, zeroLine, valueFormat, unit }: LineInput, theme: ChartTheme): ChartOption {
+export function lineOption({ categories, series, zeroLine, projectedFrom, valueFormat, unit }: LineInput, theme: ChartTheme): ChartOption {
   return {
     ...baseOption(theme, { seriesCount: series.length, trigger: "axis", valueFormat }),
     ...cartesianAxes(theme, { categories, orientation: "vertical", format: valueFormat, unit }),
@@ -35,6 +35,9 @@ export function lineOption({ categories, series, zeroLine, valueFormat, unit }: 
                 },
               },
             }
+          : {}),
+        ...(projectedFrom !== undefined && index === 0 && categories[projectedFrom] !== undefined
+          ? { markArea: { silent: true, itemStyle: { color: alpha(theme.ink3, 0.1) }, data: [[{ xAxis: categories[projectedFrom] }, { xAxis: categories[categories.length - 1] }]] } }
           : {}),
         ...(zeroLine && index === 0
           ? { markLine: { silent: true, symbol: "none", label: { show: false }, lineStyle: { color: theme.ink3, type: "dashed" as const, width: 1 }, data: [{ yAxis: 0 }] } }
