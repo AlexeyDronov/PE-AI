@@ -43,9 +43,9 @@ Status at last audit: **25 Oct 2026**. ☑ done and verified · ☐ to do · ⧗
 - [x] 2.6 Compute endpoints (`lbo`, `lbo-sensitivity`, `debt-capacity`) with the D4 cache
 - [x] 2.7 Pipeline summary endpoint
 - [x] 2.8a `set-watchlist` command + `watchlisted` on deals — 25 Oct
-- [ ] 2.8b `save-scenario` command + `lbo-scenarios` read (with 6.3)
-- [ ] 2.9 Excel LBO export (`/api/exports/lbo`, openpyxl, from the same engine)
-- [ ] 2.10 Market and portfolio read helpers the pages need: segment detail (transactions, players, matching deals), exit-route mix, fund cash-flow table
+- [x] 2.8b `save-scenario` command + `lbo-scenarios` read — 25 Oct
+- [x] 2.9 Excel LBO export (`/api/exports/lbo`, openpyxl, from the same engine) — 25 Oct; plus the `valuation-range` compute
+- [x] 2.10 Market and portfolio read helpers the pages need: segment detail (transactions, players, matching deals), exit-route mix, fund cash-flow table — 25 Oct; plus portfolio/covenant/exit/market/overview summaries, distribution waterfall, and fund metrics as of the valuation date
 
 ## Phase 3 — Contract (arch §4)
 - [x] 3.1 Every route publishes a named, typed OpenAPI schema
@@ -77,7 +77,8 @@ Each page gets domain components (props only), a view that calls hooks, page tes
   - Browser review fixes: score sort, Pass tone, gate reason in the row, integer and complete chart axes; API reload hang (SSE streams now close on shutdown) and request timeouts
 - [x] 6.2 **Deal overview** `/deals/[id]`: deal header and tabs · snapshot · scorecard · risks and flags · debt capacity · diligence questions · watchlist — 25 Oct
   - Browser review fixes: seeded criteria targets now describe what is scored; warning when policy leverage exceeds stressed capacity; no duplicate scorecard description
-- [ ] 6.3 **Deal model** `/deals/[id]/model`: returns strip · assumptions sliders (debounced, cached compute) · sources and uses · credit profile · projections · sensitivity heatmap · valuation range · value bridge · save scenario · Excel export
+- [x] 6.3 **Deal model** `/deals/[id]/model`: returns strip · assumptions sliders (debounced, cached compute) · sources and uses · credit profile · projections · sensitivity heatmap · valuation range · value bridge · save scenario · Excel export — 25 Oct
+  - Browser review fixes: formatted waterfall labels, placeholders while loading, ask stated on the valuation chart, benchmark captions
 - [ ] 6.4 **Portfolio** `/portfolio`: summary · platforms table · EBITDA vs budget · value creation
 - [ ] 6.5 **Platform** `/portfolio/[id]`: snapshot · quarterly performance · capital structure · value creation · alerts · exit plan
 - [ ] 6.6 **Covenants** `/portfolio/covenants`: headroom summary · covenant monitor · test calendar
