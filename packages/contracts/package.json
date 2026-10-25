@@ -1,0 +1,7 @@
+{
+  "name": "@harrowgate/contracts",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Generated API contract: openapi.json and src/openapi.ts. Run `make codegen`; never edit by hand.",
+  "types": "src/openapi.ts"
+}
