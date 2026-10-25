@@ -93,9 +93,11 @@ Each page gets domain components (props only), a view that calls hooks, page tes
 - [ ] 6.14 **IC memo** `/deals/[id]/memo`: needs 7.6
 
 ## Phase 7 — Agent service (arch §8) — **needs OpenRouter and Tavily API keys from you before 7.4**
-- [ ] 7.1 Mastra server scaffold (Node), OpenRouter provider, models per role from env, service-token auth, `/jobs/{kind}/start`
-- [ ] 7.2 Tools, each with Zod I/O and recorded-fixture tests (no live network in tests): webSearch (Tavily adapter), fetchPage, extractTables, companyRegistry (Companies House), secFilings (EDGAR), fxRates (ECB), internalData (read-only API), calculator, recordSource
-- [ ] 7.3 Query templates and skill playbooks
+- [x] 7.1 Mastra server scaffold (Node), OpenRouter provider, models per role from env, service-token auth, `/jobs/{kind}/start` — 26 Oct (verified on the live server)
+- [x] 7.2 Tools, each with Zod I/O and recorded-fixture tests (no live network in tests): webSearch (Tavily adapter), fetchPage, extractTables, companyRegistry (Companies House), secFilings (EDGAR), fxRates (ECB), internalData (read-only API), calculator, recordSource — 26 Oct
+  - Live check fixes: real ECB feed format, proper HTML parser (node-html-parser 9.0.4) for real pages
+- [x] 7.3 Query templates and skill playbooks; market-researcher and analyst agents — 26 Oct
+  - Live check fix: playbooks load in the bundled server (`make smoke-agent`)
 - [ ] 7.4 `teaserScreen` workflow + API `screen-teaser` command and persist (new deal appears live)
 - [ ] 7.5 `marketResearch` workflow (cited findings; uncited rejected by API); `confidence` becomes a string enum (TODO.md)
 - [ ] 7.6 `memoDraft` workflow + API `draft-memo` command and persist
