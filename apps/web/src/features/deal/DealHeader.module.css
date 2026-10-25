@@ -1,0 +1,15 @@
+.code {
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.caption {
+  color: var(--ink-3);
+  font-size: 12px;
+}
+
+.missing {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-3);
+}
