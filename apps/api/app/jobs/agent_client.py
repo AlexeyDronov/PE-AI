@@ -11,7 +11,7 @@ class AgentClient:
         self.token = token
 
     async def start_job(self, kind: str, job_id: str, payload: dict[str, Any]) -> None:
-        async with httpx.AsyncClient() as http:
+        async with httpx.AsyncClient(timeout=httpx.Timeout(30.0, connect=3.0)) as http:
             response = await http.post(
                 f"{self.base_url}/jobs/{kind}/start",
                 json={"jobId": job_id, "input": payload},

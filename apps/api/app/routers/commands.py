@@ -24,7 +24,7 @@ def _endpoint(spec: CommandSpec) -> Callable[..., Awaitable[JSONResponse]]:
             {"type": "changed", "resources": list(spec.invalidates), "ids": [row.id]}
         )
         if spec.async_job:
-            await dispatch_job(app, row)
+            row = await dispatch_job(app, row)
         return JSONResponse(jsonable_encoder(row), status_code=spec.status_code)
 
     return run

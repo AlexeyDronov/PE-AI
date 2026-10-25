@@ -166,3 +166,26 @@ def test_job_lifecycle_publishes_events(app, client, auth):
     assert [e["status"] for e in job_events] == ["queued", "running", "succeeded"]
     changed = [e for e in events if e["type"] == "changed"]
     assert any("research-reports" in e["resources"] for e in changed)
+
+
+# ---------- found in browser review: an unreachable agent caused a 500 and an orphaned job ----------
+
+
+def test_unreachable_agent_fails_the_job_cleanly(settings):
+    from fastapi.testclient import TestClient
+
+    from app.main import create_app
+
+    class DownAgent:
+        async def start_job(self, kind, job_id, payload):
+            raise ConnectionError("connection refused")
+
+    with TestClient(create_app(settings, agent_client=DownAgent())) as c:
+        r = c.post("/api/commands/start-market-research", json={"question": "q", "segment_id": None})
+        assert r.status_code == 202, r.text
+        job = r.json()
+        assert job["status"] == "failed"
+        assert job["error"] == "The Copilot agent is not reachable. Try again once it is running."
+        stored = c.get(f"/api/jobs/{job['id']}").json()
+        assert stored["status"] == "failed"
+        assert c.get("/api/jobs", params={"status": "queued"}).json()["total"] == 0
