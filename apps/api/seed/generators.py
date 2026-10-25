@@ -83,15 +83,15 @@ def quarterly_series(rng: random.Random, start: float, end: float) -> list[float
 
 
 def fund_cashflows(rng: random.Random, committed: float, first_year: int = 2019) -> list[dict]:
-    """Yearly calls, distributions and NAV for 2019-2030 producing a J-curve."""
-    call_share = [0.14, 0.22, 0.2, 0.18, 0.14, 0.08, 0.04, 0.0, 0.0, 0.0, 0.0, 0.0]
-    dist_share = [0.0, 0.0, 0.01, 0.03, 0.05, 0.1, 0.22, 0.3, 0.38, 0.35, 0.3, 0.2]
+    """Yearly calls, distributions and NAV for 2019-2030 with later years as projections."""
+    call_share = [0.10, 0.17, 0.16, 0.14, 0.10, 0.07, 0.04, 0.02, 0.02, 0.01, 0.0, 0.0]
+    dist_share = [0.0, 0.0, 0.0, 0.01, 0.03, 0.06, 0.10, 0.12, 0.20, 0.28, 0.30, 0.20]
     nav = 0.0
     rows = []
     for i, (c, d) in enumerate(zip(call_share, dist_share, strict=True)):
         calls = round(committed * c, 1)
         dists = round(committed * d * rng.uniform(0.95, 1.05), 1)
-        growth = 0.04 if i < 3 else 0.14
+        growth = 0.04 if i < 3 else 0.11
         nav = round(max(nav * (1 + growth) + calls - dists, 0.0), 1)
         rows.append({"period": first_year + i, "calls": calls, "distributions": dists, "nav": nav})
     return rows

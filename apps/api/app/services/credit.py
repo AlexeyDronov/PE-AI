@@ -1,5 +1,7 @@
 """Debt capacity and covenant maths."""
 
+from typing import Literal
+
 from pydantic import BaseModel
 
 
@@ -43,3 +45,8 @@ def debt_capacity(
 def covenant_headroom(test_level: float, actual: float) -> float:
     """EBITDA cushion before the covenant test level is breached."""
     return 1 - actual / test_level
+
+
+def covenant_band(headroom: float, comfort: float) -> Literal["breach", "tight", "comfortable"]:
+    """Breach below zero, tight below the comfort threshold, otherwise comfortable."""
+    return "breach" if headroom < 0 else "tight" if headroom < comfort else "comfortable"

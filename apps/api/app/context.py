@@ -72,6 +72,10 @@ class Reference:
         return self.benchmarks["stress_ebitda_drop"].low
 
     @property
+    def covenant_comfort(self) -> float:
+        return self.benchmarks["covenant_headroom_comfort"].low
+
+    @property
     def risk_bands(self) -> dict[str, tuple[float, float]]:
         return {k: (b.low, b.high) for k, b in self.benchmarks.items() if b.high is not None}
 

@@ -65,14 +65,14 @@ class DebtCapacityResponse(BaseModel):
     max_debt: float
 
 
-def _checked[T](fn: Callable[[], T]) -> T:
+def checked[T](fn: Callable[[], T]) -> T:
     try:
         return fn()
     except ValueError as exc:
         raise InvalidAssumptions(str(exc)) from exc
 
 
-def _context(session: Session, deal_id: str) -> tuple[Reference, DealContext]:
+def load_context(session: Session, deal_id: str) -> tuple[Reference, DealContext]:
     deal = Repository(Deal, session).get(deal_id)
     return Reference.load(session), load_deals(session, [deal])[0]
 
@@ -106,9 +106,9 @@ def build_assumptions(ref: Reference, ctx: DealContext, data: LboRequest) -> lbo
 
 
 def run_lbo(data: LboRequest, session: Session) -> LboResponse:
-    ref, ctx = _context(session, data.deal_id)
+    ref, ctx = load_context(session, data.deal_id)
     a = build_assumptions(ref, ctx, data)
-    result = _checked(lambda: lbo.run_lbo(a))
+    result = checked(lambda: lbo.run_lbo(a))
     try:
         multiple = lbo.max_entry_multiple(a, ref.fund.irr_hurdle)
         max_bid = MaxBid(multiple=multiple, enterprise_value=multiple * a.ebitda0)
@@ -120,13 +120,13 @@ def run_lbo(data: LboRequest, session: Session) -> LboResponse:
 
 
 def run_sensitivity(data: LboRequest, session: Session) -> lbo.Grid:
-    ref, ctx = _context(session, data.deal_id)
+    ref, ctx = load_context(session, data.deal_id)
     a = build_assumptions(ref, ctx, data)
     entry = [a.entry_multiple + s for s in SENSITIVITY_STEPS]
     exit_ = [a.exit_multiple + s for s in SENSITIVITY_STEPS]
-    return _checked(lambda: lbo.sensitivity(a, entry, exit_))
+    return checked(lambda: lbo.sensitivity(a, entry, exit_))
 
 
 def run_debt_capacity(data: DealRequest, session: Session) -> DebtCapacityResponse:
-    ref, ctx = _context(session, data.deal_id)
+    ref, ctx = load_context(session, data.deal_id)
     return DebtCapacityResponse(**ref.debt_capacity(ctx.financials.ebitda))

@@ -18,6 +18,10 @@ class Fund(Base, table=True):
     hold_years_max: int
     verdict_advance: float
     verdict_watch: float
+    pref_rate: float
+    carry: float
+    catch_up: float
+    as_of: date
 
 
 class Benchmark(Base, table=True):

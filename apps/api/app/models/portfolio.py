@@ -34,6 +34,7 @@ class DebtFacility(Base, table=True):
     actual: float
     interest_cover: float
     cov_lite: bool
+    next_test_date: str
 
 
 class ValueCreationItem(Base, table=True):

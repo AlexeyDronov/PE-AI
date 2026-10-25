@@ -10,6 +10,10 @@ fund:
   hold_years_max: 7
   verdict_advance: 68
   verdict_watch: 55
+  pref_rate: 0.08
+  carry: 0.20
+  catch_up: 1.0
+  as_of: 2026-09-30
 
 criteria:
   - {key: scale, label: Scale, weight: 0.10, metric: ebitda, kind: band, target_text: "£10–60m LTM EBITDA", floor: 10, ceiling: 60}
@@ -31,6 +35,7 @@ benchmarks:
   - {key: mgmt_pool, label: Management incentive pool, low: 0.03, high: 0.20, unit: fraction, source_note: "Typical sweet equity range"}
   - {key: customer_concentration, label: Top customer concentration, low: 0.05, high: 0.10, unit: fraction, source_note: "Fund risk policy"}
   - {key: gross_retention, label: Gross retention, low: 0.90, high: 0.93, unit: fraction, source_note: "Fund risk policy"}
+  - {key: covenant_headroom_comfort, label: Covenant headroom comfort, low: 0.15, high: null, unit: fraction, source_note: "Fund credit policy"}
   - {key: senior_spread, label: Senior spread over SONIA, low: 0.0475, high: null, unit: fraction, source_note: "Mid-market buyout lender survey"}
   - {key: sub_rate, label: Subordinated debt rate, low: 0.11, high: null, unit: fraction, source_note: "Mid-market buyout lender survey"}
 

@@ -1,13 +1,14 @@
 """Response models for resources whose rows are enriched with derived values."""
 
-from datetime import datetime
+from datetime import date, datetime
 from typing import Any, Literal
 
-from pydantic import BaseModel
+from pydantic import BaseModel, model_validator
 
 from app import models as m
-from app.compute.lbo import DebtCapacityResponse
+from app.compute.lbo import DebtCapacityResponse, Overrides
 from app.services.finance import FundMetrics
+from app.services.market import Attribute
 from app.services.screening import CriterionScore, RiskCheck
 
 
@@ -76,6 +77,7 @@ class DebtFacilityRead(BaseModel):
     actual: float
     interest_cover: float
     cov_lite: bool
+    next_test_date: str
 
 
 class FacilityWithHeadroom(DebtFacilityRead):
@@ -99,6 +101,85 @@ class PortfolioCompanyListItem(BaseModel):
     moic: float
     budget_variance: float
     facility: FacilityWithHeadroom
+    status_label: str
+
+
+class QuarterPoint(BaseModel):
+    period: str
+    ebitda: float
+    ebitda_budget: float
+
+
+class ValueCreationPoint(BaseModel):
+    lever: str
+    amount: float
+
+
+class ExitPlanSummary(BaseModel):
+    route: str
+    buyers: str
+    window: str
+
+
+class DebtFacilityListItem(FacilityWithHeadroom):
+    band: Literal["breach", "tight", "comfortable"]
+    company: CompanyRef
+
+
+class ValueCreationItemListItem(BaseModel):
+    id: str
+    created_at: datetime
+    company_id: str
+    lever: str
+    amount: float
+    company: CompanyRef
+
+
+class PlatformRef(BaseModel):
+    id: str
+    moic: float
+    fair_value: float
+    status: str
+    status_label: str
+
+
+class ExitPlanListItem(BaseModel):
+    id: str
+    created_at: datetime
+    company_id: str
+    route: str
+    buyers: str
+    window: str
+    company: CompanyRef
+    platform: PlatformRef
+
+
+class ExitRouteMixListItem(BaseModel):
+    id: str
+    created_at: datetime
+    segment_id: str
+    strategic_pct: float
+    sponsor_pct: float
+    ipo_pct: float
+    segment: SegmentRef
+
+
+class AlertListItem(BaseModel):
+    id: str
+    created_at: datetime
+    company_id: str
+    severity: str
+    label: str
+    text: str
+    action: str
+    company: CompanyRef
+
+
+class PortfolioCompanyDetail(PortfolioCompanyListItem):
+    quarters: list[QuarterPoint]
+    value_creation: list[ValueCreationPoint]
+    alerts: list[AlertListItem]
+    exit_plan: ExitPlanSummary
 
 
 class FundWithMetrics(BaseModel):
@@ -115,6 +196,10 @@ class FundWithMetrics(BaseModel):
     hold_years_max: int
     verdict_advance: float
     verdict_watch: float
+    pref_rate: float
+    carry: float
+    catch_up: float
+    as_of: date
     metrics: FundMetrics
 
 
@@ -125,40 +210,6 @@ class KpiPointListItem(BaseModel):
     metric: str
     period: str
     value: float
-    company: CompanyRef
-
-
-class DebtFacilityListItem(DebtFacilityRead):
-    company: CompanyRef
-
-
-class ValueCreationItemListItem(BaseModel):
-    id: str
-    created_at: datetime
-    company_id: str
-    lever: str
-    amount: float
-    company: CompanyRef
-
-
-class ExitPlanListItem(BaseModel):
-    id: str
-    created_at: datetime
-    company_id: str
-    route: str
-    buyers: str
-    window: str
-    company: CompanyRef
-
-
-class AlertListItem(BaseModel):
-    id: str
-    created_at: datetime
-    company_id: str
-    severity: str
-    label: str
-    text: str
-    action: str
     company: CompanyRef
 
 
@@ -197,3 +248,62 @@ class JobRead(BaseModel):
     progress: list[JobProgress]
     result_ref: str | None
     error: str | None
+
+
+class LboScenarioRead(BaseModel):
+    id: str
+    deal_id: str
+    name: str
+    case: Literal["base", "down", "up"]
+    overrides: Overrides
+    created_at: datetime
+    source: str
+
+    @model_validator(mode="before")
+    @classmethod
+    def _unpack(cls, row: Any) -> Any:
+        """Flatten the stored {case, overrides} assumptions onto the row."""
+        if isinstance(row, m.LboScenario):
+            return {**row.model_dump(exclude={"assumptions"}), **row.assumptions}
+        return row
+
+
+class SegmentListItem(BaseModel):
+    id: str
+    created_at: datetime
+    name: str
+    short: str
+    market_size: float
+    cagr: float
+    avg_margin: float
+    fragmentation: str
+    ai_exposure: str
+    median_multiple: float
+    addon_multiple: float
+    typical_leverage: float
+    deal_count_24m: int
+    view: str
+    white_space: str
+    attributes: list[Attribute]
+    attractiveness: int
+    attractiveness_max: int
+
+
+class Player(BaseModel):
+    id: str
+    name: str
+    kind: Literal["portfolio", "pipeline"]
+
+
+class ExitRoutePcts(BaseModel):
+    strategic_pct: float
+    sponsor_pct: float
+    ipo_pct: float
+
+
+class SegmentDetail(SegmentListItem):
+    exit_route_mix: ExitRoutePcts
+    transactions: list[m.Transaction]
+    players: list[Player]
+    matching_deals: list[DealListItem]
+    reports: list[m.ResearchReport]

@@ -1,4 +1,4 @@
-- {company: Orbis Language Tech, severity: bad, label: Covenant breach, text: "Net leverage of 5.6x is above the 5.5x covenant test and interest cover has fallen to 1.5x.", action: Open waiver discussion with lenders}
+- {company: Orbis Language Tech, severity: bad, label: Covenant headroom, text: "Net leverage of 5.6x is within 7% of the 6.0x covenant test and interest cover has fallen to 1.5x.", action: Open waiver discussion with lenders}
 - {company: Cobalt Engineering Data, severity: warn, label: Behind budget, text: "LTM EBITDA is £1.6m below budget and covenant headroom is under 7%.", action: Review recovery plan with management}
 - {company: Paragon Payroll, severity: warn, label: Margin pressure, text: "Automation pricing pressure is driving EBITDA about 5% below budget.", action: Request revised pricing strategy}
 - {company: Lumen Risk, severity: acc, label: Exit readiness, text: "Performance and leverage support starting a sale process ahead of plan.", action: Appoint sell-side adviser}
