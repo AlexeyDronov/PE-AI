@@ -1,0 +1,507 @@
+<title>Harrowgate Theme Preview</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap">
+<style>
+/* Layout: viewer-themed intro + lifecycle strip, then one clickable app frame whose theme is switched by a toggle */
+:root{
+  --page:#F3F5F9; --page-ink:#0B1B3F; --page-muted:#6B7280; --page-line:#E3E7EE; --page-card:#FFFFFF;
+  --f-serif:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --f-sans:"IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono:"IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--page:#040918;--page-ink:#E7ECF7;--page-muted:#7F8BAA;--page-line:#1C2A52;--page-card:#0B1636;color-scheme:dark}}
+:root[data-theme="dark"]{--page:#040918;--page-ink:#E7ECF7;--page-muted:#7F8BAA;--page-line:#1C2A52;--page-card:#0B1636;color-scheme:dark}
+body{background:var(--page);color:var(--page-ink);font-family:var(--f-sans);font-size:14px;line-height:22px}
+
+/* Design tokens (docs/02-design-system.md v0.3 §2) */
+.t-light{
+  color-scheme:light;
+  --bg:#FFFFFF; --surface:#FFFFFF; --sunk:#F7F8FB; --raised:#FFFFFF;
+  --line:#E6E9F0; --line-strong:#D0D6E0;
+  --ink:#0B1B3F; --ink-2:#3F4A5C; --ink-3:#6B7280;
+  --accent:#1F45C8; --accent-hover:#1838A6; --accent-ink:#FFFFFF; --accent-soft:#EEF2FD; --link:#1F45C8; --input:#1F45C8; --nav-active-ink:#1F45C8;
+  --good:#11734A; --good-soft:#EAF5EF; --warn:#9A5B00; --warn-soft:#FBF3E2; --bad:#B42330; --bad-soft:#FBECEC;
+  --s1:#1F45C8; --s2:#E8692E; --s3:#13A06F; --s-other:#8A94A6;
+  --div-lo:#B42330; --div-mid:#F1F2F5; --div-hi:#1F45C8;
+  --card-shadow:0 1px 2px rgb(11 27 63 / 0.04); --pop-shadow:0 12px 32px rgb(11 27 63 / 0.12);
+}
+.t-dark{
+  color-scheme:dark;
+  --bg:#070E26; --surface:#0B1636; --sunk:#060C20; --raised:#0E1B40;
+  --line:#1C2A52; --line-strong:#2A3A68;
+  --ink:#E7ECF7; --ink-2:#AFBAD3; --ink-3:#7F8BAA;
+  --accent:#FFFFFF; --accent-hover:#E3E9F7; --accent-ink:#0B1B3F; --accent-soft:rgb(255 255 255 / 0.06); --link:#9DB8F2; --input:#9DB8F2; --nav-active-ink:#E7ECF7;
+  --good:#4DBF8B; --good-soft:rgb(77 191 139 / 0.12); --warn:#E0B25A; --warn-soft:rgb(224 178 90 / 0.12); --bad:#EE8A8E; --bad-soft:rgb(238 138 142 / 0.12);
+  --s1:#7FA2EC; --s2:#E99A6E; --s3:#4DBF9E; --s-other:#8D98B5;
+  --div-lo:#B8646A; --div-mid:#1C2A52; --div-hi:#6F8FD6;
+  --card-shadow:none; --pop-shadow:0 12px 32px rgb(0 0 0 / 0.5);
+}
+*{box-sizing:border-box}
+button{font-family:inherit}
+
+/* ---------- Intro (viewer theme) ---------- */
+.wrap{max-width:1480px;margin:0 auto;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:32px 48px;display:grid;gap:24px}
+.intro{display:flex;flex-wrap:wrap;gap:16px 32px;align-items:flex-end;justify-content:space-between}
+.intro h1{font-family:var(--f-serif);font-weight:600;font-size:28px;line-height:36px;margin:0;text-wrap:balance}
+.intro p{margin:4px 0 0;color:var(--page-muted);max-width:70ch}
+.toggle{display:inline-flex;background:var(--page-card);border:1px solid var(--page-line);border-radius:8px;padding:3px;gap:2px}
+.toggle button{border:0;background:transparent;color:var(--page-muted);font:500 13px/1 var(--f-sans);height:30px;padding:0 14px;border-radius:6px;cursor:pointer}
+.toggle button[aria-pressed="true"]{background:var(--page-ink);color:var(--page)}
+.toggle button:focus-visible{outline:2px solid var(--page-ink);outline-offset:2px}
+.story{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));border:1px solid var(--page-line);border-radius:8px;background:var(--page-card);overflow:hidden}
+.story div{padding:12px 16px;border-left:1px solid var(--page-line);display:grid;gap:2px;min-width:0}
+.story div:first-child{border-left:0}
+.story small{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--page-muted);font-weight:500}
+.story b{font-weight:600;font-size:13px}
+.story span{font-size:12px;color:var(--page-muted);line-height:16px}
+@media (max-width:900px){.story{grid-template-columns:repeat(2,minmax(0,1fr))}.story div{border-top:1px solid var(--page-line)}.story div:nth-child(-n+2){border-top:0}.story div:nth-child(odd){border-left:0}}
+
+/* ---------- App frame ---------- */
+.app{background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:12px;overflow:hidden;display:grid;grid-template-columns:232px minmax(0,1fr);min-height:860px;box-shadow:var(--pop-shadow)}
+.side{background:var(--sunk);border-right:1px solid var(--line);display:flex;flex-direction:column;padding:16px 12px;gap:18px}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px}
+.mark{width:28px;height:28px;border-radius:6px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-family:var(--f-serif);font-weight:600;font-size:15px;flex:none}
+.brand b{display:block;font-weight:600;font-size:14px;line-height:18px}
+.brand span{display:block;font-size:12px;line-height:16px;color:var(--ink-3)}
+.navgroup{display:grid;gap:2px}
+.navgroup small{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);font-weight:500;padding:0 10px 4px}
+.navitem{display:flex;align-items:center;gap:10px;height:32px;padding:0 10px;border-radius:6px;border:0;background:transparent;color:var(--ink-2);font-size:13px;font-weight:500;cursor:pointer;text-align:left;position:relative;transition:background-color .12s ease-out,color .12s ease-out}
+.navitem svg{width:16px;height:16px;stroke:var(--ink-3);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.navitem:hover{background:var(--accent-soft);color:var(--ink)}
+.navitem[aria-current="page"]{background:var(--accent-soft);color:var(--nav-active-ink)}
+.navitem[aria-current="page"] svg{stroke:var(--nav-active-ink)}
+.navitem[aria-current="page"]::before{content:"";position:absolute;left:-12px;top:7px;bottom:7px;width:2px;border-radius:0 2px 2px 0;background:var(--accent)}
+.navitem:focus-visible,.btn:focus-visible,.seg button:focus-visible,.tab:focus-visible,input[type=range]:focus-visible,.trow:focus-visible{outline:none;box-shadow:0 0 0 3px color-mix(in srgb, var(--accent) 35%, transparent)}
+.navitem .count{margin-left:auto;font-size:11px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.sidefoot{margin-top:auto;border-top:1px solid var(--line);padding:12px 10px 0;display:flex;align-items:center;gap:10px;font-size:12px;color:var(--ink-3)}
+.avatar{width:24px;height:24px;border-radius:50%;background:var(--line);display:grid;place-items:center;font-size:11px;font-weight:600;color:var(--ink-2)}
+
+.main{min-width:0;display:flex;flex-direction:column}
+.header{height:56px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:0 32px;font-size:13px;color:var(--ink-3)}
+.header b{color:var(--ink);font-weight:500}
+.header .sep{color:var(--line-strong)}
+.jobs{margin-left:auto;display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:6px;height:28px;padding:0 10px;font-size:12px;color:var(--ink-2)}
+.jobs i{width:6px;height:6px;border-radius:50%;background:var(--good);box-shadow:0 0 0 3px var(--good-soft)}
+.page{padding:28px 32px 48px;max-width:1280px;width:100%;display:grid;gap:0;animation:fade .12s ease-out}
+@keyframes fade{from{opacity:.4}to{opacity:1}}
+@media (prefers-reduced-motion: reduce){.page{animation:none}}
+.phead{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;justify-content:space-between;padding-bottom:24px}
+.phead h2{font-family:var(--f-serif);font-weight:600;font-size:28px;line-height:36px;margin:0;text-wrap:balance}
+.phead p{margin:4px 0 0;color:var(--ink-3);max-width:68ch}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:center}
+.mono{font-family:var(--f-mono);font-size:12px;color:var(--ink-3)}
+.tabs{display:flex;gap:24px;border-bottom:1px solid var(--line);margin-bottom:8px;position:relative}
+.tab{border:0;background:transparent;padding:0 0 12px;font-size:14px;font-weight:500;color:var(--ink-3);cursor:pointer;position:relative}
+.tab[aria-selected="true"]{color:var(--ink)}
+.tab[aria-selected="true"]::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--accent);border-radius:2px}
+.t-dark .tab[aria-selected="true"]::after{background:var(--ink)}
+
+/* Sections */
+.sec{display:grid;gap:16px;padding-block:28px}
+.sec+.sec{border-top:1px solid var(--line)}
+.sec-h{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
+.sec-h h3{margin:0;font-size:16px;line-height:24px;font-weight:600}
+.sec-h p{margin:0;font-size:12px;line-height:16px;color:var(--ink-3)}
+.grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px}
+.c12{grid-column:span 12}.c9{grid-column:span 9}.c8{grid-column:span 8}.c7{grid-column:span 7}.c6{grid-column:span 6}.c5{grid-column:span 5}.c4{grid-column:span 4}.c3{grid-column:span 3}
+@media (max-width:1100px){.c9,.c8,.c7,.c6,.c5,.c4,.c3{grid-column:span 12}}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:8px;box-shadow:var(--card-shadow);padding:20px;min-width:0;display:grid;gap:16px;align-content:start}
+.card.flush{padding:0;gap:0}
+.card.flush .card-h{padding:16px 20px 12px}
+.card-h{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.card-h h4{margin:0;font-size:14px;line-height:20px;font-weight:600}
+.card-h p{margin:2px 0 0;font-size:12px;line-height:16px;color:var(--ink-3)}
+
+/* Stat strip */
+.strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));background:var(--surface);border:1px solid var(--line);border-radius:8px;box-shadow:var(--card-shadow);overflow:hidden}
+.stat{padding:16px 20px;display:grid;gap:4px;border-left:1px solid var(--line);margin-left:-1px}
+.stat .l{font-size:11px;line-height:16px;letter-spacing:.06em;text-transform:uppercase;font-weight:500;color:var(--ink-3)}
+.stat .v{font-size:22px;line-height:30px;font-weight:500;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.stat.hero .v{font-size:28px;line-height:36px;color:var(--accent);font-weight:600}
+.stat .d{font-size:12px;line-height:16px;color:var(--ink-3)}
+.up{color:var(--good)} .down{color:var(--bad)}
+
+/* Buttons & controls */
+.btn{font:500 13px/1 var(--f-sans);height:32px;padding:0 14px;border-radius:6px;border:1px solid transparent;cursor:pointer;display:inline-flex;align-items:center;gap:8px;white-space:nowrap;transition:background-color .12s ease-out,border-color .12s ease-out,box-shadow .12s ease-out}
+.btn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent-hover);box-shadow:inset 0 1px 0 rgb(255 255 255 / 0.12)}
+.btn.primary:hover{background:var(--accent-hover)}
+.btn.secondary{background:var(--surface);color:var(--ink);border-color:var(--line-strong);box-shadow:0 1px 2px rgb(11 27 63 / 0.05)}
+.btn.secondary:hover{background:var(--sunk)}
+.btn.ghost{background:transparent;color:var(--ink-2)}
+.btn.ghost:hover{background:var(--sunk);color:var(--ink)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.spin{width:14px;height:14px;border-radius:50%;border:1.5px solid currentColor;border-right-color:transparent;animation:sp .8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.seg{position:relative;display:inline-flex;background:var(--sunk);border:1px solid var(--line);border-radius:6px;padding:2px}
+.seg .thumb{position:absolute;top:2px;bottom:2px;border-radius:4px;background:var(--surface);box-shadow:0 1px 2px rgb(11 27 63 / 0.08),0 0 0 1px var(--line);transition:left .15s cubic-bezier(.2,0,0,1),width .15s cubic-bezier(.2,0,0,1)}
+.t-dark .seg .thumb{background:var(--raised);box-shadow:0 0 0 1px var(--line-strong)}
+.seg button{position:relative;z-index:1;font:500 12px/1 var(--f-sans);height:26px;padding:0 12px;border:0;border-radius:4px;background:transparent;color:var(--ink-3);cursor:pointer;transition:color .12s}
+.seg button[aria-pressed="true"]{color:var(--ink)}
+@media (prefers-reduced-motion: reduce){.seg .thumb{transition:none}.spin{animation:none}}
+
+.badge{display:inline-flex;align-items:center;height:20px;padding:0 7px;border-radius:4px;font-size:11px;font-weight:600;white-space:nowrap;letter-spacing:.01em}
+.b-good{background:var(--good-soft);color:var(--good)}
+.b-warn{background:var(--warn-soft);color:var(--warn)}
+.b-bad{background:var(--bad-soft);color:var(--bad)}
+.b-neutral{background:var(--sunk);color:var(--ink-2);box-shadow:inset 0 0 0 1px var(--line)}
+.b-info{background:var(--accent-soft);color:var(--link)}
+
+.slider{display:grid;gap:8px}
+.slider .top{display:flex;justify-content:space-between;font-size:13px;color:var(--ink-2)}
+.slider .top output{color:var(--input);font-weight:600;font-variant-numeric:tabular-nums}
+.slider small{font-size:12px;color:var(--ink-3)}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:16px;background:transparent;margin:0}
+input[type=range]::-webkit-slider-runnable-track{height:2px;border-radius:1px;background:linear-gradient(to right,var(--accent) var(--p,50%),var(--line-strong) var(--p,50%))}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--surface);border:2px solid var(--accent);margin-top:-6px;box-shadow:0 1px 3px rgb(11 27 63 / 0.2);transition:transform .12s}
+input[type=range]:active::-webkit-slider-thumb{transform:scale(1.15)}
+input[type=range]::-moz-range-track{height:2px;background:var(--line-strong)}
+input[type=range]::-moz-range-progress{height:2px;background:var(--accent)}
+input[type=range]::-moz-range-thumb{width:12px;height:12px;border-radius:50%;background:var(--surface);border:2px solid var(--accent)}
+
+/* Table */
+.tbox{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px;line-height:20px;min-width:640px}
+th{font-size:11px;line-height:16px;letter-spacing:.06em;text-transform:uppercase;font-weight:500;color:var(--ink-3);text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:middle;height:44px}
+th:first-child,td:first-child{padding-left:20px}
+th:last-child,td:last-child{padding-right:20px}
+tbody tr:last-child td{border-bottom:0}
+.trow{cursor:pointer;transition:background-color .12s ease-out}
+.trow:hover{background:var(--sunk)}
+.trow.sel{background:var(--accent-soft);box-shadow:inset 2px 0 0 var(--accent)}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+.nm b{font-weight:500;display:block}
+.nm span{font-size:12px;line-height:16px;color:var(--ink-3)}
+.score{display:inline-flex;align-items:center;gap:8px;font-variant-numeric:tabular-nums}
+.bar{width:48px;height:4px;border-radius:2px;background:var(--line);overflow:hidden;display:inline-block}
+.bar i{display:block;height:100%;border-radius:2px}
+tr.flash td{animation:flash 1.6s linear 1}
+@keyframes flash{from{background:var(--accent-soft)}to{background:transparent}}
+.dots{display:inline-flex;gap:3px}
+.dots i{width:6px;height:6px;border-radius:50%;background:var(--line-strong)}
+.dots i.on{background:var(--ink-2)}
+
+/* Lists */
+.list{display:grid}
+.item{display:grid;gap:4px;padding:14px 20px 14px 22px;border-top:1px solid var(--line);position:relative}
+.item:first-child{border-top:0}
+.item::before{content:"";position:absolute;left:0;top:14px;bottom:14px;width:2px;border-radius:0 2px 2px 0;background:var(--sev,var(--line-strong))}
+.item .h{display:flex;gap:8px;align-items:center;font-size:13px;font-weight:500}
+.item p{margin:0;font-size:13px;line-height:20px;color:var(--ink-2)}
+.item .s{font-size:12px;line-height:16px;color:var(--ink-3)}
+.item .meta{margin-left:auto;font-size:12px;color:var(--ink-3);font-weight:400}
+
+.kv{display:grid;grid-template-columns:1fr auto;gap:10px 16px;font-size:13px;margin:0}
+.kv dt{color:var(--ink-2)} .kv dd{margin:0;text-align:right;font-variant-numeric:tabular-nums}
+.kv .tot{font-weight:600;border-top:1px solid var(--line);padding-top:10px}
+.meter{display:grid;gap:6px}
+.meter .track{position:relative;height:4px;border-radius:2px;background:var(--line)}
+.meter .fill{position:absolute;inset:0 auto 0 0;border-radius:2px}
+.meter .tick{position:absolute;top:-4px;bottom:-4px;width:2px;border-radius:1px;background:var(--ink-3)}
+.meter .lab{display:flex;justify-content:space-between;font-size:12px;color:var(--ink-3)}
+.crit{display:grid;grid-template-columns:minmax(0,1fr) 72px 120px;gap:10px 16px;align-items:center;font-size:13px}
+.crit .t{color:var(--ink-3);font-size:12px;text-align:right}
+.crit .v{text-align:right;font-variant-numeric:tabular-nums}
+.crit .bar{width:100%}
+.steps{display:flex;align-items:center;font-size:12px;color:var(--ink-3);flex-wrap:wrap;row-gap:8px}
+.step{display:flex;align-items:center;gap:6px}
+.step i{width:8px;height:8px;border-radius:50%;background:var(--line-strong)}
+.step.done i{background:var(--good)}
+.step.now{color:var(--ink)}
+.step.now i{background:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);animation:pulse 1.2s ease-in-out infinite}
+.step+.step::before{content:"";width:24px;height:1px;background:var(--line-strong);margin:0 8px}
+@keyframes pulse{50%{opacity:.4}}
+@media (prefers-reduced-motion: reduce){.step.now i{animation:none}}
+.prose{font-size:14px;line-height:22px;color:var(--ink-2);margin:0;max-width:68ch}
+.memo{display:grid;gap:10px;max-width:68ch}
+.memo h5{font-family:var(--f-serif);font-weight:600;font-size:24px;line-height:32px;margin:0;color:var(--ink)}
+.memo h6{font-family:var(--f-serif);font-weight:600;font-size:18px;line-height:26px;margin:8px 0 0;color:var(--ink)}
+.memo p{margin:0;color:var(--ink-2)}
+.memo a{color:var(--link);text-decoration:none;border-bottom:1px solid currentColor}
+.empty{display:grid;justify-items:center;gap:8px;padding:72px 16px;text-align:center;color:var(--ink-3)}
+.empty b{color:var(--ink);font-weight:600;font-size:15px}
+.empty svg{width:28px;height:28px;stroke:var(--ink-3);fill:none;stroke-width:1.5}
+
+.chart{width:100%;height:280px}
+.chart.tall{height:320px}
+
+@media (max-width:860px){
+  .app{grid-template-columns:56px minmax(0,1fr)}
+  .side{padding:16px 8px}
+  .brand div:last-child,.navgroup small,.navitem span,.navitem .count,.sidefoot span{display:none}
+  .navitem{justify-content:center;padding:0}
+  .navitem[aria-current="page"]::before{left:-8px}
+  .header,.page{padding-left:16px;padding-right:16px}
+}
+</style>
+
+<div class="wrap">
+  <header class="intro">
+    <div>
+      <h1>Harrowgate theme preview</h1>
+      <p>A clickable mock of the proposed design. Use the sidebar to move through the fund's lifecycle and the switch to compare themes. All companies and figures are mock examples.</p>
+    </div>
+    <div class="toggle" role="group" aria-label="Theme"><button type="button" data-theme-set="light" aria-pressed="true">Light</button><button type="button" data-theme-set="dark" aria-pressed="false">Dark</button></div>
+  </header>
+
+  <div class="story" aria-label="Site structure">
+    <div><small>Start</small><b>Overview</b><span>What needs attention today</span></div>
+    <div><small>1 · Where to look</small><b>Markets, Research</b><span>Which sub-sectors deserve our time</span></div>
+    <div><small>2 · What to buy</small><b>Pipeline, Screen</b><span>Which deals should advance</span></div>
+    <div><small>3 · What to pay</small><b>Deal model, IC memo</b><span>What we can pay and still hit the hurdle</span></div>
+    <div><small>4 · How it's going</small><b>Portfolio, Covenants</b><span>Which platforms are on or off plan</span></div>
+    <div><small>5 · When to sell</small><b>Exits, Fund</b><span>What to sell, when, to whom</span></div>
+  </div>
+
+  <div class="app t-light" id="app">
+    <aside class="side">
+      <div class="brand"><div class="mark" aria-hidden="true">H</div><div><b>Harrowgate</b><span>Fund VII · £1.4bn</span></div></div>
+      <nav id="nav" aria-label="Main"></nav>
+      <div class="sidefoot"><div class="avatar" aria-hidden="true">KS</div><span>Associate · Services</span></div>
+    </aside>
+    <div class="main">
+      <div class="header"><span id="crumb"></span><div class="jobs"><i aria-hidden="true"></i>1 Copilot job running</div></div>
+      <div class="page" id="page"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+<script>
+(function(){
+  const $=s=>document.querySelector(s);
+  const app=$('#app'), page=$('#page'), nav=$('#nav'), crumb=$('#crumb');
+  const ICONS={
+    home:'<path d="M3 10.5 12 3l9 7.5V21h-6v-6H9v6H3z"/>',
+    globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3Z"/>',
+    search:'<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
+    list:'<path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"/>',
+    plus:'<rect x="3" y="3" width="18" height="18" rx="3"/><path d="M12 8v8M8 12h8"/>',
+    brief:'<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>',
+    shield:'<path d="M12 3 4 6v6c0 4.5 3.4 8.3 8 9 4.6-.7 8-4.5 8-9V6z"/>',
+    exit:'<path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/>',
+    trend:'<path d="m3 17 6-6 4 4 8-8M14 7h7v7"/>',
+    file:'<path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/>',
+    down:'<path d="M12 4v12m-5-5 5 5 5-5M5 20h14"/>'
+  };
+  const svg=n=>'<svg viewBox="0 0 24 24" aria-hidden="true">'+ICONS[n]+'</svg>';
+  const NAV=[
+    [null,[['overview','Overview','home']]],
+    ['Origination',[['markets','Markets','globe'],['research','Research','search']]],
+    ['Deals',[['pipeline','Pipeline','list','8'],['screen','Screen a teaser','plus']]],
+    ['Portfolio',[['portfolio','Platforms','brief','6'],['covenants','Covenants','shield'],['exits','Exits','exit']]],
+    ['Fund',[['fund','Performance','trend']]]
+  ];
+  nav.innerHTML=NAV.map(([g,items])=>'<div class="navgroup">'+(g?'<small>'+g+'</small>':'')+items.map(([id,l,ic,c])=>
+    '<button class="navitem" type="button" data-go="'+id+'">'+svg(ic)+'<span>'+l+'</span>'+(c?'<span class="count">'+c+'</span>':'')+'</button>').join('')+'</div>').join('');
+
+  // ---------- Building blocks (mirrors the planned components) ----------
+  const sec=(title,desc,body,actions='')=>'<section class="sec"><div class="sec-h"><div><h3>'+title+'</h3>'+(desc?'<p>'+desc+'</p>':'')+'</div>'+actions+'</div>'+body+'</section>';
+  const card=(span,title,desc,body,flush,actions='')=>'<div class="card '+span+(flush?' flush':'')+'"><div class="card-h"><div><h4>'+title+'</h4>'+(desc?'<p>'+desc+'</p>':'')+'</div>'+actions+'</div>'+body+'</div>';
+  const strip=items=>'<div class="strip">'+items.map((s,i)=>'<div class="stat'+(i===0?' hero':'')+'"><span class="l">'+s[0]+'</span><span class="v">'+s[1]+'</span><span class="d">'+(s[2]||'')+'</span></div>').join('')+'</div>';
+  const badge=(t,tone)=>'<span class="badge b-'+tone+'">'+t+'</span>';
+  const VT={Advance:'good',Watch:'warn',Pass:'bad','On plan':'good',Action:'bad',Opportunity:'info','Exit prep':'info'};
+  const scoreTone=s=>s>=68?'var(--good)':s>=55?'var(--warn)':'var(--bad)';
+  const scoreCell=s=>'<span class="score">'+s+'<span class="bar"><i style="width:'+s+'%;background:'+scoreTone(s)+'"></i></span></span>';
+  const seg=(opts,active,label)=>'<div class="seg" role="group" aria-label="'+label+'"><span class="thumb" aria-hidden="true"></span>'+opts.map(o=>'<button type="button" aria-pressed="'+(o===active)+'">'+o+'</button>').join('')+'</div>';
+  const chart=(id,cls='')=>'<div class="chart '+cls+'" data-chart="'+id+'" role="img" aria-label="'+id+' chart"></div>';
+  const btn=(t,v='secondary',ic)=>'<button class="btn '+v+'" type="button">'+(ic?svg(ic):'')+t+'</button>';
+  const phead=(title,desc,actions='',extra='')=>'<div class="phead"><div><h2>'+title+'</h2><p>'+desc+'</p>'+extra+'</div><div style="display:flex;gap:8px;flex-wrap:wrap">'+actions+'</div></div>';
+
+  const DEALS=[
+    ['Northvale Compliance','Compliance · London','CIM',14.6,'71%','15.5x',83,'Advance'],
+    ['Ledgerline','Payroll BPO · Amsterdam','Teaser',19.0,'82%','12.5x',74,'Advance'],
+    ['Project Nova','TIC · Manchester','Teaser',12.4,'74%','13.0x',69,'Advance','new'],
+    ['Corvid Cyber Services','IT & cyber · Madrid','IOI',17.3,'78%','14.0x',66,'Watch'],
+    ['Veritest Group','TIC · Leeds','NDA',31.0,'64%','13.5x',60,'Watch'],
+    ['Atlas DataOps','Data services · Berlin','CIM',12.2,'48%','16.0x',52,'Pass'],
+    ['Meridian Legal Ops','Legal ops · London','Teaser',9.8,'60%','11.0x',47,'Pass']
+  ];
+  const ALERTS=[
+    ['bad','Action','Orbis Language Tech','Net leverage of 5.6x leaves 7% headroom to the 6.0x covenant tested on 31 Dec.','Open lender dialogue before the test date.','2h ago'],
+    ['warn','Watch','Cobalt Engineering Data','Interest cover of 1.9x is below the 2.0x comfort level; add-on synergies at 45% of target.','Operating partner review of the integration plan.','Yesterday'],
+    ['warn','Watch','Paragon Payroll','SME cohort churn rose to 9.4% from 6.1%; lost deals cite AI-native tools priced 25% lower.','Board paper on repricing the sub-50 employee tier.','2 days ago'],
+    ['info','Opportunity','Lumen Risk','LTM EBITDA of £26.0m supports a 3.2x MOIC exit at 15x; two strategics have approached.','Appoint sell-side adviser in Q1 2027.','3 days ago']
+  ];
+  const sevVar={bad:'var(--bad)',warn:'var(--warn)',info:'var(--link)'};
+  const alertList=a=>'<div class="list">'+a.map(x=>'<div class="item" style="--sev:'+sevVar[x[0]]+'"><div class="h">'+badge(x[1],VT[x[1]])+x[2]+'<span class="meta">'+x[5]+'</span></div><p>'+x[3]+'</p><div class="s">Suggested: '+x[4]+'</div></div>').join('')+'</div>';
+
+  // ---------- Pages ----------
+  const PAGES={
+    overview:{crumb:['Overview'],render:()=>
+      phead('Good morning','Fund VII at a glance, and what needs a decision today.',btn('Weekly report','secondary','down'))+
+      sec('Fund at a glance','Marked at 30 Sep 2026',strip([['NAV','£1,182m','<span class="up">▲ 4.1%</span> QoQ'],['Net IRR','12.6%','Gross 17.8%'],['TVPI','1.46x','DPI 0.38x'],['Dry powder','£412m','29% of commitments'],['In diligence','3','Of 8 in pipeline']]))+
+      sec('Needs attention','Alerts and deals waiting on a decision','<div class="grid">'+card('c7','Portfolio alerts','From the latest management accounts',alertList(ALERTS.slice(0,3)),true)+
+        card('c5','Awaiting decision','Pipeline deals at a gate','<div class="tbox"><table style="min-width:0"><tbody>'+DEALS.slice(0,4).map(d=>'<tr class="trow" tabindex="0" data-go="deal"><td class="nm"><b>'+d[0]+'</b><span>'+d[2]+' → next gate</span></td><td class="n">'+scoreCell(d[6])+'</td><td>'+badge(d[7],VT[d[7]])+'</td></tr>').join('')+'</tbody></table></div>',true)+'</div>')+
+      sec('Copilot activity','Jobs run by the research agent and the teaser screener','<div class="card flush"><div class="list">'+
+        '<div class="item" style="--sev:var(--accent)"><div class="h">'+badge('Running','info')+'Market research · Compliance outsourcing<span class="meta">Started 4 min ago</span></div><div class="steps"><span class="step done"><i></i>Plan queries</span><span class="step done"><i></i>Search</span><span class="step now"><i></i>Read sources</span><span class="step"><i></i>Extract findings</span><span class="step"><i></i>Synthesise</span></div></div>'+
+        '<div class="item" style="--sev:var(--good)"><div class="h">'+badge('Done','good')+'Teaser screen · Project Nova<span class="meta">32 min ago</span></div><p>Extracted financials and scored 69/100 (Advance). Added to the pipeline.</p></div>'+
+        '</div></div>')},
+
+    pipeline:{crumb:['Deals','Pipeline'],render:()=>
+      phead('Pipeline','Opportunities scored against the fund\'s buyout criteria.',btn('Export','secondary','down')+btn('Screen a teaser','primary','plus'),'<div class="chips"><span class="mono">EBITDA £10–60m · hurdle 20% IRR · 2.5x MOIC · 5–7 yr hold</span></div>')+
+      sec('Summary','',strip([['Deals','8','3 added this quarter'],['Advance','3','<span class="up">▲ 1</span> vs last month'],['Watch','2',''],['Average score','64','out of 100'],['Median ask','13.8x','EV / LTM EBITDA']]))+
+      sec('Deals','Select a deal to open its overview, model and IC memo','<div class="card flush"><div class="card-h" style="align-items:center"><div><h4>All deals</h4><p>Sorted by score</p></div>'+seg(['All','Advance','Watch','Pass'],'All','Filter by verdict')+'</div><div class="tbox"><table><thead><tr><th>Company</th><th>Stage</th><th class="n">EBITDA £m</th><th class="n">Recurring</th><th class="n">Ask</th><th class="n">Score</th><th>Verdict</th></tr></thead><tbody>'+
+        DEALS.map((d,i)=>'<tr class="trow'+(d[8]?' flash':'')+'" tabindex="0" data-go="deal"><td class="nm"><b>'+d[0]+(d[8]?' '+badge('Copilot','info'):'')+'</b><span>'+d[1]+'</span></td><td>'+d[2]+'</td><td class="n">'+d[3].toFixed(1)+'</td><td class="n">'+d[4]+'</td><td class="n">'+d[5]+'</td><td class="n">'+scoreCell(d[6])+'</td><td>'+badge(d[7],VT[d[7]])+'</td></tr>').join('')+
+        '</tbody></table></div></div>')+
+      sec('Flow','How the pipeline converts',  '<div class="grid">'+card('c6','Stage funnel','Deals at each stage',chart('funnel'))+card('c6','Average score by segment','Bar = average · marker = best deal',chart('segscore'))+'</div>')},
+
+    deal:{crumb:['Deals','Pipeline','Northvale Compliance'],tabs:true,render:(tab)=>{
+      const head=phead('Northvale Compliance','Regulatory compliance and financial crime outsourcing for banks and payments firms.',
+        tab==='model'?btn('Save scenario')+btn('Export Excel','secondary','down')+btn('Draft IC memo','primary','file'):btn('Add to watchlist','ghost')+btn('Build model','primary'),
+        '<div class="chips">'+badge('Advance','good')+badge('CIM','neutral')+'<span class="mono">KEEL · Compliance · London · Targeted auction</span></div>')+
+        '<div class="tabs" role="tablist">'+[['overview','Overview'],['model','Model'],['memo','IC memo']].map(([k,l])=>'<button class="tab" role="tab" type="button" data-tab="'+k+'" aria-selected="'+(k===tab)+'">'+l+'</button>').join('')+'</div>';
+      if(tab==='overview') return head+
+        sec('Snapshot','',strip([['Score','83','Advance · threshold 68'],['LTM EBITDA','£14.6m','24.0% margin'],['Revenue growth','22%','Segment 11%'],['Recurring','71%','Target ≥ 70%'],['Ask','15.5x','Segment median 16.0x']])+'<p class="prose">Rising regulatory load is pushing mid-tier lenders to outsource KYC and remediation to specialists. Northvale has the best margin and growth profile in the current pipeline.</p>')+
+        sec('Scorecard','Each criterion against the fund\'s target','<div class="card"><div class="crit">'+[['Scale','£14.6m','£10–60m',100],['Cash conversion','91.7%','≥ 85%',91],['Recurring revenue','71%','≥ 70%',69],['EBITDA margin','24.0%','≥ 18%',94],['Revenue growth','22%','≥ 8%',100],['Moat / AI resilience','70','≥ 65',70],['Buy-and-build','85','≥ 70',85],['Entry price','15.5x','≤ 16.0x',58]].map(c=>'<span>'+c[0]+'</span><span class="v">'+c[1]+'</span><span style="display:flex;align-items:center;gap:10px"><span class="bar" style="width:100%"><i style="width:'+c[3]+'%;background:'+scoreTone(c[3])+'"></i></span></span>').join('')+'</div><p class="prose" style="font-size:12px;color:var(--ink-3)">Targets come from the fund mandate and the benchmark library.</p></div>')+
+        sec('Risks','Standard checks, then company-specific flags','<div class="grid">'+card('c6','Standard checks','',  '<div class="list">'+[['Customer concentration','good','Clear','Largest customer is 9% of revenue.'],['Churn','good','Clear','Gross revenue retention of 94%.'],['Entry valuation','good','Clear','15.5x ask against a 16.0x segment median.'],['Key person','good','Clear','CEO and CFO have worked together for nine years.']].map(r=>'<div class="item" style="--sev:var(--'+r[1]+')"><div class="h">'+badge(r[2],r[1])+r[0]+'</div><p>'+r[3]+'</p></div>').join('')+'</div>',true)+
+          card('c6','Company flags','With mitigants',alertList([['bad','High','Revenue mix','Remediation projects are 29% of revenue and arrive in irregular batches.','Split run-rate from project revenue in the QoE.',''],['warn','Medium','AI exposure','The analyst workforce is exposed to AI-driven KYC automation.','Underwrite a productivity case, not a headcount case.','']]).replace(/b-undefined/g,'b-bad'),true)+'</div>')+
+        sec('Debt capacity','At the fund\'s 4.5x leverage policy','<div class="grid">'+card('c6','Supportable debt','',  '<dl class="kv"><dt>Senior debt at 3.0x</dt><dd>£43.8m</dd><dt>Interest cover at policy</dt><dd>2.34x</dd><dt>Cover with EBITDA −22.5%</dt><dd>1.81x</dd><dt class="tot">Supportable total debt</dt><dd class="tot">£73.0m · 5.0x</dd></dl>')+
+          card('c6','Covenant headroom','Projected first test','<div class="meter"><div class="lab"><span>Headroom to 6.0x net leverage</span><span>27%</span></div><div class="track"><div class="fill" style="width:54%;background:var(--good)"></div><div class="tick" style="left:30%"></div></div><div class="lab"><span>Comfort threshold 15%</span><span>Test date 31 Mar 2027</span></div></div>')+'</div>');
+      if(tab==='model') return head+
+        sec('Returns','Base case · 5-year hold · 75% cash sweep',strip([['Gross IRR','20.3%','<span class="up">▲ 0.3pt</span> above hurdle'],['MOIC','2.52x','Hurdle 2.5x'],['Equity cheque','£152m','Rollover 10%'],['Max bid at 20%','£229m','15.7x EBITDA'],['FCF yield','3.8%','Levered, year 1']]))+
+        sec('Assumptions and structure','Blue figures are editable inputs','<div class="grid">'+card('c4','Assumptions','',  '<div style="display:grid;gap:18px">'+seg(['Downside','Base','Upside'],'Base','Case')+
+          [['Entry EV / EBITDA',6,20,0.5,15.5,'x','Segment median 16.0x'],['Exit EV / EBITDA',6,20,0.5,15.5,'x','Exit at entry multiple'],['Total leverage',2,7,0.25,4.5,'x2','Benchmark 5.0–7.0x'],['Revenue growth, Y1',0,25,1,15,'pct','Then fades to 7%']].map((s,i)=>'<div class="slider"><div class="top"><label for="sl'+i+'">'+s[0]+'</label><output>'+s[4]+'</output></div><input id="sl'+i+'" type="range" min="'+s[1]+'" max="'+s[2]+'" step="'+s[3]+'" value="'+s[4]+'" data-fmt="'+s[5]+'"><small>'+s[6]+'</small></div>').join('')+'</div>')+
+          card('c4','Sources and uses','£m','<dl class="kv"><dt>Enterprise value (15.5x)</dt><dd>226.3</dd><dt>Transaction fees (2.0%)</dt><dd>4.5</dd><dt>Financing fees (2.5%)</dt><dd>1.6</dd><dt>Minimum cash</dt><dd>2.0</dd><dt class="tot">Total uses</dt><dd class="tot">234.5</dd><dt>Senior TLB · SONIA + 4.75%</dt><dd>43.8</dd><dt>Subordinated notes · 11.0%</dt><dd>21.9</dd><dt>Harrowgate equity</dt><dd>152.0</dd></dl>')+
+          card('c4','Credit profile','Against benchmarks','<dl class="kv"><dt>Total debt / EBITDA</dt><dd>4.50x</dd><dt>Senior debt / EBITDA</dt><dd>3.00x</dd><dt>Interest cover</dt><dd>2.75x</dd><dt>Cover, EBITDA −22.5%</dt><dd>2.13x</dd><dt>Debt / equity</dt><dd>30 / 70</dd></dl><p class="prose" style="font-size:12px;color:var(--ink-3)">All metrics within the benchmark ranges.</p>')+'</div>')+
+        sec('Sensitivity','How returns move with price and exit','<div class="grid">'+card('c6','IRR by entry and exit multiple','Midpoint is the 20% hurdle',chart('heat','tall'))+card('c6','Equity value bridge','Entry equity to exit equity, £m',chart('bridge','tall'))+'</div>');
+      return head+sec('IC memo','Drafted by Copilot from the deal record and the base-case model','<div class="grid">'+card('c3','Sections','',  '<div class="list" style="margin:0 -20px">'+['Company overview','Investment thesis','Market','Financial summary','Returns and sensitivity','Key risks','Diligence plan'].map((s,i)=>'<div class="item" style="--sev:'+(i<5?'var(--good)':'var(--line-strong)')+';padding-block:10px"><div class="h" style="font-weight:400">'+s+'<span class="meta">'+(i<5?'Drafted':'Queued')+'</span></div></div>').join('')+'</div>')+
+        card('c9','Project Keel','Draft · Copilot · 25 Oct 2026','<div class="memo"><h5>Project Keel: Investment Committee memo</h5><h6>Investment thesis</h6><p>Rising regulatory load, including Consumer Duty and APP fraud reimbursement, is pushing mid-tier lenders to outsource KYC and remediation <a href="#">[1]</a>. Northvale has the strongest margin and growth profile in the pipeline, with 71% recurring revenue and 94% gross retention.</p><h6>Returns</h6><p>At 15.5x entry and exit with 4.5x leverage, the base case returns 2.52x and 20.3% gross IRR over five years. The maximum bid that still clears the hurdle is £229m.</p></div>',false,btn('Copy','ghost'))+'</div>');
+    }},
+
+    portfolio:{crumb:['Portfolio','Platforms'],render:()=>
+      phead('Platforms','Six platforms, marked at 30 Sep 2026.',btn('Export','secondary','down'))+
+      sec('Summary','',strip([['Fair value','£865m','<span class="up">▲ 6.2%</span> YTD'],['Invested','£571m',''],['Gross MOIC','1.51x',''],['On plan','3','of 6'],['Need action','1','Orbis Language Tech']]))+
+      sec('Platforms','','<div class="card flush"><div class="tbox"><table><thead><tr><th>Company</th><th class="n">Year</th><th class="n">Invested</th><th class="n">Fair value</th><th class="n">MOIC</th><th class="n">LTM EBITDA</th><th class="n">vs budget</th><th class="n">Leverage</th><th>Status</th></tr></thead><tbody>'+
+        [['Halden Group','TIC',2022,96,178,39.5,37.0,3.6,'On plan'],['Lumen Risk','Compliance',2020,64,203,26.0,25.1,2.1,'Exit prep'],['Sentinel MSP','IT & cyber',2023,118,149,24.8,24.0,4.4,'On plan'],['Paragon Payroll','Payroll BPO',2021,82,131,26.1,27.4,4.1,'Watch'],['Cobalt Engineering Data','Engineering',2024,140,146,17.9,19.5,4.9,'Watch'],['Orbis Language Tech','Legal ops',2021,71,58,9.2,12.6,5.6,'Action']].map(p=>{const v=(p[5]/p[6]-1)*100;return '<tr class="trow" tabindex="0"><td class="nm"><b>'+p[0]+'</b><span>'+p[1]+'</span></td><td class="n">'+p[2]+'</td><td class="n">£'+p[3]+'m</td><td class="n">£'+p[4]+'m</td><td class="n">'+(p[4]/p[3]).toFixed(2)+'x</td><td class="n">£'+p[5].toFixed(1)+'m</td><td class="n '+(v>=0?'up':'down')+'">'+(v>=0?'+':'−')+Math.abs(v).toFixed(1)+'%</td><td class="n">'+p[7].toFixed(1)+'x</td><td>'+badge(p[8],VT[p[8]]||'warn')+'</td></tr>';}).join('')+
+        '</tbody></table></div></div>')+
+      sec('Performance','Earnings against plan, and where value has come from','<div class="grid">'+card('c6','LTM EBITDA vs budget','£m · bar = actual · marker = budget',chart('budget'))+card('c6','Value creation by lever','£m · entry equity to fair value',chart('waterfall'))+'</div>')},
+
+    markets:{crumb:['Origination','Markets'],render:()=>
+      phead('Markets','Seven tech-enabled services sub-sectors, ranked by how well they fit a buyout thesis.',btn('Run research','primary','search'))+
+      sec('Summary','',strip([['Segments','7',''],['Profit pool','£132bn','Combined market size'],['Median EV/EBITDA','13.0x','Platform deals'],['Deals, 24m','193','Sponsor and strategic']]))+
+      sec('Growth vs margin','Bubble size is market size. Select a segment to open it.','<div class="card">'+chart('bubble','tall')+'</div>')+
+      sec('Sponsor attractiveness','How each segment scores on the traits that draw buyout capital','<div class="card flush"><div class="tbox"><table><thead><tr><th>Segment</th><th>Non-cyclical</th><th>Recurring</th><th>Moat</th><th>Synergies</th><th>Tailwinds</th><th>Fragmented</th><th class="n">Score</th></tr></thead><tbody>'+
+        [['TIC',[3,2,3,2,3,3]],['Compliance',[3,2,2,2,3,3]],['IT & cyber',[2,3,2,3,2,3]],['Payroll BPO',[3,3,1,2,1,2]],['Data services',[1,1,2,2,2,2]],['Engineering',[1,2,1,2,1,3]],['Legal ops',[2,1,0,1,0,2]]].map(r=>'<tr class="trow" tabindex="0"><td class="nm"><b>'+r[0]+'</b></td>'+r[1].map(v=>'<td><span class="dots" aria-label="'+v+' of 3">'+[0,1,2].map(k=>'<i class="'+(k<v?'on':'')+'"></i>').join('')+'</span></td>').join('')+'<td class="n">'+r[1].reduce((a,b)=>a+b,0)+' / 18</td></tr>').join('')+
+        '</tbody></table></div></div>')},
+
+    fund:{crumb:['Fund','Performance'],render:()=>
+      phead('Fund performance','Fund VII, 2019 vintage, £1.4bn committed.',btn('LP report','secondary','down'))+
+      sec('Returns','Net of fees and carry',strip([['Net IRR','12.6%','Gross 17.8%'],['TVPI','1.46x',''],['DPI','0.38x',''],['Called','71%','£994m']]))+
+      sec('J-curve','Cumulative net cash flow to LPs and NAV, £m','<div class="card">'+chart('jcurve','tall')+'</div>')}
+  };
+  ['research','screen','covenants','exits'].forEach(k=>{
+    const names={research:['Origination','Research'],screen:['Deals','Screen a teaser'],covenants:['Portfolio','Covenants'],exits:['Portfolio','Exits']};
+    PAGES[k]={crumb:names[k],render:()=>phead(names[k][1],'Part of the site map, not drawn in this preview.')+'<div class="card"><div class="empty">'+svg('file')+'<b>Not in this preview</b><span>This page follows the same shell, sections and components.</span></div></div>'};
+  });
+
+  // ---------- Charts ----------
+  const fam='"IBM Plex Sans", system-ui, sans-serif';
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let charts=[];
+  function tk(){const cs=getComputedStyle(app),g=n=>cs.getPropertyValue(n).trim();
+    return {ink:g('--ink'),ink2:g('--ink-2'),ink3:g('--ink-3'),line:g('--line'),lineS:g('--line-strong'),surface:g('--surface'),raised:g('--raised'),s1:g('--s1'),sOther:g('--s-other'),good:g('--good'),bad:g('--bad'),lo:g('--div-lo'),mid:g('--div-mid'),hi:g('--div-hi'),accent:g('--accent'),shadow:g('--pop-shadow')};}
+  const base=t=>({animation:!reduce,animationDuration:400,animationEasing:'cubicOut',textStyle:{fontFamily:fam,color:t.ink2,fontSize:12},
+    grid:{left:4,right:16,top:36,bottom:4,containLabel:true},
+    tooltip:{backgroundColor:t.raised,borderColor:t.line,borderWidth:1,padding:[8,10],textStyle:{color:t.ink,fontFamily:fam,fontSize:12},extraCssText:'box-shadow:'+t.shadow+';border-radius:6px;'}});
+  const vAx=t=>({type:'value',axisLine:{show:false},axisTick:{show:false},axisLabel:{color:t.ink3},splitLine:{lineStyle:{color:t.line}}});
+  const cAx=(t,d)=>({type:'category',data:d,axisLine:{lineStyle:{color:t.lineS}},axisTick:{show:false},axisLabel:{color:t.ink2}});
+  const leg=(t,d)=>({show:true,top:0,left:0,icon:'roundRect',itemWidth:10,itemHeight:10,itemGap:16,textStyle:{color:t.ink2,fontSize:12},data:d});
+  const tip=(t,o)=>Object.assign(base(t).tooltip,o);
+  const lum=h=>{const c=[1,3,5].map(i=>parseInt(h.slice(i,i+2),16)/255).map(x=>x<=0.03928?x/12.92:Math.pow((x+0.055)/1.055,2.4));return 0.2126*c[0]+0.7152*c[1]+0.0722*c[2];};
+  const hex=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));
+  const mix=(a,b,k)=>a.map((x,i)=>Math.round(x+(b[i]-x)*k));
+  const toHex=c=>'#'+c.map(x=>x.toString(16).padStart(2,'0')).join('');
+  const B={
+    funnel(t){const st=['Teaser','NDA','CIM','IOI','LOI','Exclusivity'],v=[23,14,8,3,1,1];
+      return Object.assign(base(t),{tooltip:tip(t,{trigger:'item',formatter:p=>p.name+': <b>'+p.value+' deals</b>'}),grid:{left:4,right:32,top:8,bottom:4,containLabel:true},
+        xAxis:Object.assign(vAx(t),{show:false}),yAxis:Object.assign(cAx(t,st),{inverse:true,axisLine:{show:false}}),
+        series:[{type:'bar',data:v,barWidth:14,itemStyle:{color:t.s1,borderRadius:[0,3,3,0]},label:{show:true,position:'right',color:t.ink,fontSize:12}}]});},
+    segscore(t){const s=['Compliance','IT & cyber','Payroll','TIC','Data','Legal'],a=[78,66,74,62,52,47],b=[83,66,74,69,52,47];
+      return Object.assign(base(t),{legend:leg(t,['Average','Best deal']),tooltip:tip(t,{trigger:'axis',axisPointer:{type:'shadow',shadowStyle:{color:'rgba(127,127,127,0.06)'}}}),
+        xAxis:cAx(t,s),yAxis:Object.assign(vAx(t),{max:100}),
+        series:[{name:'Average',type:'bar',data:a,barWidth:16,itemStyle:{color:t.s1,borderRadius:[3,3,0,0]}},{name:'Best deal',type:'scatter',data:b,symbol:'rect',symbolSize:[22,2],itemStyle:{color:t.ink3}}]});},
+    budget(t){const cos=['Orbis','Cobalt','Sentinel','Paragon','Lumen','Halden'],act=[9.2,17.9,24.8,26.1,26.0,39.5],bud=[12.6,19.5,24.0,27.4,25.1,37.0];
+      return Object.assign(base(t),{legend:leg(t,['Actual','Budget']),tooltip:tip(t,{trigger:'axis',axisPointer:{type:'shadow',shadowStyle:{color:'rgba(127,127,127,0.06)'}},valueFormatter:v=>'£'+v.toFixed(1)+'m'}),
+        xAxis:vAx(t),yAxis:Object.assign(cAx(t,cos),{axisLine:{show:false}}),
+        series:[{name:'Actual',type:'bar',data:act,barWidth:12,itemStyle:{color:t.s1,borderRadius:[0,3,3,0]}},
+          {name:'Budget',type:'scatter',data:bud,symbol:'rect',symbolSize:[2,20],itemStyle:{color:t.ink3},z:5}]});},
+    waterfall(t){return wf(t,['Entry','Growth','Margin','Multiple','Delever','Fair value'],[571,241,71,-62,44]);},
+    bridge(t){return wf(t,['Entry equity','EBITDA growth','Fees and leakage','Debt paydown','Exit equity'],[152,165,-12,78]);},
+    jcurve(t){const y=['2019','2020','2021','2022','2023','2024','2025','2026','2027','2028','2029','2030'],net=[-80,-260,-470,-640,-720,-690,-560,-360,-90,180,430,610],nav=[70,240,450,690,880,1010,1080,1120,1050,880,640,380];
+      return Object.assign(base(t),{legend:leg(t,['Cumulative net cash flow','NAV']),grid:{left:4,right:56,top:36,bottom:4,containLabel:true},
+        tooltip:tip(t,{trigger:'axis',axisPointer:{type:'line',lineStyle:{color:t.lineS}},valueFormatter:v=>(v<0?'−£':'£')+Math.abs(v)+'m'}),
+        xAxis:Object.assign(cAx(t,y),{boundaryGap:false}),yAxis:vAx(t),
+        series:[{name:'Cumulative net cash flow',type:'line',data:net,smooth:.3,showSymbol:false,symbolSize:8,lineStyle:{width:2,color:t.s1},itemStyle:{color:t.s1,borderColor:t.surface,borderWidth:2},
+          areaStyle:{color:{type:'linear',x:0,y:0,x2:0,y2:1,colorStops:[{offset:0,color:t.s1+'29'},{offset:1,color:t.s1+'00'}]}},
+          markLine:{silent:true,symbol:'none',lineStyle:{color:t.lineS,type:'solid',width:1},label:{show:false},data:[{yAxis:0}]},endLabel:{show:true,color:t.ink,formatter:p=>'£'+p.value+'m'}},
+          {name:'NAV',type:'line',data:nav,smooth:.3,showSymbol:false,symbolSize:8,lineStyle:{width:2,color:t.sOther},itemStyle:{color:t.sOther,borderColor:t.surface,borderWidth:2}}]});},
+    heat(t){const en=[12,13,14,15,16],ex=[12,13,14,15,16],lo=hex(t.lo),mid=hex(t.mid),hi=hex(t.hi);
+      const col=v=>{const k=Math.max(0,Math.min(1,(v-5)/30));return toHex(k<.5?mix(lo,mid,k*2):mix(mid,hi,(k-.5)*2));};
+      const isDark=app.classList.contains('t-dark');
+      const txt=v=>{if(isDark)return t.ink;const L=lum(col(v));return (1.05/(L+.05))>=((L+.05)/0.0168)?'#FFFFFF':'#0B1B3F';};
+      const data=[];en.forEach((a,i)=>ex.forEach((b,j)=>{const r=+(20.3+(b-a)*3.1-(a-14)*.9).toFixed(1);data.push({value:[j,i,r],itemStyle:{color:col(r)},label:{color:txt(r)}});}));
+      return Object.assign(base(t),{grid:{left:4,right:8,top:8,bottom:28,containLabel:true},
+        tooltip:tip(t,{trigger:'item',formatter:p=>'Entry '+en[p.value[1]]+'.0x · exit '+ex[p.value[0]]+'.0x<br><b>IRR '+p.value[2].toFixed(1)+'%</b>'}),
+        xAxis:Object.assign(cAx(t,ex.map(x=>x+'.0x')),{name:'Exit multiple',nameLocation:'middle',nameGap:26,nameTextStyle:{color:t.ink3},axisLine:{show:false}}),
+        yAxis:Object.assign(cAx(t,en.map(x=>x+'.0x')),{axisLine:{show:false}}),
+        series:[{type:'heatmap',data,itemStyle:{borderColor:t.surface,borderWidth:2,borderRadius:3},label:{show:true,fontFamily:fam,fontSize:12,formatter:p=>p.value[2].toFixed(1)+'%'},emphasis:{itemStyle:{borderColor:t.ink,borderWidth:1.5}}}]});},
+    bubble(t){const s=[['TIC',6,18,28],['Compliance',11,24,9],['Payroll BPO',7,20,14],['IT & cyber',10,15,41],['Data services',14,17,12],['Engineering',5,12,22],['Legal ops',8,16,6]];
+      return Object.assign(base(t),{grid:{left:4,right:24,top:16,bottom:28,containLabel:true},
+        tooltip:tip(t,{trigger:'item',formatter:p=>'<b>'+p.data[3]+'</b><br>Growth '+p.data[0]+'% · margin '+p.data[1]+'%<br>Market £'+p.data[2]+'bn'}),
+        xAxis:Object.assign(vAx(t),{name:'Market growth, CAGR 2026–30',nameLocation:'middle',nameGap:26,nameTextStyle:{color:t.ink3},min:3,max:16,axisLabel:{color:t.ink3,formatter:'{value}%'},splitLine:{show:false},axisLine:{show:true,lineStyle:{color:t.lineS}}}),
+        yAxis:Object.assign(vAx(t),{min:10,max:26,axisLabel:{color:t.ink3,formatter:'{value}%'}}),
+        series:[{type:'scatter',data:s.map(x=>[x[1],x[2],x[3],x[0]]),symbolSize:d=>Math.sqrt(d[2])*7,itemStyle:{color:t.s1,opacity:.8,borderColor:t.surface,borderWidth:2},
+          label:{show:true,position:'right',color:t.ink2,fontSize:12,formatter:p=>p.data[3]},emphasis:{itemStyle:{opacity:1}}}]});}
+  };
+  function wf(t,cats,steps){let run=0;const bs=[],up=[],dn=[],end=[];
+    cats.forEach((c,i)=>{if(i===0){end.push(steps[0]);bs.push(0);up.push('-');dn.push('-');run=steps[0];}
+      else if(i===cats.length-1){end.push(run);bs.push(0);up.push('-');dn.push('-');}
+      else{const v=steps[i];end.push('-');if(v>=0){bs.push(run);up.push(v);dn.push('-');run+=v;}else{run+=v;bs.push(run);dn.push(-v);up.push('-');}}});
+    const lab=(f,pos='top')=>({show:true,position:pos,color:t.ink2,fontSize:12,formatter:f});
+    return Object.assign(base(t),{grid:{left:4,right:8,top:24,bottom:4,containLabel:true},
+      tooltip:tip(t,{trigger:'item',formatter:p=>{const i=p.dataIndex,v=i===0?steps[0]:i===cats.length-1?run:steps[i];return cats[i]+'<br><b>'+(v<0?'−':(i>0&&i<cats.length-1?'+':''))+'£'+Math.abs(v)+'m</b>';}}),
+      xAxis:Object.assign(cAx(t,cats),{axisLabel:{color:t.ink2,interval:0,width:84,overflow:'break',lineHeight:16}}),yAxis:vAx(t),
+      series:[{type:'bar',stack:'w',data:bs,itemStyle:{color:'transparent'},silent:true,tooltip:{show:false},barWidth:'44%'},
+        {type:'bar',stack:'w',data:end,itemStyle:{color:t.s1,borderRadius:[3,3,0,0]},label:lab(p=>p.value==='-'?'':'£'+p.value+'m')},
+        {type:'bar',stack:'w',data:up,itemStyle:{color:t.good,borderRadius:[3,3,0,0]},label:lab(p=>p.value==='-'||!p.value?'':'+'+p.value)},
+        {type:'bar',stack:'w',data:dn,itemStyle:{color:t.bad,borderRadius:[0,0,3,3]},label:lab(p=>p.value==='-'?'':'('+p.value+')','bottom')}]});}
+
+  function drawCharts(){charts.forEach(c=>c.dispose());charts=[];
+    if(typeof echarts==='undefined') return;
+    const t=tk();
+    page.querySelectorAll('[data-chart]').forEach(el=>{const c=echarts.init(el,null,{renderer:'canvas'});c.setOption(B[el.dataset.chart](t));charts.push(c);});}
+
+  // ---------- Behaviour ----------
+  function placeThumbs(){page.querySelectorAll('.seg').forEach(g=>{const a=g.querySelector('[aria-pressed="true"]'),th=g.querySelector('.thumb');if(a&&th){th.style.left=a.offsetLeft+'px';th.style.width=a.offsetWidth+'px';}});}
+  function bindSliders(){page.querySelectorAll('input[type=range]').forEach(r=>{const o=r.closest('.slider').querySelector('output');
+    const u=()=>{const v=+r.value;r.style.setProperty('--p',((v-r.min)/(r.max-r.min)*100)+'%');o.textContent=r.dataset.fmt==='x2'?v.toFixed(2)+'x':r.dataset.fmt==='pct'?v+'%':v.toFixed(1)+'x';};r.addEventListener('input',u);u();});}
+  let current='overview',dealTab='overview';
+  function go(id,tab){current=id;if(tab)dealTab=tab;
+    const P=PAGES[id];page.innerHTML=P.render(dealTab);
+    crumb.innerHTML=P.crumb.map((c,i)=>i===P.crumb.length-1?'<b>'+c+'</b>':c+' <span class="sep">/</span> ').join('');
+    const navId=id==='deal'?'pipeline':id;
+    nav.querySelectorAll('.navitem').forEach(n=>{if(n.dataset.go===navId)n.setAttribute('aria-current','page');else n.removeAttribute('aria-current');});
+    bindSliders();requestAnimationFrame(()=>{placeThumbs();drawCharts();});}
+  nav.addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(b)go(b.dataset.go,'overview');});
+  page.addEventListener('click',e=>{
+    const tab=e.target.closest('[data-tab]');if(tab){go('deal',tab.dataset.tab);return;}
+    const sb=e.target.closest('.seg button');if(sb){sb.parentElement.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',String(x===sb)));placeThumbs();return;}
+    const pr=e.target.closest('.btn.primary');if(pr&&/Build model/.test(pr.textContent)){go('deal','model');return;}
+    if(pr&&/Draft IC memo/.test(pr.textContent)){go('deal','memo');return;}
+    if(pr&&/Screen a teaser/.test(pr.textContent)){go('screen');return;}
+    const row=e.target.closest('.trow[data-go]');if(row){go('deal','overview');return;}
+    const r2=e.target.closest('.trow');if(r2){r2.parentElement.querySelectorAll('.trow').forEach(x=>x.classList.toggle('sel',x===r2));}
+  });
+  page.addEventListener('keydown',e=>{if(e.key==='Enter'){const r=e.target.closest('.trow');if(r)r.click();}});
+  document.querySelectorAll('[data-theme-set]').forEach(b=>b.addEventListener('click',()=>{
+    const th=b.dataset.themeSet;app.classList.toggle('t-dark',th==='dark');app.classList.toggle('t-light',th==='light');
+    document.querySelectorAll('[data-theme-set]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));drawCharts();}));
+  let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{charts.forEach(c=>c.resize());placeThumbs();},120);});
+  (document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(()=>go('overview'));
+})();
+</script>
