@@ -1,5 +1,6 @@
-import { PlaceholderPage } from "@/components/shell/PlaceholderPage";
+import { SegmentView } from "@/features/markets/SegmentView";
 
-export default function SegmentPage() {
-  return <PlaceholderPage title="Segment" question="Is this segment investable, and who's in it?" />;
+export default async function SegmentPage({ params }: { params: Promise<{ segment: string }> }) {
+  const { segment } = await params;
+  return <SegmentView segmentId={segment} />;
 }

@@ -1,5 +1,5 @@
-import { PlaceholderPage } from "@/components/shell/PlaceholderPage";
+import { MarketsView } from "@/features/markets/MarketsView";
 
 export default function MarketsPage() {
-  return <PlaceholderPage title="Markets" question="Which sub-sectors deserve our time?" />;
+  return <MarketsView />;
 }

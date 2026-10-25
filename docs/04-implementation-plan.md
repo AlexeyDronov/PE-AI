@@ -83,11 +83,11 @@ Each page gets domain components (props only), a view that calls hooks, page tes
 - [x] 6.5 **Platform** `/portfolio/[id]`: snapshot · quarterly performance · capital structure · value creation · alerts · exit plan — 25 Oct
 - [x] 6.6 **Covenants** `/portfolio/covenants`: headroom summary · covenant monitor · test calendar — 25 Oct
   - Browser review fixes (6.4–6.6): angled labels on crowded axes, sign-coloured lever bars, full-width headroom meter, no-wrap short table cells, no duplicate card titles
-- [ ] 6.7 **Exits** `/exits`: readiness summary · exit planner · exit routes by segment
-- [ ] 6.8 **Fund performance** `/fund`: returns strip · J-curve · distribution waterfall · cash-flow table
-- [ ] 6.9 **Markets** `/markets`: summary · growth vs margin · sponsor attractiveness · valuation charts
-- [ ] 6.10 **Segment** `/markets/[segment]`: profile · landscape and transactions · evidence
-- [ ] 6.11 **Overview** `/`: fund at a glance · needs attention · Copilot activity
+- [x] 6.7 **Exits** `/exits`: readiness summary · exit planner · exit routes by segment — 25 Oct (review fix: soonest window first)
+- [x] 6.8 **Fund performance** `/fund`: returns strip · J-curve · distribution waterfall · cash-flow table — 25 Oct (review fixes: metrics as of the valuation date with projections flagged; explanation when no carry is earned)
+- [x] 6.9 **Markets** `/markets`: summary · growth vs margin · sponsor attractiveness · valuation charts — 25 Oct
+- [x] 6.10 **Segment** `/markets/[segment]`: profile · landscape and transactions · evidence — 25 Oct ("Run research" works end to end once the agent service exists, step 7.5)
+- [x] 6.11 **Overview** `/`: fund at a glance · needs attention · Copilot activity — 25 Oct
 - [ ] 6.12 **Screen a teaser** `/deals/new`: needs 7.4
 - [ ] 6.13 **Research** `/research`: needs 7.5
 - [ ] 6.14 **IC memo** `/deals/[id]/memo`: needs 7.6

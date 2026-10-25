@@ -1,0 +1,18 @@
+.growth {
+  display: grid;
+  grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
+  gap: var(--space-6);
+}
+
+.pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-6);
+}
+
+@media (max-width: 1023px) {
+  .growth,
+  .pair {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
