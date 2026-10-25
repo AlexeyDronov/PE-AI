@@ -172,6 +172,24 @@
         "title": "AnnotationRead",
         "type": "object"
       },
+      "Attribute": {
+        "properties": {
+          "attribute": {
+            "title": "Attribute",
+            "type": "string"
+          },
+          "score": {
+            "title": "Score",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "attribute",
+          "score"
+        ],
+        "title": "Attribute",
+        "type": "object"
+      },
       "Benchmark": {
         "properties": {
           "created_at": {
@@ -241,6 +259,24 @@
           "value"
         ],
         "title": "BridgeItem",
+        "type": "object"
+      },
+      "BridgeStep": {
+        "properties": {
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "value": {
+            "title": "Value",
+            "type": "number"
+          }
+        },
+        "required": [
+          "label",
+          "value"
+        ],
+        "title": "BridgeStep",
         "type": "object"
       },
       "Company": {
@@ -334,6 +370,52 @@
           "segment_id"
         ],
         "title": "CompanyRef",
+        "type": "object"
+      },
+      "CovenantSummary": {
+        "properties": {
+          "below_comfort": {
+            "title": "Below Comfort",
+            "type": "integer"
+          },
+          "comfort_threshold": {
+            "title": "Comfort Threshold",
+            "type": "number"
+          },
+          "facilities": {
+            "title": "Facilities",
+            "type": "integer"
+          },
+          "next_test_date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Test Date"
+          },
+          "tightest": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Tightest"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "facilities",
+          "below_comfort",
+          "comfort_threshold",
+          "next_test_date",
+          "tightest"
+        ],
+        "title": "CovenantSummary",
         "type": "object"
       },
       "CreateAnnotationInput": {
@@ -817,6 +899,15 @@
             "title": "Actual",
             "type": "number"
           },
+          "band": {
+            "enum": [
+              "breach",
+              "tight",
+              "comfortable"
+            ],
+            "title": "Band",
+            "type": "string"
+          },
           "company": {
             "$ref": "#/components/schemas/CompanyRef"
           },
@@ -837,6 +928,10 @@
             "title": "Created At",
             "type": "string"
           },
+          "headroom": {
+            "title": "Headroom",
+            "type": "number"
+          },
           "id": {
             "title": "Id",
             "type": "string"
@@ -844,6 +939,10 @@
           "interest_cover": {
             "title": "Interest Cover",
             "type": "number"
+          },
+          "next_test_date": {
+            "title": "Next Test Date",
+            "type": "string"
           },
           "pricing": {
             "title": "Pricing",
@@ -869,6 +968,9 @@
           "actual",
           "interest_cover",
           "cov_lite",
+          "next_test_date",
+          "headroom",
+          "band",
           "company"
         ],
         "title": "DebtFacilityListItem",
@@ -928,6 +1030,9 @@
             "title": "Id",
             "type": "string"
           },
+          "platform": {
+            "$ref": "#/components/schemas/PlatformRef"
+          },
           "route": {
             "title": "Route",
             "type": "string"
@@ -944,12 +1049,36 @@
           "route",
           "buyers",
           "window",
-          "company"
+          "company",
+          "platform"
         ],
         "title": "ExitPlanListItem",
         "type": "object"
       },
-      "ExitRouteMix": {
+      "ExitPlanSummary": {
+        "properties": {
+          "buyers": {
+            "title": "Buyers",
+            "type": "string"
+          },
+          "route": {
+            "title": "Route",
+            "type": "string"
+          },
+          "window": {
+            "title": "Window",
+            "type": "string"
+          }
+        },
+        "required": [
+          "route",
+          "buyers",
+          "window"
+        ],
+        "title": "ExitPlanSummary",
+        "type": "object"
+      },
+      "ExitRouteMixListItem": {
         "properties": {
           "created_at": {
             "format": "date-time",
@@ -963,6 +1092,9 @@
           "ipo_pct": {
             "title": "Ipo Pct",
             "type": "number"
+          },
+          "segment": {
+            "$ref": "#/components/schemas/SegmentRef"
           },
           "segment_id": {
             "title": "Segment Id",
@@ -978,12 +1110,69 @@
           }
         },
         "required": [
+          "id",
+          "created_at",
           "segment_id",
+          "strategic_pct",
+          "sponsor_pct",
+          "ipo_pct",
+          "segment"
+        ],
+        "title": "ExitRouteMixListItem",
+        "type": "object"
+      },
+      "ExitRoutePcts": {
+        "properties": {
+          "ipo_pct": {
+            "title": "Ipo Pct",
+            "type": "number"
+          },
+          "sponsor_pct": {
+            "title": "Sponsor Pct",
+            "type": "number"
+          },
+          "strategic_pct": {
+            "title": "Strategic Pct",
+            "type": "number"
+          }
+        },
+        "required": [
           "strategic_pct",
           "sponsor_pct",
           "ipo_pct"
         ],
-        "title": "ExitRouteMix",
+        "title": "ExitRoutePcts",
+        "type": "object"
+      },
+      "ExitSummary": {
+        "properties": {
+          "exit_prep": {
+            "title": "Exit Prep",
+            "type": "integer"
+          },
+          "exit_prep_fair_value": {
+            "title": "Exit Prep Fair Value",
+            "type": "number"
+          },
+          "platforms": {
+            "title": "Platforms",
+            "type": "integer"
+          },
+          "routes": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "title": "Routes",
+            "type": "object"
+          }
+        },
+        "required": [
+          "platforms",
+          "exit_prep",
+          "exit_prep_fair_value",
+          "routes"
+        ],
+        "title": "ExitSummary",
         "type": "object"
       },
       "FacilityWithHeadroom": {
@@ -1021,6 +1210,10 @@
             "title": "Interest Cover",
             "type": "number"
           },
+          "next_test_date": {
+            "title": "Next Test Date",
+            "type": "string"
+          },
           "pricing": {
             "title": "Pricing",
             "type": "string"
@@ -1045,6 +1238,7 @@
           "actual",
           "interest_cover",
           "cov_lite",
+          "next_test_date",
           "headroom"
         ],
         "title": "FacilityWithHeadroom",
@@ -1102,6 +1296,10 @@
       },
       "FundMetrics": {
         "properties": {
+          "as_of_period": {
+            "title": "As Of Period",
+            "type": "string"
+          },
           "called": {
             "title": "Called",
             "type": "number"
@@ -1112,6 +1310,18 @@
           },
           "dpi": {
             "title": "Dpi",
+            "type": "number"
+          },
+          "gp_carry": {
+            "title": "Gp Carry",
+            "type": "number"
+          },
+          "gross_profit": {
+            "title": "Gross Profit",
+            "type": "number"
+          },
+          "lp_total": {
+            "title": "Lp Total",
             "type": "number"
           },
           "nav": {
@@ -1132,16 +1342,28 @@
           "tvpi": {
             "title": "Tvpi",
             "type": "number"
+          },
+          "waterfall": {
+            "items": {
+              "$ref": "#/components/schemas/Tier"
+            },
+            "title": "Waterfall",
+            "type": "array"
           }
         },
         "required": [
+          "as_of_period",
           "called",
           "distributed",
           "nav",
           "dpi",
           "tvpi",
           "net_irr",
-          "series"
+          "series",
+          "waterfall",
+          "gross_profit",
+          "lp_total",
+          "gp_carry"
         ],
         "title": "FundMetrics",
         "type": "object"
@@ -1167,6 +1389,10 @@
           "period": {
             "title": "Period",
             "type": "string"
+          },
+          "projected": {
+            "title": "Projected",
+            "type": "boolean"
           }
         },
         "required": [
@@ -1174,13 +1400,27 @@
           "calls",
           "distributions",
           "nav",
-          "cumulative_net"
+          "cumulative_net",
+          "projected"
         ],
         "title": "FundPoint",
         "type": "object"
       },
       "FundWithMetrics": {
         "properties": {
+          "as_of": {
+            "format": "date",
+            "title": "As Of",
+            "type": "string"
+          },
+          "carry": {
+            "title": "Carry",
+            "type": "number"
+          },
+          "catch_up": {
+            "title": "Catch Up",
+            "type": "number"
+          },
           "committed": {
             "title": "Committed",
             "type": "number"
@@ -1225,6 +1465,10 @@
             "title": "Name",
             "type": "string"
           },
+          "pref_rate": {
+            "title": "Pref Rate",
+            "type": "number"
+          },
           "verdict_advance": {
             "title": "Verdict Advance",
             "type": "number"
@@ -1252,6 +1496,10 @@
           "hold_years_max",
           "verdict_advance",
           "verdict_watch",
+          "pref_rate",
+          "carry",
+          "catch_up",
+          "as_of",
           "metrics"
         ],
         "title": "FundWithMetrics",
@@ -1660,12 +1908,16 @@
         "title": "LboResponse",
         "type": "object"
       },
-      "LboScenario": {
+      "LboScenarioRead": {
         "properties": {
-          "assumptions": {
-            "additionalProperties": true,
-            "title": "Assumptions",
-            "type": "object"
+          "case": {
+            "enum": [
+              "base",
+              "down",
+              "up"
+            ],
+            "title": "Case",
+            "type": "string"
           },
           "created_at": {
             "format": "date-time",
@@ -1684,17 +1936,24 @@
             "title": "Name",
             "type": "string"
           },
+          "overrides": {
+            "$ref": "#/components/schemas/Overrides"
+          },
           "source": {
-            "default": "user",
             "title": "Source",
             "type": "string"
           }
         },
         "required": [
+          "id",
           "deal_id",
-          "name"
+          "name",
+          "case",
+          "overrides",
+          "created_at",
+          "source"
         ],
-        "title": "LboScenario",
+        "title": "LboScenarioRead",
         "type": "object"
       },
       "MacroRate": {
@@ -1753,6 +2012,39 @@
           "question"
         ],
         "title": "MarketResearchInput",
+        "type": "object"
+      },
+      "MarketSummary": {
+        "properties": {
+          "deals_24m": {
+            "title": "Deals 24M",
+            "type": "integer"
+          },
+          "median_multiple": {
+            "title": "Median Multiple",
+            "type": "number"
+          },
+          "profit_pool": {
+            "title": "Profit Pool",
+            "type": "number"
+          },
+          "reports": {
+            "title": "Reports",
+            "type": "integer"
+          },
+          "segments": {
+            "title": "Segments",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "segments",
+          "profit_pool",
+          "median_multiple",
+          "deals_24m",
+          "reports"
+        ],
+        "title": "MarketSummary",
         "type": "object"
       },
       "MaxBid": {
@@ -1953,6 +2245,57 @@
         "title": "Overrides",
         "type": "object"
       },
+      "OverviewSummary": {
+        "properties": {
+          "alerts": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "title": "Alerts",
+            "type": "object"
+          },
+          "dpi": {
+            "title": "Dpi",
+            "type": "number"
+          },
+          "dry_powder": {
+            "title": "Dry Powder",
+            "type": "number"
+          },
+          "in_diligence": {
+            "title": "In Diligence",
+            "type": "integer"
+          },
+          "nav": {
+            "title": "Nav",
+            "type": "number"
+          },
+          "net_irr": {
+            "title": "Net Irr",
+            "type": "number"
+          },
+          "pipeline_total": {
+            "title": "Pipeline Total",
+            "type": "integer"
+          },
+          "tvpi": {
+            "title": "Tvpi",
+            "type": "number"
+          }
+        },
+        "required": [
+          "nav",
+          "net_irr",
+          "tvpi",
+          "dpi",
+          "dry_powder",
+          "in_diligence",
+          "pipeline_total",
+          "alerts"
+        ],
+        "title": "OverviewSummary",
+        "type": "object"
+      },
       "Page_AlertListItem_": {
         "properties": {
           "items": {
@@ -2142,11 +2485,11 @@
         "title": "Page[ExitPlanListItem]",
         "type": "object"
       },
-      "Page_ExitRouteMix_": {
+      "Page_ExitRouteMixListItem_": {
         "properties": {
           "items": {
             "items": {
-              "$ref": "#/components/schemas/ExitRouteMix"
+              "$ref": "#/components/schemas/ExitRouteMixListItem"
             },
             "title": "Items",
             "type": "array"
@@ -2160,7 +2503,7 @@
           "items",
           "total"
         ],
-        "title": "Page[ExitRouteMix]",
+        "title": "Page[ExitRouteMixListItem]",
         "type": "object"
       },
       "Page_FundCashflow_": {
@@ -2247,11 +2590,11 @@
         "title": "Page[KpiPointListItem]",
         "type": "object"
       },
-      "Page_LboScenario_": {
+      "Page_LboScenarioRead_": {
         "properties": {
           "items": {
             "items": {
-              "$ref": "#/components/schemas/LboScenario"
+              "$ref": "#/components/schemas/LboScenarioRead"
             },
             "title": "Items",
             "type": "array"
@@ -2265,7 +2608,7 @@
           "items",
           "total"
         ],
-        "title": "Page[LboScenario]",
+        "title": "Page[LboScenarioRead]",
         "type": "object"
       },
       "Page_MacroRate_": {
@@ -2457,11 +2800,11 @@
         "title": "Page[SegmentAttributeScore]",
         "type": "object"
       },
-      "Page_Segment_": {
+      "Page_SegmentListItem_": {
         "properties": {
           "items": {
             "items": {
-              "$ref": "#/components/schemas/Segment"
+              "$ref": "#/components/schemas/SegmentListItem"
             },
             "title": "Items",
             "type": "array"
@@ -2475,7 +2818,7 @@
           "items",
           "total"
         ],
-        "title": "Page[Segment]",
+        "title": "Page[SegmentListItem]",
         "type": "object"
       },
       "Page_Source_": {
@@ -2637,6 +2980,185 @@
         "title": "PipelineSummary",
         "type": "object"
       },
+      "PlatformRef": {
+        "properties": {
+          "fair_value": {
+            "title": "Fair Value",
+            "type": "number"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "moic": {
+            "title": "Moic",
+            "type": "number"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          },
+          "status_label": {
+            "title": "Status Label",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "moic",
+          "fair_value",
+          "status",
+          "status_label"
+        ],
+        "title": "PlatformRef",
+        "type": "object"
+      },
+      "Player": {
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "portfolio",
+              "pipeline"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "kind"
+        ],
+        "title": "Player",
+        "type": "object"
+      },
+      "PortfolioCompanyDetail": {
+        "properties": {
+          "alerts": {
+            "items": {
+              "$ref": "#/components/schemas/AlertListItem"
+            },
+            "title": "Alerts",
+            "type": "array"
+          },
+          "budget_variance": {
+            "title": "Budget Variance",
+            "type": "number"
+          },
+          "company": {
+            "$ref": "#/components/schemas/CompanyRef"
+          },
+          "company_id": {
+            "title": "Company Id",
+            "type": "string"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "ebitda_budget": {
+            "title": "Ebitda Budget",
+            "type": "number"
+          },
+          "ebitda_ltm": {
+            "title": "Ebitda Ltm",
+            "type": "number"
+          },
+          "exit_plan": {
+            "$ref": "#/components/schemas/ExitPlanSummary"
+          },
+          "facility": {
+            "$ref": "#/components/schemas/FacilityWithHeadroom"
+          },
+          "fair_value": {
+            "title": "Fair Value",
+            "type": "number"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "invest_year": {
+            "title": "Invest Year",
+            "type": "integer"
+          },
+          "invested": {
+            "title": "Invested",
+            "type": "number"
+          },
+          "moic": {
+            "title": "Moic",
+            "type": "number"
+          },
+          "net_leverage": {
+            "title": "Net Leverage",
+            "type": "number"
+          },
+          "quarters": {
+            "items": {
+              "$ref": "#/components/schemas/QuarterPoint"
+            },
+            "title": "Quarters",
+            "type": "array"
+          },
+          "revenue": {
+            "title": "Revenue",
+            "type": "number"
+          },
+          "segment": {
+            "$ref": "#/components/schemas/SegmentRef"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          },
+          "status_label": {
+            "title": "Status Label",
+            "type": "string"
+          },
+          "value_creation": {
+            "items": {
+              "$ref": "#/components/schemas/ValueCreationPoint"
+            },
+            "title": "Value Creation",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "created_at",
+          "company_id",
+          "invest_year",
+          "invested",
+          "fair_value",
+          "revenue",
+          "ebitda_ltm",
+          "ebitda_budget",
+          "net_leverage",
+          "status",
+          "company",
+          "segment",
+          "moic",
+          "budget_variance",
+          "facility",
+          "status_label",
+          "quarters",
+          "value_creation",
+          "alerts",
+          "exit_plan"
+        ],
+        "title": "PortfolioCompanyDetail",
+        "type": "object"
+      },
       "PortfolioCompanyListItem": {
         "properties": {
           "budget_variance": {
@@ -2700,6 +3222,10 @@
           "status": {
             "title": "Status",
             "type": "string"
+          },
+          "status_label": {
+            "title": "Status Label",
+            "type": "string"
           }
         },
         "required": [
@@ -2718,9 +3244,54 @@
           "segment",
           "moic",
           "budget_variance",
-          "facility"
+          "facility",
+          "status_label"
         ],
         "title": "PortfolioCompanyListItem",
+        "type": "object"
+      },
+      "PortfolioSummary": {
+        "properties": {
+          "fair_value": {
+            "title": "Fair Value",
+            "type": "number"
+          },
+          "invested": {
+            "title": "Invested",
+            "type": "number"
+          },
+          "moic": {
+            "title": "Moic",
+            "type": "number"
+          },
+          "platforms": {
+            "title": "Platforms",
+            "type": "integer"
+          },
+          "status_counts": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "title": "Status Counts",
+            "type": "object"
+          },
+          "value_bridge": {
+            "items": {
+              "$ref": "#/components/schemas/BridgeStep"
+            },
+            "title": "Value Bridge",
+            "type": "array"
+          }
+        },
+        "required": [
+          "platforms",
+          "invested",
+          "fair_value",
+          "moic",
+          "status_counts",
+          "value_bridge"
+        ],
+        "title": "PortfolioSummary",
         "type": "object"
       },
       "Progress": {
@@ -2739,6 +3310,29 @@
           "message"
         ],
         "title": "Progress",
+        "type": "object"
+      },
+      "QuarterPoint": {
+        "properties": {
+          "ebitda": {
+            "title": "Ebitda",
+            "type": "number"
+          },
+          "ebitda_budget": {
+            "title": "Ebitda Budget",
+            "type": "number"
+          },
+          "period": {
+            "title": "Period",
+            "type": "string"
+          }
+        },
+        "required": [
+          "period",
+          "ebitda",
+          "ebitda_budget"
+        ],
+        "title": "QuarterPoint",
         "type": "object"
       },
       "Rect": {
@@ -3014,6 +3608,38 @@
         "title": "RiskFlag",
         "type": "object"
       },
+      "SaveScenarioInput": {
+        "properties": {
+          "case": {
+            "enum": [
+              "base",
+              "down",
+              "up"
+            ],
+            "title": "Case",
+            "type": "string"
+          },
+          "deal_id": {
+            "title": "Deal Id",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "overrides": {
+            "$ref": "#/components/schemas/Overrides"
+          }
+        },
+        "required": [
+          "deal_id",
+          "name",
+          "case",
+          "overrides"
+        ],
+        "title": "SaveScenarioInput",
+        "type": "object"
+      },
       "ScreeningCriterion": {
         "properties": {
           "ceiling": {
@@ -3147,7 +3773,39 @@
         "title": "ScreeningSummary",
         "type": "object"
       },
-      "Segment": {
+      "SegmentAttributeScore": {
+        "properties": {
+          "attribute": {
+            "title": "Attribute",
+            "type": "string"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "score": {
+            "title": "Score",
+            "type": "integer"
+          },
+          "segment_id": {
+            "title": "Segment Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "segment_id",
+          "attribute",
+          "score"
+        ],
+        "title": "SegmentAttributeScore",
+        "type": "object"
+      },
+      "SegmentDetail": {
         "properties": {
           "addon_multiple": {
             "title": "Addon Multiple",
@@ -3156,6 +3814,159 @@
           "ai_exposure": {
             "title": "Ai Exposure",
             "type": "string"
+          },
+          "attractiveness": {
+            "title": "Attractiveness",
+            "type": "integer"
+          },
+          "attractiveness_max": {
+            "title": "Attractiveness Max",
+            "type": "integer"
+          },
+          "attributes": {
+            "items": {
+              "$ref": "#/components/schemas/Attribute"
+            },
+            "title": "Attributes",
+            "type": "array"
+          },
+          "avg_margin": {
+            "title": "Avg Margin",
+            "type": "number"
+          },
+          "cagr": {
+            "title": "Cagr",
+            "type": "number"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "deal_count_24m": {
+            "title": "Deal Count 24M",
+            "type": "integer"
+          },
+          "exit_route_mix": {
+            "$ref": "#/components/schemas/ExitRoutePcts"
+          },
+          "fragmentation": {
+            "title": "Fragmentation",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "market_size": {
+            "title": "Market Size",
+            "type": "number"
+          },
+          "matching_deals": {
+            "items": {
+              "$ref": "#/components/schemas/DealListItem"
+            },
+            "title": "Matching Deals",
+            "type": "array"
+          },
+          "median_multiple": {
+            "title": "Median Multiple",
+            "type": "number"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "players": {
+            "items": {
+              "$ref": "#/components/schemas/Player"
+            },
+            "title": "Players",
+            "type": "array"
+          },
+          "reports": {
+            "items": {
+              "$ref": "#/components/schemas/ResearchReport"
+            },
+            "title": "Reports",
+            "type": "array"
+          },
+          "short": {
+            "title": "Short",
+            "type": "string"
+          },
+          "transactions": {
+            "items": {
+              "$ref": "#/components/schemas/Transaction"
+            },
+            "title": "Transactions",
+            "type": "array"
+          },
+          "typical_leverage": {
+            "title": "Typical Leverage",
+            "type": "number"
+          },
+          "view": {
+            "title": "View",
+            "type": "string"
+          },
+          "white_space": {
+            "title": "White Space",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "created_at",
+          "name",
+          "short",
+          "market_size",
+          "cagr",
+          "avg_margin",
+          "fragmentation",
+          "ai_exposure",
+          "median_multiple",
+          "addon_multiple",
+          "typical_leverage",
+          "deal_count_24m",
+          "view",
+          "white_space",
+          "attributes",
+          "attractiveness",
+          "attractiveness_max",
+          "exit_route_mix",
+          "transactions",
+          "players",
+          "matching_deals",
+          "reports"
+        ],
+        "title": "SegmentDetail",
+        "type": "object"
+      },
+      "SegmentListItem": {
+        "properties": {
+          "addon_multiple": {
+            "title": "Addon Multiple",
+            "type": "number"
+          },
+          "ai_exposure": {
+            "title": "Ai Exposure",
+            "type": "string"
+          },
+          "attractiveness": {
+            "title": "Attractiveness",
+            "type": "integer"
+          },
+          "attractiveness_max": {
+            "title": "Attractiveness Max",
+            "type": "integer"
+          },
+          "attributes": {
+            "items": {
+              "$ref": "#/components/schemas/Attribute"
+            },
+            "title": "Attributes",
+            "type": "array"
           },
           "avg_margin": {
             "title": "Avg Margin",
@@ -3212,6 +4023,8 @@
           }
         },
         "required": [
+          "id",
+          "created_at",
           "name",
           "short",
           "market_size",
@@ -3224,41 +4037,12 @@
           "typical_leverage",
           "deal_count_24m",
           "view",
-          "white_space"
+          "white_space",
+          "attributes",
+          "attractiveness",
+          "attractiveness_max"
         ],
-        "title": "Segment",
-        "type": "object"
-      },
-      "SegmentAttributeScore": {
-        "properties": {
-          "attribute": {
-            "title": "Attribute",
-            "type": "string"
-          },
-          "created_at": {
-            "format": "date-time",
-            "title": "Created At",
-            "type": "string"
-          },
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "score": {
-            "title": "Score",
-            "type": "integer"
-          },
-          "segment_id": {
-            "title": "Segment Id",
-            "type": "string"
-          }
-        },
-        "required": [
-          "segment_id",
-          "attribute",
-          "score"
-        ],
-        "title": "SegmentAttributeScore",
+        "title": "SegmentListItem",
         "type": "object"
       },
       "SegmentRef": {
@@ -3524,6 +4308,47 @@
         "title": "Teaser",
         "type": "object"
       },
+      "Tier": {
+        "properties": {
+          "gp": {
+            "title": "Gp",
+            "type": "number"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "lp": {
+            "title": "Lp",
+            "type": "number"
+          }
+        },
+        "required": [
+          "label",
+          "lp",
+          "gp"
+        ],
+        "title": "Tier",
+        "type": "object"
+      },
+      "Tightest": {
+        "properties": {
+          "company": {
+            "title": "Company",
+            "type": "string"
+          },
+          "headroom": {
+            "title": "Headroom",
+            "type": "number"
+          }
+        },
+        "required": [
+          "company",
+          "headroom"
+        ],
+        "title": "Tightest",
+        "type": "object"
+      },
       "Transaction": {
         "properties": {
           "acquirer": {
@@ -3639,6 +4464,50 @@
         "title": "ValidationError",
         "type": "object"
       },
+      "ValuationRange": {
+        "properties": {
+          "ask": {
+            "title": "Ask",
+            "type": "number"
+          },
+          "rows": {
+            "items": {
+              "$ref": "#/components/schemas/ValuationRow"
+            },
+            "title": "Rows",
+            "type": "array"
+          }
+        },
+        "required": [
+          "ask",
+          "rows"
+        ],
+        "title": "ValuationRange",
+        "type": "object"
+      },
+      "ValuationRow": {
+        "properties": {
+          "high": {
+            "title": "High",
+            "type": "number"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "low": {
+            "title": "Low",
+            "type": "number"
+          }
+        },
+        "required": [
+          "label",
+          "low",
+          "high"
+        ],
+        "title": "ValuationRow",
+        "type": "object"
+      },
       "ValueCreationItemListItem": {
         "properties": {
           "amount": {
@@ -3675,6 +4544,24 @@
           "company"
         ],
         "title": "ValueCreationItemListItem",
+        "type": "object"
+      },
+      "ValueCreationPoint": {
+        "properties": {
+          "amount": {
+            "title": "Amount",
+            "type": "number"
+          },
+          "lever": {
+            "title": "Lever",
+            "type": "string"
+          }
+        },
+        "required": [
+          "lever",
+          "amount"
+        ],
+        "title": "ValueCreationPoint",
         "type": "object"
       },
       "Viewport": {
@@ -4265,6 +5152,47 @@
         ]
       }
     },
+    "/api/commands/save-scenario": {
+      "post": {
+        "operationId": "save_scenario_api_commands_save_scenario_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SaveScenarioInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LboScenarioRead"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Save-Scenario",
+        "tags": [
+          "commands"
+        ]
+      }
+    },
     "/api/commands/set-watchlist": {
       "post": {
         "operationId": "set_watchlist_api_commands_set_watchlist_post",
@@ -4638,6 +5566,68 @@
         "summary": "Lbo-Sensitivity",
         "tags": [
           "compute"
+        ]
+      }
+    },
+    "/api/compute/valuation-range": {
+      "post": {
+        "operationId": "valuation_range_api_compute_valuation_range_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DealRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValuationRange"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Valuation-Range",
+        "tags": [
+          "compute"
+        ]
+      }
+    },
+    "/api/covenant-summary": {
+      "get": {
+        "operationId": "covenant_summary_api_covenant_summary_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CovenantSummary"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Covenant Summary",
+        "tags": [
+          "portfolio"
         ]
       }
     },
@@ -5359,7 +6349,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Page_ExitRouteMix_"
+                  "$ref": "#/components/schemas/Page_ExitRouteMixListItem_"
                 }
               }
             },
@@ -5401,7 +6391,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ExitRouteMix"
+                  "$ref": "#/components/schemas/ExitRouteMixListItem"
                 }
               }
             },
@@ -5421,6 +6411,70 @@
         "summary": "Get Item",
         "tags": [
           "exit-route-mixes"
+        ]
+      }
+    },
+    "/api/exit-summary": {
+      "get": {
+        "operationId": "exit_summary_api_exit_summary_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExitSummary"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Exit Summary",
+        "tags": [
+          "portfolio"
+        ]
+      }
+    },
+    "/api/exports/lbo": {
+      "post": {
+        "description": "LBO model for a deal as an Excel workbook.",
+        "operationId": "export_lbo_api_exports_lbo_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LboRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Export Lbo",
+        "tags": [
+          "exports"
         ]
       }
     },
@@ -6007,7 +7061,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Page_LboScenario_"
+                  "$ref": "#/components/schemas/Page_LboScenarioRead_"
                 }
               }
             },
@@ -6049,7 +7103,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/LboScenario"
+                  "$ref": "#/components/schemas/LboScenarioRead"
                 }
               }
             },
@@ -6191,6 +7245,27 @@
         "summary": "Get Item",
         "tags": [
           "macro-rates"
+        ]
+      }
+    },
+    "/api/market-summary": {
+      "get": {
+        "operationId": "market_summary_api_market_summary_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MarketSummary"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Market Summary",
+        "tags": [
+          "overview"
         ]
       }
     },
@@ -6454,6 +7529,27 @@
         ]
       }
     },
+    "/api/overview-summary": {
+      "get": {
+        "operationId": "overview_summary_api_overview_summary_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OverviewSummary"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Overview Summary",
+        "tags": [
+          "overview"
+        ]
+      }
+    },
     "/api/pipeline-summary": {
       "get": {
         "operationId": "pipeline_summary_api_pipeline_summary_get",
@@ -6582,7 +7678,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PortfolioCompanyListItem"
+                  "$ref": "#/components/schemas/PortfolioCompanyDetail"
                 }
               }
             },
@@ -6602,6 +7698,27 @@
         "summary": "Get Item",
         "tags": [
           "portfolio-companies"
+        ]
+      }
+    },
+    "/api/portfolio-summary": {
+      "get": {
+        "operationId": "portfolio_summary_api_portfolio_summary_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PortfolioSummary"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Portfolio Summary",
+        "tags": [
+          "portfolio"
         ]
       }
     },
@@ -7336,7 +8453,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Page_Segment_"
+                  "$ref": "#/components/schemas/Page_SegmentListItem_"
                 }
               }
             },
@@ -7378,7 +8495,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Segment"
+                  "$ref": "#/components/schemas/SegmentDetail"
                 }
               }
             },
