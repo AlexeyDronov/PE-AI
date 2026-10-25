@@ -7,6 +7,9 @@ export const resources = {
   deal: { path: "/deals/{id}", resource: "deals" },
   companies: { path: "/companies", resource: "companies" },
   portfolioCompanies: { path: "/portfolio-companies", resource: "portfolio-companies" },
+  portfolioCompany: { path: "/portfolio-companies/{id}", resource: "portfolio-companies" },
+  portfolioSummary: { path: "/portfolio-summary", resource: "portfolio-companies" },
+  covenantSummary: { path: "/covenant-summary", resource: "debt-facilities" },
   kpiPoints: { path: "/kpi-points", resource: "kpi-points" },
   alerts: { path: "/alerts", resource: "alerts" },
   funds: { path: "/funds", resource: "funds" },
@@ -26,6 +29,8 @@ export const resources = {
   pipelineSummary: { path: "/pipeline-summary", resource: "deals" },
   lbo: { path: "/compute/lbo", resource: "deals", method: "POST" },
   lboSensitivity: { path: "/compute/lbo-sensitivity", resource: "deals", method: "POST" },
+  valuationRange: { path: "/compute/valuation-range", resource: "deals", method: "POST" },
+  lboScenarios: { path: "/lbo-scenarios", resource: "lbo-scenarios" },
   debtCapacity: { path: "/compute/debt-capacity", resource: "deals", method: "POST" },
 } as const satisfies Record<string, ResourceDef>;
 
@@ -34,6 +39,7 @@ export const commands = {
   updateAnnotation: "/commands/update-annotation",
   startMarketResearch: "/commands/start-market-research",
   setWatchlist: "/commands/set-watchlist",
+  saveScenario: "/commands/save-scenario",
 } as const satisfies Record<string, string>;
 
 export type ResourceKey = keyof typeof resources;

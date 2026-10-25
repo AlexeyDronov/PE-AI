@@ -13,6 +13,8 @@ export type Column<Row> = {
   sub?: (row: Row) => ReactNode;
   sortValue?: (row: Row) => string | number;
   width?: string | number;
+  /** Keep the cell on one line. */
+  nowrap?: boolean;
 };
 
 type Props<Row> = {
@@ -154,7 +156,7 @@ export function DataTable<Row>({
                     onKeyDown={(event) => onRowKeyDown(event, index)}
                   >
                     {columns.map((column) => (
-                      <td key={column.key} className={styles.td} data-align={column.align ?? "left"}>
+                      <td key={column.key} className={styles.td} data-align={column.align ?? "left"} data-nowrap={column.nowrap ? "true" : undefined}>
                         <div className={styles.main}>{column.render(row)}</div>
                         {column.sub ? <div className={styles.sub}>{column.sub(row)}</div> : null}
                       </td>

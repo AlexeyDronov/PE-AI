@@ -21,8 +21,12 @@ export function compactMoney(v: number): string {
   return v < 0 ? `${MINUS}${body}` : body;
 }
 
-/** Vertical category labels: show every one, wrapping long ones. */
-export const CATEGORY_LABELS = { interval: 0, overflow: "break", width: 80 };
+const CROWDED_CATEGORIES = 6;
+
+/** Vertical category labels: show every one; wrap them, or angle them when crowded. */
+export function categoryLabels(count: number): Record<string, unknown> {
+  return count > CROWDED_CATEGORIES ? { interval: 0, rotate: 30 } : { interval: 0, overflow: "break", width: 80 };
+}
 
 const BAR_THICKNESS = 16;
 

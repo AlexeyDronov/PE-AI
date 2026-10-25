@@ -7,7 +7,7 @@
 .track {
   position: relative;
   flex: 1;
-  min-width: 48px;
+  min-width: 96px;
   height: 4px;
   border-radius: 2px;
   background: var(--line);

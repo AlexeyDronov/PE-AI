@@ -1,15 +1,15 @@
-import { barStyle, baseOption, CATEGORY_LABELS, cartesianAxes, type ChartOption, type Orientation, type Role, seriesColor, type Unit, type ValueFormat } from "./base";
+import { barStyle, baseOption, cartesianAxes, categoryLabels, type ChartOption, type Orientation, type Role, seriesColor, type Unit, type ValueFormat } from "./base";
 import type { ChartTheme } from "../theme";
 
 export type BarSeries = { name: string; values: number[]; role?: Role; mark?: "bar" | "marker" };
-export type BarInput = { categories: string[]; series: BarSeries[]; orientation?: Orientation; valueFormat?: ValueFormat; unit?: Unit; integer?: boolean };
+export type BarInput = { categories: string[]; series: BarSeries[]; orientation?: Orientation; valueFormat?: ValueFormat; unit?: Unit; integer?: boolean; signed?: boolean };
 
-export function barOption({ categories, series, orientation = "vertical", valueFormat, unit, integer }: BarInput, theme: ChartTheme): ChartOption {
+export function barOption({ categories, series, orientation = "vertical", valueFormat, unit, integer, signed }: BarInput, theme: ChartTheme): ChartOption {
   const horizontal = orientation === "horizontal";
   const style = barStyle(orientation);
   return {
     ...baseOption(theme, { seriesCount: series.length, trigger: "axis", valueFormat }),
-    ...cartesianAxes(theme, { categories, orientation, format: valueFormat, unit, valueExtra: integer ? { minInterval: 1 } : undefined, categoryLabel: horizontal ? undefined : CATEGORY_LABELS }),
+    ...cartesianAxes(theme, { categories, orientation, format: valueFormat, unit, valueExtra: integer ? { minInterval: 1 } : undefined, categoryLabel: horizontal ? undefined : categoryLabels(categories.length) }),
     series: series.map((s, index) => {
       const color = seriesColor(theme, index, s.role);
       if (s.mark === "marker") {
@@ -29,7 +29,7 @@ export function barOption({ categories, series, orientation = "vertical", valueF
         barMaxWidth: style.barMaxWidth,
         barGap: style.barGap,
         itemStyle: { color, borderRadius: style.radius },
-        data: s.values,
+        data: signed ? s.values.map((value) => ({ value, itemStyle: { color: value < 0 ? theme.bad : theme.good, borderRadius: style.radius } })) : s.values,
       };
     }),
   } as ChartOption;

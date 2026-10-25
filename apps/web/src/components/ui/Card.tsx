@@ -13,7 +13,7 @@ type Props = {
 export function Card({ title, description, actions, flush, testId = "card", children }: Props) {
   return (
     <div className={styles.root} data-flush={flush ? "true" : undefined} data-testid={testId}>
-      {title || actions ? (
+      {title || description || actions ? (
         <div className={styles.header}>
           <div>
             {title ? <h3 className={styles.title}>{title}</h3> : null}

@@ -34,12 +34,13 @@ function queryString(params: Params): string {
 
 export const DEFAULT_TIMEOUT_MS = 15_000;
 
-export async function apiFetch<T>(
+async function request(
   baseUrl: string,
   path: string,
-  opts: { method?: "GET" | "POST"; params?: Params; body?: unknown; timeoutMs?: number } = {},
-): Promise<T> {
-  const method = opts.method ?? "GET";
+  method: "GET" | "POST",
+  opts: { params?: Params; body?: unknown; timeoutMs?: number },
+  read: (res: Response) => Promise<unknown>,
+): Promise<unknown> {
   const url = `${baseUrl}/api${path}${method === "GET" && opts.params ? queryString(opts.params) : ""}`;
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), opts.timeoutMs ?? DEFAULT_TIMEOUT_MS);
@@ -67,9 +68,8 @@ export async function apiFetch<T>(
         payload?.error?.details,
       );
     }
-    if (res.status === 204) return undefined as T;
     try {
-      return (await res.json()) as T;
+      return await read(res);
     } catch (err) {
       if (controller.signal.aborted) throw timeoutError();
       throw err;
@@ -77,6 +77,24 @@ export async function apiFetch<T>(
   } finally {
     clearTimeout(timer);
   }
+}
+
+export async function apiFetch<T>(
+  baseUrl: string,
+  path: string,
+  opts: { method?: "GET" | "POST"; params?: Params; body?: unknown; timeoutMs?: number } = {},
+): Promise<T> {
+  return (await request(baseUrl, path, opts.method ?? "GET", opts, (res) =>
+    res.status === 204 ? Promise.resolve(undefined) : res.json(),
+  )) as T;
+}
+
+/** POST a JSON body and receive a file; the name comes from Content-Disposition. */
+export async function apiDownload(baseUrl: string, path: string, body: unknown): Promise<{ blob: Blob; filename: string }> {
+  return (await request(baseUrl, path, "POST", { body }, async (res) => {
+    const match = /filename="?([^";]+)"?/.exec(res.headers.get("content-disposition") ?? "");
+    return { blob: await res.blob(), filename: match?.[1] ?? "download" };
+  })) as { blob: Blob; filename: string };
 }
 
 function timeoutError(): ApiError {

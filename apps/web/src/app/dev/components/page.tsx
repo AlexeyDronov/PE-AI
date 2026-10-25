@@ -13,6 +13,20 @@ import {
 } from "@/components/charts/options";
 import { useChartTheme } from "@/components/charts/theme";
 import { CompanyFlags, DebtCapacityPanel, DiligenceList, RiskChecks, Scorecard } from "@/components/domain/deal";
+import { AssumptionsPanel, CreditProfileCard, ProjectionsTable, ScenarioList, SourcesUsesCard } from "@/components/domain/model";
+import {
+  CapitalStructure,
+  CovenantTable,
+  EbitdaVsBudget,
+  ExitPlanCard,
+  type Facility,
+  PlatformAlerts,
+  type Platform,
+  PlatformsTable,
+  QuarterlyEbitda,
+  TestCalendar,
+  ValueCreationChart,
+} from "@/components/domain/portfolio";
 import { type Deal, PipelineTable, SegmentScores, StageFunnel } from "@/components/domain/pipeline";
 import { VERDICT_TONE } from "@/components/domain/verdict";
 import {
@@ -70,6 +84,25 @@ const MOCK_DEALS: Deal[] = [
   { id: "d2", code_name: "Project Vale", stage: "NDA", ask_multiple: 13.5, process: "Bilateral", origin: "seed", source: "seed", company: { id: "c2", name: "Veritest Group", hq: "Leeds, UK", description: "", segment_id: "s2" }, segment: { id: "s2", name: "Testing, inspection & certification", short: "TIC", median_multiple: 14 }, financials: { revenue: 142, ebitda: 31, growth: 0.11, recurring_pct: 0.64, capex_pct: 0.065 }, screening: { score: 60, verdict: "Watch", gate_reason: null } },
   { id: "d3", code_name: "Project Mere", stage: "Teaser", ask_multiple: 11, process: "Auction", origin: "seed", source: "seed", company: { id: "c3", name: "Meridian Legal Ops", hq: "Bristol, UK", description: "", segment_id: "s1" }, segment: { id: "s1", name: "Compliance & regulatory services", short: "Compliance", median_multiple: 16 }, financials: { revenue: 40, ebitda: 8.2, growth: 0.05, recurring_pct: 0.4, capex_pct: 0.02 }, screening: { score: 47, verdict: "Pass", gate_reason: "EBITDA £8.2m is below the £10m mandate floor" } },
 ] as unknown as Deal[];
+
+const MOCK_FACILITIES = [
+  { id: "f1", company_id: "c1", type: "Unitranche", pricing: "SONIA + 5.25%", covenant: "Net leverage below 6x", test_level: 6, actual: 5.6, interest_cover: 1.6, cov_lite: false, headroom: 0.067, band: "tight", next_test_date: "2026-12-31", company: { name: "Orbis Language Tech", hq: "London", description: "", segment_id: "s1" } },
+  { id: "f2", company_id: "c2", type: "Term loan B", pricing: "SONIA + 4.75%", covenant: "Net leverage below 4.5x", test_level: 4.5, actual: 2.1, interest_cover: 3.2, cov_lite: true, headroom: 0.53, band: "comfortable", next_test_date: "2027-03-31", company: { name: "Lumen Risk", hq: "Leeds", description: "", segment_id: "s1" } },
+] as unknown as Facility[];
+
+const MOCK_PLATFORMS = [
+  { id: "p1", invest_year: 2021, invested: 71, fair_value: 58, ebitda_ltm: 9.2, ebitda_budget: 12.6, net_leverage: 5.6, status: "bad", status_label: "Action", moic: 0.82, budget_variance: -0.27, company: MOCK_FACILITIES[0]?.company, segment: { id: "s1", name: "Legal & professional outsourcing", short: "Legal ops", median_multiple: 9.5 }, facility: MOCK_FACILITIES[0] },
+  { id: "p2", invest_year: 2022, invested: 64, fair_value: 203, ebitda_ltm: 26, ebitda_budget: 25.1, net_leverage: 2.1, status: "acc", status_label: "Exit prep", moic: 3.17, budget_variance: 0.036, company: MOCK_FACILITIES[1]?.company, segment: { id: "s1", name: "Legal & professional outsourcing", short: "Legal ops", median_multiple: 9.5 }, facility: MOCK_FACILITIES[1] },
+] as unknown as Platform[];
+
+const MOCK_QUARTERS = ["2025Q1", "2025Q2", "2025Q3", "2025Q4"].map((period, i) => ({ period, ebitda: 11.8 - i * 0.7, ebitda_budget: 12.6 }));
+
+const MOCK_BRIDGE = [
+  { label: "Invested", value: 135 },
+  { label: "Revenue growth", value: 80 },
+  { label: "Multiple", value: 46 },
+  { label: "Fair value", value: 261 },
+];
 
 const MOCK_STAGES = ["Teaser", "NDA", "CIM", "IOI", "LOI"].map((stage, i) => ({ stage, count: 5 - i }));
 
@@ -396,6 +429,8 @@ export default function ComponentGallery() {
 
       <ChartGroup />
       <PipelineGroup />
+      <PortfolioGroup />
+      <ModelGroup />
 
       <Group title="Page layout">
         <Variant name="PageHeader with meta and tabs">
@@ -498,6 +533,56 @@ function PipelineGroup() {
             <SegmentScores bySegment={MOCK_SEGMENTS} />
           </Variant>
         </div>
+      </div>
+    </PageSection>
+  );
+}
+
+function PortfolioGroup() {
+  const facility = MOCK_FACILITIES[0];
+  return (
+    <PageSection id="portfolio" title="Portfolio">
+      <div className={styles.stack}>
+        <Variant name="PlatformsTable">
+          <PlatformsTable platforms={MOCK_PLATFORMS} onOpen={() => undefined} />
+        </Variant>
+        <Variant name="PlatformsTable loading / error">
+          <PlatformsTable platforms={[]} onOpen={() => undefined} loading />
+          <PlatformsTable platforms={[]} onOpen={() => undefined} error="Couldn't load platforms." onRetry={() => undefined} />
+        </Variant>
+        <div className={styles.grid}>
+          <Variant name="EbitdaVsBudget">
+            <EbitdaVsBudget platforms={MOCK_PLATFORMS} />
+          </Variant>
+          <Variant name="ValueCreationChart">
+            <ValueCreationChart steps={MOCK_BRIDGE} description="From invested capital to fair value" />
+          </Variant>
+          <Variant name="ValueCreationChart (levers do not reconcile)">
+            <ValueCreationChart steps={[MOCK_BRIDGE[0], MOCK_BRIDGE[1], MOCK_BRIDGE[3]].flatMap((x) => (x ? [x] : []))} />
+          </Variant>
+          <Variant name="QuarterlyEbitda">
+            <QuarterlyEbitda quarters={MOCK_QUARTERS} />
+          </Variant>
+        </div>
+        <div className={styles.grid}>
+          <Variant name="CapitalStructure">{facility ? <CapitalStructure facility={facility} threshold={0.15} /> : null}</Variant>
+          <Variant name="ExitPlanCard">
+            <ExitPlanCard plan={{ route: "Recapitalise, then secondary", buyers: "Special situations funds", window: "2028" }} moic={0.82} />
+          </Variant>
+        </div>
+        <Variant name="PlatformAlerts">
+          <PlatformAlerts alerts={[{ id: "a1", company_id: "c1", severity: "bad", label: "Action", text: "Net leverage of 5.6x leaves 7% headroom.", action: "Open lender dialogue.", created_at: "", company: MOCK_PLATFORMS[0]?.company ?? { name: "", hq: "", description: "", segment_id: null } }]} />
+          <PlatformAlerts alerts={[]} />
+        </Variant>
+        <Variant name="CovenantTable">
+          <CovenantTable facilities={MOCK_FACILITIES} threshold={0.15} />
+        </Variant>
+        <Variant name="CovenantTable loading">
+          <CovenantTable facilities={[]} threshold={0.15} loading />
+        </Variant>
+        <Variant name="TestCalendar">
+          <TestCalendar facilities={MOCK_FACILITIES} />
+        </Variant>
       </div>
     </PageSection>
   );
@@ -624,6 +709,52 @@ function ChartGroup() {
             )}
             table={tableOf(buyers, (i) => `${split[0]?.[i]}% / ${split[1]?.[i]}%`)}
           />
+        </Variant>
+      </div>
+    </PageSection>
+  );
+}
+
+const MOCK_ASSUMPTIONS = {
+  revenue0: 61, ebitda0: 14.6, entry_multiple: 15.5, exit_multiple: 15.5, total_leverage: 4.5, senior_leverage: 3, rate_senior: 0.0875, rate_sub: 0.11,
+  tx_fee_pct: 0.02, fin_fee_pct: 0.025, min_cash: 2, tax_rate: 0.25, revenue_growth: [0.22, 0.19, 0.16, 0.14, 0.11], margin_change_bp: 0,
+  capex_pct: 0.03, da_pct: 0.04, nwc_pct: 0.06, sweep: 0.75, mgmt_rollover: 0.1, years: 5,
+};
+
+const MOCK_SOURCES = {
+  enterprise_value: 226.3, transaction_fees: 4.5, financing_fees: 1.6, min_cash: 2, total_uses: 234.4,
+  senior_debt: 43.8, sub_debt: 21.9, rollover_equity: 16.9, sponsor_equity: 151.8, total_sources: 234.4,
+};
+
+const MOCK_SCHEDULE = [1, 2, 3, 4, 5].map((year) => ({
+  year, revenue: 61 + year * 14, margin: 0.24, ebitda: 14.6 + year * 3.3, da: 2, capex: 2, nwc: 1, interest: 6.2, tax: 2.1,
+  free_cash_flow: year === 5 ? -1.2 : 6.5 + year, repayment: 5, senior_close: 43.8 - year * 6, sub_close: 21.9, cash: 3,
+}));
+
+function ModelGroup() {
+  const [scenario, setScenario] = useState<"down" | "base" | "up">("base");
+  return (
+    <PageSection id="deal-model" title="Deal model">
+      <div className={styles.stack}>
+        <div className={styles.grid}>
+          <Variant name="AssumptionsPanel">
+            <AssumptionsPanel assumptions={MOCK_ASSUMPTIONS} overrides={{ entry_multiple: 16 }} scenario={scenario} onScenarioChange={setScenario} onOverride={() => undefined} onReset={() => undefined} />
+          </Variant>
+          <Variant name="SourcesUsesCard">
+            <SourcesUsesCard sourcesUses={MOCK_SOURCES} assumptions={MOCK_ASSUMPTIONS} />
+          </Variant>
+          <Variant name="CreditProfileCard">
+            <CreditProfileCard
+              credit={{ total_leverage: 4.5, senior_leverage: 3, interest_cover: 2.75, debt_share: 0.3, stressed_cover: 2.13 }}
+              benchmarks={[{ id: "b1", key: "total_leverage", label: "Total leverage", low: 5, high: 7, unit: "x", source_note: "", created_at: "2026-10-01T00:00:00Z" }]}
+            />
+          </Variant>
+          <Variant name="ScenarioList">
+            <ScenarioList scenarios={[{ id: "s1", deal_id: "d1", name: "Bid at 15x", case: "base", overrides: { entry_multiple: 15 }, created_at: "2026-10-01T00:00:00Z", source: "user" }]} onLoad={() => undefined} />
+          </Variant>
+        </div>
+        <Variant name="ProjectionsTable">
+          <ProjectionsTable schedule={MOCK_SCHEDULE} />
         </Variant>
       </div>
     </PageSection>

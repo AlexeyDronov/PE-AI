@@ -72,6 +72,10 @@
   vertical-align: middle;
 }
 
+.td[data-nowrap="true"] {
+  white-space: nowrap;
+}
+
 .main {
   min-height: 20px;
 }

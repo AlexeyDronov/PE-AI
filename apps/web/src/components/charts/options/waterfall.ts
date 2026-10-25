@@ -1,4 +1,4 @@
-import { barStyle, baseOption, CATEGORY_LABELS, cartesianAxes, compactMoney, type ChartOption, type Unit, type ValueFormat } from "./base";
+import { barStyle, baseOption, categoryLabels, cartesianAxes, compactMoney, type ChartOption, type Unit, type ValueFormat } from "./base";
 import type { ChartTheme } from "../theme";
 
 export type WaterfallStep = { label: string; value?: number; kind: "start" | "delta" | "end" };
@@ -30,13 +30,20 @@ export function waterfallOption({ steps, valueFormat, unit }: WaterfallInput, th
   }
   const style = barStyle("vertical");
   const totalFormat = unit === "money" ? compactMoney : (valueFormat ?? String);
-  const signed = (v: number) => (v < 0 ? `(${Math.abs(v)})` : `+${v}`);
+  const amount = unit === "money" ? compactMoney : (valueFormat ?? String);
+  const signed = (v: number) => {
+    if (!Number.isFinite(v) || v === 0) return "";
+    return v < 0 ? `(${amount(Math.abs(v))})` : `+${amount(v)}`;
+  };
   const label = (format: (v: number) => string) => ({
     show: true,
     position: "top" as const,
     color: theme.ink2,
     fontFamily: theme.fontFamily,
-    formatter: (p: unknown) => format(Number((p as { value: unknown }).value)),
+    formatter: (p: unknown) => {
+      const v = (p as { value: unknown }).value;
+      return v === "-" ? "" : format(Number(v));
+    },
   });
   const bar = (name: string, data: Cell[], color: string, silent = false, labelFormat?: (v: number) => string) => ({
     name,
@@ -50,7 +57,7 @@ export function waterfallOption({ steps, valueFormat, unit }: WaterfallInput, th
   });
   return {
     ...baseOption(theme, { seriesCount: 1, valueFormat }),
-    ...cartesianAxes(theme, { categories: steps.map((s) => s.label), orientation: "vertical", format: valueFormat, unit, categoryLabel: CATEGORY_LABELS }),
+    ...cartesianAxes(theme, { categories: steps.map((s) => s.label), orientation: "vertical", format: valueFormat, unit, categoryLabel: categoryLabels(steps.length) }),
     series: [bar("base", base, "transparent", true), bar("total", total, theme.series[0] ?? theme.other, false, totalFormat), bar("increase", increase, theme.good, false, signed), bar("decrease", decrease, theme.bad, false, (v) => signed(-v))],
   } as ChartOption;
 }

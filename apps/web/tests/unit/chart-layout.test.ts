@@ -156,3 +156,30 @@ describe("scatter bounds and labels (browser review round 2)", () => {
     expect(opt.series[0].label.position).toBe("top");
   });
 });
+
+describe("crowded category axes (found in browser review of /portfolio: 'Deleveraging' vanished)", () => {
+  const steps = (n: number) => [
+    { label: "Invested", value: 571, kind: "start" as const },
+    ...Array.from({ length: n - 2 }, (_, i) => ({ label: `Lever number ${i}`, value: 10, kind: "delta" as const })),
+    { label: "Fair value", kind: "end" as const },
+  ];
+
+  it("angles labels when there are more than six categories, without truncating them", () => {
+    const opt = o(waterfallOption({ steps: steps(8) }, theme));
+    expect(opt.xAxis.axisLabel.rotate).toBe(30);
+    expect(opt.xAxis.axisLabel.interval).toBe(0);
+    expect(opt.xAxis.axisLabel.overflow).toBeUndefined();
+  });
+
+  it("keeps horizontal wrapped labels for six or fewer", () => {
+    const opt = o(waterfallOption({ steps: steps(6) }, theme));
+    expect(opt.xAxis.axisLabel.rotate ?? 0).toBe(0);
+    expect(opt.xAxis.axisLabel.overflow).toBe("break");
+  });
+
+  it("applies the same rule to vertical bar charts", () => {
+    const cats = Array.from({ length: 7 }, (_, i) => `Segment ${i}`);
+    const opt = o(barOption({ categories: cats, series: [{ name: "x", values: cats.map(() => 1) }] }, theme));
+    expect(opt.xAxis.axisLabel.rotate).toBe(30);
+  });
+});

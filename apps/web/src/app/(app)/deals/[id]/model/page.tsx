@@ -1,5 +1,11 @@
-import { EmptyState } from "@/components/ui";
+import { Suspense } from "react";
+import { DealModel } from "@/features/deal/DealModel";
 
-export default function ModelPage() {
-  return <EmptyState title="The model is being built" body="What can we pay and still hit the hurdle?" />;
+export default async function ModelPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  return (
+    <Suspense>
+      <DealModel dealId={id} />
+    </Suspense>
+  );
 }

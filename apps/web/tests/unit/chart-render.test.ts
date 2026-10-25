@@ -96,3 +96,4 @@ describe("options render in real ECharts", () => {
     }
   });
 });
+
