@@ -1,0 +1,17 @@
+.mandate {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-2);
+}
+
+.flow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-6);
+}
+
+@media (max-width: 1023px) {
+  .flow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
