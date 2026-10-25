@@ -1,0 +1,39 @@
+.root {
+  display: grid;
+  gap: var(--space-4);
+  scroll-margin-top: var(--space-6);
+}
+
+.root + .root {
+  margin-top: var(--space-6);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--line);
+}
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
+}
+
+.description {
+  margin: 0;
+  color: var(--ink-3);
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}

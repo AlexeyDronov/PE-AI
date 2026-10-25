@@ -1,0 +1,33 @@
+.root {
+  font-size: 13px;
+  color: var(--ink-3);
+}
+
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item + .item::before {
+  content: "/";
+  margin: 0 var(--space-2);
+  color: var(--line-strong);
+}
+
+.link {
+  color: var(--ink-3);
+  text-decoration: none;
+}
+
+.link:hover {
+  color: var(--ink);
+}
+
+.current {
+  color: var(--ink);
+  font-weight: 500;
+}

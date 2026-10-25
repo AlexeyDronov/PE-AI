@@ -1,0 +1,200 @@
+/* Design tokens: docs/02-design-system.md §2 and §8. Components reference these only. */
+
+:root {
+  color-scheme: light;
+
+  /* Surfaces and lines */
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --surface-sunk: #f7f8fb;
+  --surface-raised: #ffffff;
+  --line: #e6e9f0;
+  --line-strong: #d0d6e0;
+
+  /* Ink */
+  --ink: #0b1b3f;
+  --ink-2: #3f4a5c;
+  --ink-3: #6b7280;
+
+  /* Accent and status */
+  --accent: #1f45c8;
+  --accent-hover: #1838a6;
+  --accent-ink: #ffffff;
+  --accent-soft: #eef2fd;
+  --nav-active-ink: #1f45c8;
+  --link: #1f45c8;
+  --input: #1f45c8;
+  --good: #11734a;
+  --good-soft: #eaf5ef;
+  --warn: #9a5b00;
+  --warn-soft: #fbf3e2;
+  --bad: #b42330;
+  --bad-soft: #fbecec;
+
+  /* Data visualisation */
+  --series-1: #1f45c8;
+  --series-2: #e8692e;
+  --series-3: #13a06f;
+  --series-4: #b98200;
+  --series-5: #d9608f;
+  --series-other: #8a94a6;
+  --seq-lo: #eef2fd;
+  --seq-mid: #1f45c8;
+  --seq-hi: #0b1b3f;
+  --div-lo: #b42330;
+  --div-mid: #f1f2f5;
+  --div-hi: #1f45c8;
+
+  /* Elevation */
+  --shadow-card: 0 1px 2px rgb(11 27 63 / 0.04);
+  --shadow-control: 0 1px 2px rgb(11 27 63 / 0.05);
+  --shadow-thumb: 0 1px 2px rgb(11 27 63 / 0.08);
+  --shadow-pop: 0 12px 32px rgb(11 27 63 / 0.12);
+  --shadow-inset-hi: inset 0 1px 0 rgb(255 255 255 / 0.12);
+  --focus-ring: 0 0 0 3px color-mix(in srgb, var(--accent) 35%, transparent);
+  --scrim: rgb(7 14 38 / 0.5);
+
+  /* Spacing (4px base) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 32px;
+  --space-8: 40px;
+  --space-9: 48px;
+  --space-10: 64px;
+
+  /* Shape */
+  --radius-badge: 4px;
+  --radius-control: 6px;
+  --radius-card: 8px;
+  --radius-dialog: 10px;
+
+  /* Control heights */
+  --control-sm: 28px;
+  --control-md: 32px;
+  --control-lg: 40px;
+
+  /* Type */
+  --font-serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --font-sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+
+  /* Motion (§8) */
+  --dur-hover: 120ms;
+  --dur-slide: 150ms;
+  --dur-pop: 150ms;
+  --dur-dialog: 200ms;
+  --dur-page: 120ms;
+  --dur-chart: 400ms;
+  --dur-chart-update: 250ms;
+  --dur-count: 300ms;
+  --dur-live: 1600ms;
+  --dur-shimmer: 1400ms;
+  --ease-hover: ease-out;
+  --ease-slide: cubic-bezier(0.2, 0, 0, 1);
+  --ease-chart: cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+/* Dark: wired end to end, polish deferred (docs/TODO.md). */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #070e26;
+  --surface: #0b1636;
+  --surface-sunk: #060c20;
+  --surface-raised: #0e1b40;
+  --line: #1c2a52;
+  --line-strong: #2a3a68;
+  --ink: #e7ecf7;
+  --ink-2: #afbad3;
+  --ink-3: #7f8baa;
+  --accent: #ffffff;
+  --accent-hover: #e3e9f7;
+  --accent-ink: #0b1b3f;
+  --accent-soft: rgb(255 255 255 / 0.06);
+  --nav-active-ink: #e7ecf7;
+  --link: #9db8f2;
+  --input: #9db8f2;
+  --good: #4dbf8b;
+  --good-soft: rgb(77 191 139 / 0.12);
+  --warn: #e0b25a;
+  --warn-soft: rgb(224 178 90 / 0.12);
+  --bad: #ee8a8e;
+  --bad-soft: rgb(238 138 142 / 0.12);
+  --series-1: #7fa2ec;
+  --series-2: #e99a6e;
+  --series-3: #4dbf9e;
+  --series-4: #d9b562;
+  --series-5: #d68baa;
+  --series-other: #8d98b5;
+  --seq-lo: #0e1b40;
+  --seq-mid: #7fa2ec;
+  --seq-hi: #e7ecf7;
+  --div-lo: #b8646a;
+  --div-mid: #1c2a52;
+  --div-hi: #6f8fd6;
+  --shadow-card: none;
+  --shadow-control: none;
+  --shadow-thumb: none;
+  --shadow-pop: 0 12px 32px rgb(0 0 0 / 0.5);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #070e26;
+    --surface: #0b1636;
+    --surface-sunk: #060c20;
+    --surface-raised: #0e1b40;
+    --line: #1c2a52;
+    --line-strong: #2a3a68;
+    --ink: #e7ecf7;
+    --ink-2: #afbad3;
+    --ink-3: #7f8baa;
+    --accent: #ffffff;
+    --accent-hover: #e3e9f7;
+    --accent-ink: #0b1b3f;
+    --accent-soft: rgb(255 255 255 / 0.06);
+    --nav-active-ink: #e7ecf7;
+    --link: #9db8f2;
+    --input: #9db8f2;
+    --good: #4dbf8b;
+    --good-soft: rgb(77 191 139 / 0.12);
+    --warn: #e0b25a;
+    --warn-soft: rgb(224 178 90 / 0.12);
+    --bad: #ee8a8e;
+    --bad-soft: rgb(238 138 142 / 0.12);
+    --series-1: #7fa2ec;
+    --series-2: #e99a6e;
+    --series-3: #4dbf9e;
+    --series-4: #d9b562;
+    --series-5: #d68baa;
+    --series-other: #8d98b5;
+    --seq-lo: #0e1b40;
+    --seq-mid: #7fa2ec;
+    --seq-hi: #e7ecf7;
+    --div-lo: #b8646a;
+    --div-mid: #1c2a52;
+    --div-hi: #6f8fd6;
+    --shadow-card: none;
+    --shadow-control: none;
+    --shadow-thumb: none;
+    --shadow-pop: 0 12px 32px rgb(0 0 0 / 0.5);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-hover: 0ms;
+    --dur-slide: 0ms;
+    --dur-pop: 0ms;
+    --dur-dialog: 0ms;
+    --dur-page: 0ms;
+    --dur-chart: 0ms;
+    --dur-chart-update: 0ms;
+    --dur-count: 0ms;
+    --dur-shimmer: 0ms;
+  }
+}

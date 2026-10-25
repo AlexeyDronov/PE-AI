@@ -1,0 +1,44 @@
+.root {
+  position: relative;
+  display: inline-flex;
+  padding: 2px;
+  background: var(--surface-sunk);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-control);
+}
+
+.thumb {
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  background: var(--surface);
+  border-radius: var(--radius-badge);
+  box-shadow:
+    var(--shadow-thumb),
+    0 0 0 1px var(--line);
+  transition:
+    left var(--dur-slide) var(--ease-slide),
+    width var(--dur-slide) var(--ease-slide);
+}
+
+.option {
+  position: relative;
+  z-index: 1;
+  height: 26px;
+  padding: 0 var(--space-3);
+  border: 0;
+  border-radius: var(--radius-badge);
+  background: transparent;
+  color: var(--ink-3);
+  font: 500 12px/1 var(--font-sans);
+  cursor: pointer;
+  transition: color var(--dur-hover) var(--ease-hover);
+}
+
+.option[aria-pressed="true"] {
+  color: var(--ink);
+}
+
+.option:focus-visible {
+  box-shadow: var(--focus-ring);
+}

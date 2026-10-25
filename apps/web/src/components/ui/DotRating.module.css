@@ -1,0 +1,15 @@
+.root {
+  display: inline-flex;
+  gap: 3px;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--line-strong);
+}
+
+.dot[data-on="true"] {
+  background: var(--ink-2);
+}

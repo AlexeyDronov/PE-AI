@@ -1,0 +1,64 @@
+.root {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.label {
+  color: var(--ink-2);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+}
+
+.control {
+  width: 100%;
+  height: var(--control-md);
+  padding: 0 10px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-control);
+  background: var(--surface);
+  color: var(--ink);
+  font: 400 13px/20px var(--font-sans);
+  transition: border-color var(--dur-hover) var(--ease-hover);
+}
+
+.control::placeholder {
+  color: var(--ink-3);
+}
+
+.control:focus {
+  border-color: var(--accent);
+}
+
+.control:disabled {
+  background: var(--surface-sunk);
+  color: var(--ink-3);
+  cursor: not-allowed;
+}
+
+.control[aria-invalid="true"] {
+  border-color: var(--bad);
+}
+
+.area {
+  height: auto;
+  min-height: 72px;
+  padding: var(--space-2) 10px;
+  resize: none;
+  overflow: hidden;
+}
+
+.help,
+.error {
+  margin: 0;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.help {
+  color: var(--ink-3);
+}
+
+.error {
+  color: var(--bad);
+}

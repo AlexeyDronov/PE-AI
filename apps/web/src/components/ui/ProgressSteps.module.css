@@ -1,0 +1,80 @@
+.root {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.steps {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  row-gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--ink-3);
+  font-size: 12px;
+}
+
+.step {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.step + .step::before {
+  content: "";
+  width: 24px;
+  height: 1px;
+  margin: 0 var(--space-2);
+  background: var(--line-strong);
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--line-strong);
+}
+
+.step[data-state="done"] .dot {
+  background: var(--good);
+}
+
+.step[data-state="current"] {
+  color: var(--ink);
+}
+
+.step[data-state="current"] .dot {
+  background: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+.step[data-state="failed"] {
+  color: var(--bad);
+}
+
+.step[data-state="failed"] .dot {
+  background: var(--bad);
+}
+
+.error {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  color: var(--bad);
+  font-size: 12px;
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.4;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .step[data-state="current"] .dot {
+    animation: none;
+  }
+}

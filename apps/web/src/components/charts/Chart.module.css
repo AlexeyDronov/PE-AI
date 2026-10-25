@@ -1,0 +1,14 @@
+.root {
+  display: grid;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.plot {
+  width: 100%;
+}
+
+.toggle {
+  display: flex;
+  justify-content: flex-end;
+}

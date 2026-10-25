@@ -1,0 +1,32 @@
+.root {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  font-size: 13px;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.row[data-emphasis="true"] {
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+  font-weight: 600;
+}
+
+.term {
+  color: var(--ink-2);
+}
+
+.row[data-emphasis="true"] .term {
+  color: var(--ink);
+}
+
+.value {
+  margin: 0;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}

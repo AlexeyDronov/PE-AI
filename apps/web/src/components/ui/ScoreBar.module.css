@@ -1,0 +1,37 @@
+.root {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.figure {
+  font-variant-numeric: tabular-nums;
+}
+
+.track {
+  display: inline-block;
+  width: 48px;
+  height: 4px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: var(--line);
+}
+
+.fill {
+  display: block;
+  height: 100%;
+  border-radius: 2px;
+  background: var(--ink-3);
+}
+
+.root[data-tone="good"] .fill {
+  background: var(--good);
+}
+
+.root[data-tone="warn"] .fill {
+  background: var(--warn);
+}
+
+.root[data-tone="bad"] .fill {
+  background: var(--bad);
+}
