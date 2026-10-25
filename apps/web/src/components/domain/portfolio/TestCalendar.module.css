@@ -1,0 +1,22 @@
+.group + .group {
+  margin-top: var(--space-4);
+}
+
+.date {
+  margin: 0 0 var(--space-2);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--ink-2);
+}
+
+.item {
+  padding: var(--space-2) 0;
+  border-top: 1px solid var(--line);
+}

@@ -1,0 +1,7 @@
+.variance[data-tone="good"] {
+  color: var(--good);
+}
+
+.variance[data-tone="bad"] {
+  color: var(--bad);
+}

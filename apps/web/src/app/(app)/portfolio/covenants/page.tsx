@@ -1,5 +1,5 @@
-import { PlaceholderPage } from "@/components/shell/PlaceholderPage";
+import { CovenantsView } from "@/features/portfolio/CovenantsView";
 
 export default function CovenantsPage() {
-  return <PlaceholderPage title="Covenants" question="Where is lender risk building?" />;
+  return <CovenantsView />;
 }

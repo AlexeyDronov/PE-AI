@@ -79,9 +79,10 @@ Each page gets domain components (props only), a view that calls hooks, page tes
   - Browser review fixes: seeded criteria targets now describe what is scored; warning when policy leverage exceeds stressed capacity; no duplicate scorecard description
 - [x] 6.3 **Deal model** `/deals/[id]/model`: returns strip · assumptions sliders (debounced, cached compute) · sources and uses · credit profile · projections · sensitivity heatmap · valuation range · value bridge · save scenario · Excel export — 25 Oct
   - Browser review fixes: formatted waterfall labels, placeholders while loading, ask stated on the valuation chart, benchmark captions
-- [ ] 6.4 **Portfolio** `/portfolio`: summary · platforms table · EBITDA vs budget · value creation
-- [ ] 6.5 **Platform** `/portfolio/[id]`: snapshot · quarterly performance · capital structure · value creation · alerts · exit plan
-- [ ] 6.6 **Covenants** `/portfolio/covenants`: headroom summary · covenant monitor · test calendar
+- [x] 6.4 **Portfolio** `/portfolio`: summary · platforms table · EBITDA vs budget · value creation — 25 Oct
+- [x] 6.5 **Platform** `/portfolio/[id]`: snapshot · quarterly performance · capital structure · value creation · alerts · exit plan — 25 Oct
+- [x] 6.6 **Covenants** `/portfolio/covenants`: headroom summary · covenant monitor · test calendar — 25 Oct
+  - Browser review fixes (6.4–6.6): angled labels on crowded axes, sign-coloured lever bars, full-width headroom meter, no-wrap short table cells, no duplicate card titles
 - [ ] 6.7 **Exits** `/exits`: readiness summary · exit planner · exit routes by segment
 - [ ] 6.8 **Fund performance** `/fund`: returns strip · J-curve · distribution waterfall · cash-flow table
 - [ ] 6.9 **Markets** `/markets`: summary · growth vs margin · sponsor attractiveness · valuation charts

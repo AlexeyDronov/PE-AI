@@ -1,0 +1,25 @@
+.layout {
+  display: grid;
+  gap: var(--space-6);
+}
+
+.sections {
+  min-width: 0;
+}
+
+.missing {
+  display: grid;
+  gap: var(--space-4);
+  justify-items: start;
+}
+
+.meta {
+  font-size: 13px;
+  color: var(--ink-2);
+}
+
+@media (min-width: 1280px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr) 176px;
+  }
+}

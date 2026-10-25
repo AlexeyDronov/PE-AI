@@ -1,5 +1,5 @@
-import { PlaceholderPage } from "@/components/shell/PlaceholderPage";
+import { PortfolioView } from "@/features/portfolio/PortfolioView";
 
 export default function PlatformsPage() {
-  return <PlaceholderPage title="Platforms" question="Which platforms are on or off plan?" />;
+  return <PortfolioView />;
 }

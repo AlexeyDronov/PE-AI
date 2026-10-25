@@ -1,5 +1,6 @@
-import { PlaceholderPage } from "@/components/shell/PlaceholderPage";
+import { PlatformView } from "@/features/portfolio/PlatformView";
 
-export default function PlatformPage() {
-  return <PlaceholderPage title="Platform" question="What is happening at this company, and what should we do?" />;
+export default async function PlatformPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  return <PlatformView platformId={id} />;
 }
