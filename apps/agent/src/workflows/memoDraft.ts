@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { checkResult } from "../contracts";
 import type { JobRunner } from "../jobs";
 import { callClaude, LlmError, type Usage } from "../llm";
 import { buildInstructions } from "../skills";
@@ -63,7 +64,7 @@ export const memoDraft: JobRunner = async (jobId, input, { config, callbacks }) 
     if (byKey.size !== call.data.sections.length || byKey.size !== sections.length || sections.some((k) => !byKey.has(k))) {
       throw new Error(`Claude did not return exactly the requested sections (${sections.join(", ")}); got ${call.data.sections.map((s) => s.key).join(", ")}.`);
     }
-    await callbacks.result(jobId, { sections: sections.map((k) => byKey.get(k)!) }, usage);
+    await callbacks.result(jobId, checkResult("memo_draft", { sections: sections.map((k) => byKey.get(k)!) }), usage);
   } catch (err) {
     if (err instanceof LlmError) usage = err.usage;
     await callbacks.fail(jobId, err instanceof Error ? err.message : String(err), usage);

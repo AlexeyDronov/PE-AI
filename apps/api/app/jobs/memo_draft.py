@@ -1,3 +1,5 @@
+from typing import Literal
+
 from pydantic import BaseModel, Field, field_validator
 from sqlmodel import Session
 
@@ -47,13 +49,8 @@ class MemoDraftInput(BaseModel):
 
 
 class SectionIn(BaseModel):
-    key: str
+    key: Literal["summary", "thesis", "market", "financials", "valuation", "risks", "recommendation"]
     markdown: str = Field(min_length=1, max_length=8000)
-
-    @field_validator("key")
-    @classmethod
-    def _valid_key(cls, key: str) -> str:
-        return _known([key])[0]
 
 
 class MemoDraftResult(BaseModel):

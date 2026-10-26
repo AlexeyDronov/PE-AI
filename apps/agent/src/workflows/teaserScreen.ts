@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { checkResult } from "../contracts";
 import type { JobRunner } from "../jobs";
 import { callClaude, LlmError, type Usage } from "../llm";
 import { buildInstructions } from "../skills";
@@ -90,7 +91,7 @@ export const teaserScreen: JobRunner = async (jobId, input, { config, callbacks 
     if (!shorts.includes(data.segment)) throw new Error(`Claude chose a segment we do not cover: "${data.segment}".`);
     if (data.financials.ebitda >= data.financials.revenue) throw new Error("Extracted EBITDA is not below revenue, so the figures are unreliable.");
 
-    await callbacks.result(jobId, data, usage);
+    await callbacks.result(jobId, checkResult("teaser_screen", data), usage);
   } catch (err) {
     if (err instanceof LlmError) usage = err.usage;
     await callbacks.fail(jobId, err instanceof Error ? err.message : String(err), usage);

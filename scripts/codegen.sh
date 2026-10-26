@@ -11,3 +11,4 @@ from app.main import create_app
 print(json.dumps(create_app().openapi(), indent=2, sort_keys=True))
 ") > "$OUT/openapi.json"
 "$ROOT/apps/web/node_modules/.bin/openapi-typescript" --default-non-nullable false "$OUT/openapi.json" -o "$OUT/src/openapi.ts"
+PATH="$HOME/.local/node/bin:$PATH" node "$ROOT/scripts/zod-from-openapi.mjs" "$OUT/openapi.json" TeaserScreenResult MarketResearchResult MemoDraftResult > "$OUT/src/schemas.ts"

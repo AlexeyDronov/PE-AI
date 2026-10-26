@@ -1569,6 +1569,19 @@ export interface components {
              */
             source?: string;
         };
+        /** CompanyIn */
+        CompanyIn: {
+            /** Description */
+            description: string;
+            /** Hq */
+            hq: string;
+            /** Moat */
+            moat: string;
+            /** Name */
+            name: string;
+            /** Ownership */
+            ownership: string;
+        };
         /** CompanyRef */
         CompanyRef: {
             /** Description */
@@ -1940,6 +1953,56 @@ export interface components {
             error: string;
             usage?: components["schemas"]["Usage"] | null;
         };
+        /** FinancialsIn */
+        FinancialsIn: {
+            /** Ai Resilience */
+            ai_resilience: number;
+            /** Capex Pct */
+            capex_pct: number;
+            /**
+             * Cyclicality
+             * @enum {string}
+             */
+            cyclicality: "Low" | "Medium" | "High";
+            /** Da Pct */
+            da_pct: number;
+            /** Ebitda */
+            ebitda: number;
+            /** Fragmentation */
+            fragmentation: number;
+            /** Gross Retention */
+            gross_retention: number;
+            /** Growth */
+            growth: number;
+            /** Key Person Risk */
+            key_person_risk: boolean;
+            /** Nwc Pct */
+            nwc_pct: number;
+            /** Recurring Pct */
+            recurring_pct: number;
+            /** Revenue */
+            revenue: number;
+            /** Top Customer Pct */
+            top_customer_pct: number;
+        };
+        /** FindingIn */
+        FindingIn: {
+            /**
+             * Confidence
+             * @enum {string}
+             */
+            confidence: "low" | "medium" | "high";
+            /** Metric */
+            metric: string;
+            /** Period */
+            period: string;
+            /** Source Refs */
+            source_refs: number[];
+            /** Unit */
+            unit: string;
+            /** Value */
+            value: number;
+        };
         /** FindingWithRefs */
         FindingWithRefs: {
             /** Confidence */
@@ -2273,6 +2336,15 @@ export interface components {
             /** Segment Id */
             segment_id?: string | null;
         };
+        /** MarketResearchResult */
+        MarketResearchResult: {
+            /** Findings */
+            findings: components["schemas"]["FindingIn"][];
+            /** Sources */
+            sources: components["schemas"]["SourceIn"][];
+            /** Summary */
+            summary: string;
+        };
         /** MarketSummary */
         MarketSummary: {
             /** Deals 24M */
@@ -2344,6 +2416,11 @@ export interface components {
             scenario_id?: string | null;
             /** Sections */
             sections: string[];
+        };
+        /** MemoDraftResult */
+        MemoDraftResult: {
+            /** Sections */
+            sections: components["schemas"]["SectionIn"][];
         };
         /** MemoOutline */
         MemoOutline: {
@@ -2952,6 +3029,18 @@ export interface components {
             /** Text */
             text: string;
         };
+        /** RiskFlagIn */
+        RiskFlagIn: {
+            /** Mitigant */
+            mitigant: string;
+            /**
+             * Severity
+             * @enum {string}
+             */
+            severity: "h" | "m" | "l";
+            /** Text */
+            text: string;
+        };
         /** SaveScenarioInput */
         SaveScenarioInput: {
             /**
@@ -3016,6 +3105,16 @@ export interface components {
              * @enum {string}
              */
             verdict: "Advance" | "Watch" | "Pass";
+        };
+        /** SectionIn */
+        SectionIn: {
+            /**
+             * Key
+             * @enum {string}
+             */
+            key: "summary" | "thesis" | "market" | "financials" | "valuation" | "risks" | "recommendation";
+            /** Markdown */
+            markdown: string;
         };
         /** SegmentAttributeScore */
         SegmentAttributeScore: {
@@ -3187,6 +3286,19 @@ export interface components {
             /** Url */
             url: string;
         };
+        /** SourceIn */
+        SourceIn: {
+            /** Excerpt */
+            excerpt: string;
+            /** Publisher */
+            publisher: string;
+            /** Ref */
+            ref: number;
+            /** Title */
+            title: string;
+            /** Url */
+            url: string;
+        };
         /** SourceRef */
         SourceRef: {
             /** Excerpt */
@@ -3262,6 +3374,26 @@ export interface components {
         TeaserScreenInput: {
             /** Text */
             text: string;
+        };
+        /** TeaserScreenResult */
+        TeaserScreenResult: {
+            /**
+             * Ask Multiple
+             * @default null
+             */
+            ask_multiple?: number | null;
+            /** Code Name */
+            code_name: string;
+            company: components["schemas"]["CompanyIn"];
+            /** Diligence Questions */
+            diligence_questions: string[];
+            financials: components["schemas"]["FinancialsIn"];
+            /** Process */
+            process: string;
+            /** Risk Flags */
+            risk_flags: components["schemas"]["RiskFlagIn"][];
+            /** Segment */
+            segment: string;
         };
         /** Tier */
         Tier: {

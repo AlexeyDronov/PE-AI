@@ -52,7 +52,7 @@ Status at last audit: **25 Oct 2026**. ☑ done and verified · ☐ to do · ⧗
 - [x] 3.2 `make codegen` and `codegen-check` produce `packages/contracts/src/openapi.ts`
 - [x] 3.3 Web types are derived from the contract (`ResourceData`, `CommandInput`, …)
 - [x] 3.4 Tighten hook input types: fix the loose early tests, then remove the `Partial<…>` inputs — 25 Oct
-- [ ] 3.5 Zod schemas for the agent, generated from the same OpenAPI document
+- [x] 3.5 Zod schemas for the agent, generated from the same OpenAPI document — 27 Oct (`packages/contracts/src/schemas.ts` via `scripts/zod-from-openapi.mjs`; every workflow checks its result against it before posting)
 
 ## Phase 4 — Web foundation (arch §7, design §2, §4, §6–§8)
 - [x] 4.1 Design tokens (light and dark wired; dark polish ⧗) and global styles

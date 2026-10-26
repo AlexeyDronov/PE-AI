@@ -51,6 +51,7 @@ codegen-check:
 	@tmp=$$(mktemp -d) && sh scripts/codegen.sh $$tmp \
 	  && diff -u packages/contracts/openapi.json $$tmp/openapi.json \
 	  && diff -u packages/contracts/src/openapi.ts $$tmp/src/openapi.ts \
+	  && diff -u packages/contracts/src/schemas.ts $$tmp/src/schemas.ts \
 	  && echo "contracts up to date"; status=$$?; rm -rf $$tmp; exit $$status
 
 # The running agent server must load both agents with their playbooks (bundled code, which vitest can't exercise).

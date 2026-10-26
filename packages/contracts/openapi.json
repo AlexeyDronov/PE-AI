@@ -337,6 +337,40 @@
         "title": "Company",
         "type": "object"
       },
+      "CompanyIn": {
+        "properties": {
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "hq": {
+            "title": "Hq",
+            "type": "string"
+          },
+          "moat": {
+            "title": "Moat",
+            "type": "string"
+          },
+          "name": {
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "ownership": {
+            "title": "Ownership",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "description",
+          "hq",
+          "ownership",
+          "moat"
+        ],
+        "title": "CompanyIn",
+        "type": "object"
+      },
       "CompanyRef": {
         "properties": {
           "description": {
@@ -1267,6 +1301,151 @@
         "title": "FailBody",
         "type": "object"
       },
+      "FinancialsIn": {
+        "properties": {
+          "ai_resilience": {
+            "maximum": 100,
+            "minimum": 0,
+            "title": "Ai Resilience",
+            "type": "integer"
+          },
+          "capex_pct": {
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Capex Pct",
+            "type": "number"
+          },
+          "cyclicality": {
+            "enum": [
+              "Low",
+              "Medium",
+              "High"
+            ],
+            "title": "Cyclicality",
+            "type": "string"
+          },
+          "da_pct": {
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Da Pct",
+            "type": "number"
+          },
+          "ebitda": {
+            "exclusiveMinimum": 0,
+            "title": "Ebitda",
+            "type": "number"
+          },
+          "fragmentation": {
+            "maximum": 100,
+            "minimum": 0,
+            "title": "Fragmentation",
+            "type": "integer"
+          },
+          "gross_retention": {
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Gross Retention",
+            "type": "number"
+          },
+          "growth": {
+            "maximum": 2,
+            "minimum": -0.5,
+            "title": "Growth",
+            "type": "number"
+          },
+          "key_person_risk": {
+            "title": "Key Person Risk",
+            "type": "boolean"
+          },
+          "nwc_pct": {
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Nwc Pct",
+            "type": "number"
+          },
+          "recurring_pct": {
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Recurring Pct",
+            "type": "number"
+          },
+          "revenue": {
+            "exclusiveMinimum": 0,
+            "title": "Revenue",
+            "type": "number"
+          },
+          "top_customer_pct": {
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Top Customer Pct",
+            "type": "number"
+          }
+        },
+        "required": [
+          "revenue",
+          "ebitda",
+          "growth",
+          "recurring_pct",
+          "capex_pct",
+          "da_pct",
+          "nwc_pct",
+          "top_customer_pct",
+          "gross_retention",
+          "cyclicality",
+          "ai_resilience",
+          "fragmentation",
+          "key_person_risk"
+        ],
+        "title": "FinancialsIn",
+        "type": "object"
+      },
+      "FindingIn": {
+        "properties": {
+          "confidence": {
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ],
+            "title": "Confidence",
+            "type": "string"
+          },
+          "metric": {
+            "title": "Metric",
+            "type": "string"
+          },
+          "period": {
+            "title": "Period",
+            "type": "string"
+          },
+          "source_refs": {
+            "items": {
+              "type": "integer"
+            },
+            "minItems": 1,
+            "title": "Source Refs",
+            "type": "array"
+          },
+          "unit": {
+            "title": "Unit",
+            "type": "string"
+          },
+          "value": {
+            "title": "Value",
+            "type": "number"
+          }
+        },
+        "required": [
+          "metric",
+          "value",
+          "unit",
+          "period",
+          "confidence",
+          "source_refs"
+        ],
+        "title": "FindingIn",
+        "type": "object"
+      },
       "FindingWithRefs": {
         "properties": {
           "confidence": {
@@ -2098,6 +2277,35 @@
         "title": "MarketResearchInput",
         "type": "object"
       },
+      "MarketResearchResult": {
+        "properties": {
+          "findings": {
+            "items": {
+              "$ref": "#/components/schemas/FindingIn"
+            },
+            "title": "Findings",
+            "type": "array"
+          },
+          "sources": {
+            "items": {
+              "$ref": "#/components/schemas/SourceIn"
+            },
+            "title": "Sources",
+            "type": "array"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          }
+        },
+        "required": [
+          "summary",
+          "findings",
+          "sources"
+        ],
+        "title": "MarketResearchResult",
+        "type": "object"
+      },
       "MarketSummary": {
         "properties": {
           "deals_24m": {
@@ -2289,6 +2497,22 @@
           "sections"
         ],
         "title": "MemoDraftInput",
+        "type": "object"
+      },
+      "MemoDraftResult": {
+        "properties": {
+          "sections": {
+            "items": {
+              "$ref": "#/components/schemas/SectionIn"
+            },
+            "title": "Sections",
+            "type": "array"
+          }
+        },
+        "required": [
+          "sections"
+        ],
+        "title": "MemoDraftResult",
         "type": "object"
       },
       "MemoOutline": {
@@ -3952,6 +4176,34 @@
         "title": "RiskFlag",
         "type": "object"
       },
+      "RiskFlagIn": {
+        "properties": {
+          "mitigant": {
+            "title": "Mitigant",
+            "type": "string"
+          },
+          "severity": {
+            "enum": [
+              "h",
+              "m",
+              "l"
+            ],
+            "title": "Severity",
+            "type": "string"
+          },
+          "text": {
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "severity",
+          "text",
+          "mitigant"
+        ],
+        "title": "RiskFlagIn",
+        "type": "object"
+      },
       "SaveScenarioInput": {
         "properties": {
           "case": {
@@ -4115,6 +4367,35 @@
           "verdict"
         ],
         "title": "ScreeningSummary",
+        "type": "object"
+      },
+      "SectionIn": {
+        "properties": {
+          "key": {
+            "enum": [
+              "summary",
+              "thesis",
+              "market",
+              "financials",
+              "valuation",
+              "risks",
+              "recommendation"
+            ],
+            "title": "Key",
+            "type": "string"
+          },
+          "markdown": {
+            "maxLength": 8000,
+            "minLength": 1,
+            "title": "Markdown",
+            "type": "string"
+          }
+        },
+        "required": [
+          "key",
+          "markdown"
+        ],
+        "title": "SectionIn",
         "type": "object"
       },
       "SegmentAttributeScore": {
@@ -4527,6 +4808,39 @@
         "title": "Source",
         "type": "object"
       },
+      "SourceIn": {
+        "properties": {
+          "excerpt": {
+            "title": "Excerpt",
+            "type": "string"
+          },
+          "publisher": {
+            "title": "Publisher",
+            "type": "string"
+          },
+          "ref": {
+            "title": "Ref",
+            "type": "integer"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "url": {
+            "title": "Url",
+            "type": "string"
+          }
+        },
+        "required": [
+          "ref",
+          "url",
+          "title",
+          "publisher",
+          "excerpt"
+        ],
+        "title": "SourceIn",
+        "type": "object"
+      },
       "SourceRef": {
         "properties": {
           "excerpt": {
@@ -4709,6 +5023,69 @@
           "text"
         ],
         "title": "TeaserScreenInput",
+        "type": "object"
+      },
+      "TeaserScreenResult": {
+        "properties": {
+          "ask_multiple": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Ask Multiple"
+          },
+          "code_name": {
+            "title": "Code Name",
+            "type": "string"
+          },
+          "company": {
+            "$ref": "#/components/schemas/CompanyIn"
+          },
+          "diligence_questions": {
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 10,
+            "minItems": 1,
+            "title": "Diligence Questions",
+            "type": "array"
+          },
+          "financials": {
+            "$ref": "#/components/schemas/FinancialsIn"
+          },
+          "process": {
+            "title": "Process",
+            "type": "string"
+          },
+          "risk_flags": {
+            "items": {
+              "$ref": "#/components/schemas/RiskFlagIn"
+            },
+            "maxItems": 8,
+            "title": "Risk Flags",
+            "type": "array"
+          },
+          "segment": {
+            "title": "Segment",
+            "type": "string"
+          }
+        },
+        "required": [
+          "company",
+          "segment",
+          "code_name",
+          "process",
+          "financials",
+          "risk_flags",
+          "diligence_questions"
+        ],
+        "title": "TeaserScreenResult",
         "type": "object"
       },
       "Tier": {

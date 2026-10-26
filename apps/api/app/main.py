@@ -10,6 +10,7 @@ from app.core.config import Settings
 from app.core.errors import install_error_handlers
 from app.core.events import EventBus
 from app.jobs.agent_client import AgentClient
+from app.jobs.registry import JOB_KINDS
 from app.resources import RESOURCES
 from app.routers import commands, compute, exports, internal, overview, pipeline, portfolio
 from app.routers.events import stream_events
@@ -48,6 +49,21 @@ def create_app(settings: Settings | None = None, agent_client: Any = None) -> Fa
     app.add_api_route("/api/events", stream_events, tags=["events"])
     for module in (commands, compute, exports, internal, overview, pipeline, portfolio):
         app.include_router(module.router)
+
+    base_openapi = app.openapi
+
+    def openapi() -> dict[str, Any]:
+        """Adds the agent job result models, which no route returns, so codegen can export them."""
+        if app.openapi_schema is None:
+            doc = base_openapi()
+            schemas = doc.setdefault("components", {}).setdefault("schemas", {})
+            for spec in JOB_KINDS.values():
+                js = spec.result_schema.model_json_schema(ref_template="#/components/schemas/{model}")
+                schemas.update(js.pop("$defs", {}))
+                schemas[spec.result_schema.__name__] = js
+        return app.openapi_schema  # type: ignore[return-value]
+
+    app.openapi = openapi  # type: ignore[method-assign]
     return app
 
 

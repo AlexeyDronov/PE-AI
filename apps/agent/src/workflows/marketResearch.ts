@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { checkResult } from "../contracts";
 import type { JobRunner } from "../jobs";
 import { callClaude, LlmError, sumUsage, type Usage } from "../llm";
 import { buildInstructions } from "../skills";
@@ -151,7 +152,7 @@ export const marketResearch: JobRunner = async (jobId, input, { config, callback
           ),
         })),
     };
-    await callbacks.result(jobId, payload, sumUsage(...spent));
+    await callbacks.result(jobId, checkResult("market_research", payload), sumUsage(...spent));
   } catch (err) {
     if (err instanceof LlmError) spent.push(err.usage);
     await callbacks.fail(jobId, err instanceof Error ? err.message : String(err), spent.length ? sumUsage(...spent) : undefined);

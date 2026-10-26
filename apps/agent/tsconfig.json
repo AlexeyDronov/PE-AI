@@ -10,7 +10,7 @@
     "resolveJsonModule": true,
     "noEmit": true,
     "types": ["node", "vitest/globals"],
-    "paths": { "@/*": ["./src/*"], "@contracts/*": ["../../packages/contracts/src/*"] }
+    "paths": { "@/*": ["./src/*"], "@contracts/*": ["../../packages/contracts/src/*"], "zod": ["./node_modules/zod"] }
   },
   "include": ["src", "scripts", "tests"]
 }
