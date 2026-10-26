@@ -32,31 +32,24 @@ Read this first, then `docs/04-implementation-plan.md`, which is the source of t
 - **Commits:** identity passed per commit, `git -c user.name=kinnarishah -c user.email=kinnarirox20@gmail.com commit …`, ending with `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`. Don't change git config. **Never push** unless asked. zsh doesn't split variables, so run multi-command commit scripts with `bash script.sh`.
 - The user is direct and impatient with long autonomous runs. When they say pause, pause and report.
 
-## 4. Status
-**Done and committed** (19 commits on `main`, nothing pushed; HEAD `9193ca7`):
-- Phases 0–5: foundations, backend platform, finance services (screening, credit, LBO with sensitivity and max bid, fund IRR/TVPI/DPI, European distribution waterfall), cached compute, typed OpenAPI contract with codegen, web foundation, charts, app shell, feedback annotation tool.
-- Phase 6 pages 6.1–6.11: Pipeline, Deal overview, Deal model (sliders, scenarios, Excel export), Portfolio, Platform, Covenants, Exits, Fund, Markets, Segment, Overview.
-- Agent steps 7.1–7.3: Mastra server with token-protected `/jobs/:kind/start`, retrying API callbacks, nine tools with recorded and live-format fixtures, query templates, four playbooks, agents.
-- Tests: API 256, web 229, agent 56; all green at last run.
+## 4. Status (27 Oct)
+**Phase 7 is complete** (steps 7.4–7.7 committed; nothing pushed). Anthropic direct, `claude-haiku-5-5` at effort `medium`, per `05-agent-cost-design.md` (approved). One live run per job type, all succeeded:
+- **Cache probe:** call 2 read all 2,511 cached tokens.
+- **Teaser:** $0.0012.
+- **Research:** $0.0028, 7 code-verified findings.
+- **Memo:** $0.0033, after raising the cap to 10,000 tokens.
 
-**Uncommitted (left for the user's sign-off):**
-- `docs/05-agent-cost-design.md` (new);
-- `docs/04-implementation-plan.md`, with Phase 7 rewritten as 7.4–7.7 per that design.
+Tests: API 280, web 229, agent 105, all green. `make smoke-agent` checks that every job kind is routable in the bundled server.
 
-**The provider decision is MADE, not pending.** On 26 Oct the user chose **Anthropic directly**: `claude-haiku-5-5` at **effort `medium`**, key `ANTHROPIC_API_KEY` in the repo-root `.env`. Reading `.env` is blocked by the user's permission rules; don't try, and load it at runtime only. OpenRouter is dropped because of its fee and VAT. They then asked to design the agent service for minimum cost per request, which became `05-agent-cost-design.md`.
-
-**Waiting on the user:** approval of `05-agent-cost-design.md`. It changes autonomous agent loops into code-orchestrated workflows with 1–2 Haiku calls per job. I flagged that this departs from their original "researches on its own" brief.
+Keys in the repo-root `.env` (the user set them; never read the file): ANTHROPIC_API_KEY, TAVILY_API_KEY, COMPANIES_HOUSE_API_KEY. The user edited `.env.example` themselves; it's uncommitted and left for them.
 
 ## 5. Exact next step
-1. Get the user's sign-off on `docs/05-agent-cost-design.md`. If they want changes, revise it.
-2. On approval, commit the two docs (`Plan: agent cost design and Phase 7 rewrite`). At the same time fix two lines in the plan: 6.12 needs 7.5, 6.13 needs 7.6, 6.14 needs 7.7 (they currently say 7.4/7.5/7.6).
-3. Build **7.4**:
-   - Replace OpenRouter in `apps/agent/src/llm.ts`, the only place a model is created, with `@anthropic-ai/sdk`. Pin a version at least two weeks old (check registry dates; that rule is the user's preference for supply-chain safety).
-   - Write one `callClaude` helper: explicit `cache_control` on the frozen system prompt, structured output via `output_config.format`, `output_config.effort: "medium"`, `max_tokens` per job, usage capture.
-   - Rename config keys (`ANTHROPIC_API_KEY`, `MODEL_*` → `claude-haiku-5-5`), update `.env.example` and `docs/01` D3.
-   - Add a tool-result cache, a cache-probe script, and usage stored on the job (API side).
-   - Use the claude-api skill for SDK specifics; don't guess the API.
-4. Then 7.5 teaser screen, 7.6 research, 7.7 memo, each ending in **one live run only after asking**, then pages 6.12–6.14, then Phase 8.
+Pages **6.12 Screen a teaser** (needs 7.5), **6.13 Research** (needs 7.6) and **6.14 IC memo** (needs 7.7), then Phase 8. Commands: `screenTeaser`, `startMarketResearch`, `draftMemo`; jobs carry `usage` for showing cost. Backlog: the Linden seed-data contradiction in `docs/TODO.md`.
+
+Gotchas from Phase 7:
+- **Restart the agent server after editing `.env`.** Env loads once, by searching up from `.mastra/output` (`envFilesUpward`).
+- **The bundler drops side-effect imports.** Runners register through `registerJobRunners()`.
+- **`make seed` wipes agent-created rows.**
 
 ## 6. Environment gotchas
 - **Toolchain** is in the home folder: `export PATH="$HOME/.local/node/bin:$HOME/.local/bin:$PATH"` (the Makefile does this). Python 3.12 via uv, Node 22, pnpm 12, `COREPACK_ENABLE_DOWNLOAD_PROMPT=0`.
