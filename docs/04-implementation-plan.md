@@ -92,7 +92,9 @@ Each page gets domain components (props only), a view that calls hooks, page tes
 - [ ] 6.13 **Research** `/research`: needs 7.5
 - [ ] 6.14 **IC memo** `/deals/[id]/memo`: needs 7.6
 
-## Phase 7 — Agent service (arch §8) — **needs OpenRouter and Tavily API keys from you before 7.4**
+## Phase 7 — Agent service (arch §8) — **paused before 7.4 (26 Oct): LLM provider under review**
+
+> The product owner may use a direct provider instead of OpenRouter (OpenRouter adds a fee and VAT). Switching means changing `apps/agent/src/llm.ts` (the only place a model is created) and the `MODEL_*` / key names in config and `.env.example`; tools, agents and workflows are provider-independent. A Tavily key is still needed for web search.
 - [x] 7.1 Mastra server scaffold (Node), OpenRouter provider, models per role from env, service-token auth, `/jobs/{kind}/start` — 26 Oct (verified on the live server)
 - [x] 7.2 Tools, each with Zod I/O and recorded-fixture tests (no live network in tests): webSearch (Tavily adapter), fetchPage, extractTables, companyRegistry (Companies House), secFilings (EDGAR), fxRates (ECB), internalData (read-only API), calculator, recordSource — 26 Oct
   - Live check fixes: real ECB feed format, proper HTML parser (node-html-parser 9.0.4) for real pages
