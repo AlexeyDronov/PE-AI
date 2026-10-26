@@ -24,6 +24,8 @@ type Props = {
   groups: SidebarGroup[];
   activeHref: string;
   footer?: ReactNode;
+  /** Called when a link is hovered or focused, before it is followed. */
+  onIntent?: (href: string) => void;
   testId?: string;
 };
 
@@ -31,7 +33,7 @@ function isActive(href: string, activeHref: string): boolean {
   return href === "/" ? activeHref === "/" : activeHref === href || activeHref.startsWith(`${href}/`);
 }
 
-export function Sidebar({ fund, groups, activeHref, footer, testId = "sidebar" }: Props) {
+export function Sidebar({ fund, groups, activeHref, footer, onIntent, testId = "sidebar" }: Props) {
   return (
     <aside className={styles.root} data-testid={testId}>
       <div className={styles.brand}>
@@ -50,7 +52,14 @@ export function Sidebar({ fund, groups, activeHref, footer, testId = "sidebar" }
             {group.items.map((item) => {
               const Icon = ICONS[item.icon];
               return (
-                <Link key={item.href} href={item.href} className={styles.item} aria-current={isActive(item.href, activeHref) ? "page" : undefined}>
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={styles.item}
+                  aria-current={isActive(item.href, activeHref) ? "page" : undefined}
+                  onMouseEnter={() => onIntent?.(item.href)}
+                  onFocus={() => onIntent?.(item.href)}
+                >
                   <Icon size={16} strokeWidth={1.5} aria-hidden="true" />
                   <span className={styles.itemLabel}>{item.label}</span>
                   {item.count !== undefined ? <span className={styles.count}>{item.count}</span> : null}

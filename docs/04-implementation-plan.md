@@ -134,3 +134,8 @@ Each page gets domain components (props only), a view that calls hooks, page tes
 - [ ] 8.4 Rounds of fixes from your feedback notes
   - Round 1 — 27 Oct: feedback drawer numbers match the pins; Overview subtitle "Fund at a glance", AUM (NAV + dry powder) and fund lifecycle added, Copilot activity and the top-bar jobs widget removed, no coloured strip on alerts; teaser upload accepts PDF, Word and PowerPoint (API text extraction: pypdf 6.20.1, python-docx 1.2.0, python-pptx 1.0.2)
 - [ ] 8.5 ⧗ Dark-mode rework (deferred by product owner)
+- [x] 8.6 Page-load performance: Turbopack dev, slim lazy-loaded ECharts (and no charts on Overview), query cache trusts SSE invalidation, route loading skeleton, hover prefetch from the sidebar, self-hosted fonts, idle feedback overlay ignores scroll — 26 Oct
+  - First-load JS per page 508–513 kB → 144–153 kB; ECharts (series and components we use only) is a ~206 kB gzip chunk fetched when a chart first plots
+  - `staleTime` 5 min (the SSE stream invalidates changes; a reconnect refetches everything); job reads stay `staleTime: 0` because a command's reply can already be behind
+  - `chart-render.test.ts` now runs on the slim build and fails if an option uses an unregistered series, component or marker
+  - Fonts: latin woff2 from Fontsource (OFL) in `src/app/fonts`; tokens read the next/font variables with the family names as fallback

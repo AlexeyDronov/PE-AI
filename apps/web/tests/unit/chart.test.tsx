@@ -1,10 +1,10 @@
-import { act, render, renderHook, screen } from "@testing-library/react";
+import { act, render, renderHook, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const instance = { setOption: vi.fn(), resize: vi.fn(), dispose: vi.fn(), on: vi.fn(), off: vi.fn() };
 const init = vi.fn(() => instance);
-vi.mock("echarts", () => ({ init, default: { init } }));
+vi.mock("@/components/charts/loadEcharts", () => ({ loadEcharts: async () => ({ init }) }));
 
 const { Chart } = await import("@/components/charts/Chart");
 const { useChartTheme } = await import("@/components/charts/theme");
@@ -38,15 +38,25 @@ describe("Chart", () => {
     getRowId: (r: Row) => r.id,
   };
 
-  it("renders an accessible chart and passes the option to echarts", () => {
+  it("renders an accessible chart and passes the option to echarts", async () => {
     render(<Chart label="LTM EBITDA vs budget" option={option} table={table} />);
     expect(screen.getByRole("img", { name: "LTM EBITDA vs budget" })).toBeInTheDocument();
-    expect(init).toHaveBeenCalledTimes(1);
+    await waitFor(() => expect(init).toHaveBeenCalledTimes(1));
     expect(instance.setOption).toHaveBeenCalledWith(option, expect.objectContaining({ notMerge: true }));
   });
 
-  it("updates in place when the option changes and disposes on unmount", () => {
+  it("plots the latest option when it changes before ECharts has loaded", async () => {
+    const { rerender } = render(<Chart label="x" option={option} table={table} />);
+    const next = { ...option, series: [{ type: "line" }] };
+    rerender(<Chart label="x" option={next} table={table} />);
+    await waitFor(() => expect(init).toHaveBeenCalledTimes(1));
+    expect(instance.setOption).toHaveBeenCalledTimes(1);
+    expect(instance.setOption).toHaveBeenLastCalledWith(next, expect.anything());
+  });
+
+  it("updates in place when the option changes and disposes on unmount", async () => {
     const { rerender, unmount } = render(<Chart label="x" option={option} table={table} />);
+    await waitFor(() => expect(init).toHaveBeenCalledTimes(1));
     const next = { ...option, series: [{ type: "bar" }] };
     rerender(<Chart label="x" option={next} table={table} />);
     expect(init).toHaveBeenCalledTimes(1);
@@ -65,9 +75,10 @@ describe("Chart", () => {
     expect(screen.getByRole("img", { name: "LTM EBITDA vs budget" })).toBeInTheDocument();
   });
 
-  it("reports clicks on marks that represent an entity", () => {
+  it("reports clicks on marks that represent an entity", async () => {
     const onSelect = vi.fn();
     render(<Chart label="x" option={option} table={table} onSelect={onSelect} />);
+    await waitFor(() => expect(init).toHaveBeenCalled());
     const handler = instance.on.mock.calls.find((c) => c[0] === "click")?.[1] as (p: unknown) => void;
     handler({ name: "Halden", dataIndex: 0, seriesName: "Actual" });
     expect(onSelect).toHaveBeenCalledWith({ name: "Halden", dataIndex: 0, seriesName: "Actual" });

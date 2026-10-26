@@ -2,9 +2,11 @@
 /**
  * Renders every option builder through the REAL ECharts engine (server-side SVG),
  * so options that ECharts rejects at runtime fail here, not in the browser.
+ * Uses the app's slim build, so a series or component it doesn't register fails here too.
  */
-import * as echarts from "echarts";
-import { describe, expect, it } from "vitest";
+import { SVGRenderer } from "echarts/renderers";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { type EChartsOption, init, use } from "@/components/charts/echarts";
 import {
   barOption,
   heatmapOption,
@@ -64,7 +66,7 @@ const CASES: [string, unknown][] = [
   [
     "line",
     lineOption(
-      { categories: ["2019", "2020", "2021"], series: [{ name: "Net", values: [-80, -260, 100], area: true }], zeroLine: true },
+      { categories: ["2019", "2020", "2021"], series: [{ name: "Net", values: [-80, -260, 100], area: true }], zeroLine: true, projectedFrom: 2 },
       theme,
     ),
   ],
@@ -83,11 +85,26 @@ const CASES: [string, unknown][] = [
   ],
 ];
 
+use(SVGRenderer);
+
+afterEach(() => {
+  vi.restoreAllMocks();
+});
+
 describe("options render in real ECharts", () => {
   it.each(CASES)("%s", (_name, option) => {
-    const chart = echarts.init(null, null, { renderer: "svg", ssr: true, width: 600, height: 300 });
+    const errors = vi.spyOn(console, "error").mockImplementation(() => {});
+    const warnings = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const chart = init(null, null, { renderer: "svg", ssr: true, width: 600, height: 300 });
     try {
-      expect(() => chart.setOption(option as echarts.EChartsOption)).not.toThrow();
+      expect(() => chart.setOption(option as EChartsOption)).not.toThrow();
+      expect([...errors.mock.calls, ...warnings.mock.calls].flat().join("\n")).not.toMatch(/ECharts/);
+      // Unregistered series markers are dropped without a warning, so check they made it into the model.
+      const series = ((option as { series?: Record<string, unknown>[] }).series ?? []);
+      const model = (chart as unknown as { getModel(): { getComponent(type: string): unknown } }).getModel();
+      for (const marker of ["markArea", "markLine", "markPoint"]) {
+        if (series.some((s) => s[marker])) expect(model.getComponent(marker), marker).toBeTruthy();
+      }
       const svg = chart.renderToSVGString();
       expect(svg).toContain("<svg");
       expect(svg.length).toBeGreaterThan(500);

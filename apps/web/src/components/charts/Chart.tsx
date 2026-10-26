@@ -1,8 +1,9 @@
 "use client";
 
-import * as echarts from "echarts";
 import { type ReactNode, useEffect, useRef, useState } from "react";
 import { Button, type Column, DataTable, Skeleton } from "@/components/ui";
+import type { ECharts, EChartsOption } from "./echarts";
+import { loadEcharts } from "./loadEcharts";
 import type { ChartOption } from "./options";
 import styles from "./Chart.module.css";
 
@@ -20,38 +21,51 @@ type Props<Row> = {
 
 const prefersReducedMotion = () => window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
 
+function apply(chart: ECharts, option: ChartOption) {
+  chart.setOption((prefersReducedMotion() ? { ...option, animation: false } : option) as EChartsOption, { notMerge: true });
+}
+
 export function Chart<Row>({ label, option, table, height = 280, loading = false, onSelect, testId = "chart" }: Props<Row>) {
   const [view, setView] = useState<"chart" | "table">("chart");
   const container = useRef<HTMLDivElement>(null);
-  const instance = useRef<echarts.ECharts | null>(null);
+  const instance = useRef<ECharts | null>(null);
   const onSelectRef = useRef(onSelect);
+  const optionRef = useRef(option);
   const plotted = view === "chart" && !loading;
 
   useEffect(() => {
     onSelectRef.current = onSelect;
   }, [onSelect]);
 
+  // ECharts is loaded on first plot, so pages render (and charts show their frame) before it arrives.
   useEffect(() => {
     const el = container.current;
     if (!plotted || !el) return;
-    const chart = echarts.init(el);
-    instance.current = chart;
-    chart.on("click", (params: unknown) => {
-      const { name, dataIndex, seriesName } = params as ChartSelection;
-      onSelectRef.current?.({ name, dataIndex, seriesName });
+    let cancelled = false;
+    let observer: ResizeObserver | null = null;
+    void loadEcharts().then(({ init }) => {
+      if (cancelled) return;
+      const chart = init(el);
+      instance.current = chart;
+      chart.on("click", (params: unknown) => {
+        const { name, dataIndex, seriesName } = params as ChartSelection;
+        onSelectRef.current?.({ name, dataIndex, seriesName });
+      });
+      observer = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(() => chart.resize());
+      observer?.observe(el);
+      apply(chart, optionRef.current);
     });
-    const observer = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(() => chart.resize());
-    observer?.observe(el);
     return () => {
+      cancelled = true;
       observer?.disconnect();
-      chart.dispose();
+      instance.current?.dispose();
       instance.current = null;
     };
   }, [plotted]);
 
   useEffect(() => {
-    if (!plotted) return;
-    instance.current?.setOption((prefersReducedMotion() ? { ...option, animation: false } : option) as echarts.EChartsOption, { notMerge: true });
+    optionRef.current = option;
+    if (plotted && instance.current) apply(instance.current, option);
   }, [option, plotted]);
 
   let body: ReactNode;

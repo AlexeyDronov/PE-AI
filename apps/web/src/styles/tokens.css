@@ -78,9 +78,9 @@
   --control-lg: 40px;
 
   /* Type */
-  --font-serif: "Source Serif 4", Georgia, "Times New Roman", serif;
-  --font-sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --font-serif: var(--font-source-serif, "Source Serif 4"), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-plex-sans, "IBM Plex Sans"), system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: var(--font-plex-mono, "IBM Plex Mono"), ui-monospace, Menlo, monospace;
 
   /* Motion (§8) */
   --dur-hover: 120ms;

@@ -14,7 +14,7 @@ vi.mock("next/navigation", () => ({
   useRouter: () => ({ push: nav.push, replace: nav.replace, prefetch: vi.fn() }),
 }));
 const inst = { setOption: vi.fn(), resize: vi.fn(), dispose: vi.fn(), on: vi.fn(), off: vi.fn() };
-vi.mock("echarts", () => ({ init: vi.fn(() => inst), default: { init: vi.fn(() => inst) } }));
+vi.mock("@/components/charts/loadEcharts", () => ({ loadEcharts: async () => ({ init: vi.fn(() => inst) }) }));
 const { DealModel } = await import("@/features/deal/DealModel");
 
 const year = (n: number, rev: number, ebitda: number, fcf: number, senior: number) => ({
@@ -141,15 +141,20 @@ describe("DealModel", () => {
     expect(screen.getByRole("slider", { name: "Margin change per year" })).toHaveAttribute("aria-valuetext", "+0bp");
   });
 
-  it("resets overrides to the case defaults", async () => {
+  it("resets overrides to the case defaults, reusing their cached result", async () => {
     const user = userEvent.setup();
     renderWithApi(<DealModel dealId="d1" />);
     const slider = await screen.findByRole("slider", { name: "Entry EV / EBITDA" });
     await waitFor(() => expect(slider).toHaveAttribute("aria-valuenow", "15.5"));
     fireEvent.keyDown(slider, { key: "ArrowRight" });
     await waitFor(() => expect(lboBodies.at(-1)?.overrides?.entry_multiple).toBe(16));
+    const requests = lboBodies.length;
     await user.click(screen.getByRole("button", { name: "Reset" }));
-    await waitFor(() => expect(lboBodies.at(-1)?.overrides ?? {}).toEqual({}));
+    await waitFor(() => expect(slider).toHaveAttribute("aria-valuenow", "15.5"));
+    // The defaults were computed on load and are still cached, so going back to them costs no request.
+    expect(lboBodies[0]?.overrides ?? {}).toEqual({});
+    await new Promise((r) => setTimeout(r, 300));
+    expect(lboBodies).toHaveLength(requests);
   });
 
   it("shows sources and uses, and credit stats against benchmarks", async () => {

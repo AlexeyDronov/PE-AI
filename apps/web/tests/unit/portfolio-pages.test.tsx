@@ -13,7 +13,7 @@ vi.mock("next/navigation", () => ({
   useRouter: () => ({ push: nav.push, replace: vi.fn(), prefetch: vi.fn() }),
 }));
 const inst = { setOption: vi.fn(), resize: vi.fn(), dispose: vi.fn(), on: vi.fn(), off: vi.fn() };
-vi.mock("echarts", () => ({ init: vi.fn(() => inst), default: { init: vi.fn(() => inst) } }));
+vi.mock("@/components/charts/loadEcharts", () => ({ loadEcharts: async () => ({ init: vi.fn(() => inst) }) }));
 const { PortfolioView } = await import("@/features/portfolio/PortfolioView");
 const { PlatformView } = await import("@/features/portfolio/PlatformView");
 const { CovenantsView } = await import("@/features/portfolio/CovenantsView");
