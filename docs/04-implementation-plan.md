@@ -88,22 +88,20 @@ Each page gets domain components (props only), a view that calls hooks, page tes
 - [x] 6.9 **Markets** `/markets`: summary · growth vs margin · sponsor attractiveness · valuation charts — 25 Oct
 - [x] 6.10 **Segment** `/markets/[segment]`: profile · landscape and transactions · evidence — 25 Oct ("Run research" works end to end once the agent service exists, step 7.5)
 - [x] 6.11 **Overview** `/`: fund at a glance · needs attention · Copilot activity — 25 Oct
-- [ ] 6.12 **Screen a teaser** `/deals/new`: needs 7.4
-- [ ] 6.13 **Research** `/research`: needs 7.5
-- [ ] 6.14 **IC memo** `/deals/[id]/memo`: needs 7.6
+- [ ] 6.12 **Screen a teaser** `/deals/new`: needs 7.5
+- [ ] 6.13 **Research** `/research`: needs 7.6
+- [ ] 6.14 **IC memo** `/deals/[id]/memo`: needs 7.7
 
-## Phase 7 — Agent service (arch §8) — **paused before 7.4 (26 Oct): LLM provider under review**
-
-> The product owner may use a direct provider instead of OpenRouter (OpenRouter adds a fee and VAT). Switching means changing `apps/agent/src/llm.ts` (the only place a model is created) and the `MODEL_*` / key names in config and `.env.example`; tools, agents and workflows are provider-independent. A Tavily key is still needed for web search.
-- [x] 7.1 Mastra server scaffold (Node), OpenRouter provider, models per role from env, service-token auth, `/jobs/{kind}/start` — 26 Oct (verified on the live server)
-- [x] 7.2 Tools, each with Zod I/O and recorded-fixture tests (no live network in tests): webSearch (Tavily adapter), fetchPage, extractTables, companyRegistry (Companies House), secFilings (EDGAR), fxRates (ECB), internalData (read-only API), calculator, recordSource — 26 Oct
+## Phase 7 — Agent service (arch §8, amended by `05-agent-cost-design.md`)
+- [x] 7.1 Mastra server scaffold, service-token auth, `/jobs/{kind}/start`, callbacks — 26 Oct (verified on the live server)
+- [x] 7.2 Nine tools with recorded-fixture tests — 26 Oct
   - Live check fixes: real ECB feed format, proper HTML parser (node-html-parser 9.0.4) for real pages
-- [x] 7.3 Query templates and skill playbooks; market-researcher and analyst agents — 26 Oct
+- [x] 7.3 Query templates, skill playbooks, agents — 26 Oct
   - Live check fix: playbooks load in the bundled server (`make smoke-agent`)
-- [ ] 7.4 `teaserScreen` workflow + API `screen-teaser` command and persist (new deal appears live)
-- [ ] 7.5 `marketResearch` workflow (cited findings; uncited rejected by API); `confidence` becomes a string enum (TODO.md)
-- [ ] 7.6 `memoDraft` workflow + API `draft-memo` command and persist
-- [ ] 7.7 Budgets and guardrails: tool-call, token and time limits; progress callbacks
+- [ ] 7.4 Provider switch to Anthropic: `@anthropic-ai/sdk`, `claude-haiku-5-5`, effort `medium`; one `callClaude` helper (cached system prefix, structured output, max_tokens per job, usage capture); cache probe script; tool-result cache; usage stored on jobs
+- [ ] 7.5 `teaserScreen` workflow (1 call) + API `screen-teaser` command and persist (new deal appears live) — live run with approval
+- [ ] 7.6 `marketResearch` workflow (≤2 calls: deterministic search → fetch → passage filter → extract; code verifies cited figures); `confidence` becomes a string enum — live run with approval
+- [ ] 7.7 `memoDraft` workflow (1 call, all sections) + API `draft-memo` command and persist — live run with approval
 
 ## Phase 8 — Quality
 - [ ] 8.1 Playwright E2E: screen a teaser → job → deal appears live; slider → LBO updates; research job → report renders; feedback note round trip
