@@ -1,0 +1,26 @@
+.layout {
+  display: grid;
+  gap: var(--space-6);
+}
+
+.layout > * {
+  min-width: 0;
+}
+
+.progress {
+  margin-top: var(--space-4);
+}
+
+@media (min-width: 1024px) {
+  .layout {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+
+  .left {
+    grid-column: span 3;
+  }
+
+  .right {
+    grid-column: span 9;
+  }
+}

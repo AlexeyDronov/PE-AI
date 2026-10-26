@@ -95,7 +95,10 @@ Each page gets domain components (props only), a view that calls hooks, page tes
 - [x] 6.13 **Research** `/research`: needs 7.6 — 27 Oct (browser-reviewed with a live run)
   - New research form (question, segment), live progress with cost, report list newest first, report detail with findings table and numbered sources; `Select` ui primitive
   - Live run (TIC deal multiples): $0.0029, 3 verified findings, report opened on completion; the honest "not found" answer exposed that gap-fill only triggered on finding count (fixed next)
-- [ ] 6.14 **IC memo** `/deals/[id]/memo`: needs 7.7
+- [x] 6.14 **IC memo** `/deals/[id]/memo`: needs 7.7 — 27 Oct (browser-reviewed with a live run)
+  - Section picker (outline from the API, scenario select), live progress with cost, latest memo with a status per section, safe `Markdown` renderer (no raw HTML), copy and .md export; `Checkbox` and `Markdown` ui primitives
+  - Live run (Project Kestrel, all 7 sections, base case): $0.0028; figures match the model
+  - Review fix: each section was named twice (label + heading), now once (tested)
 
 ## Phase 7 — Agent service (arch §8, amended by `05-agent-cost-design.md`)
 - [x] 7.1 Mastra server scaffold, service-token auth, `/jobs/{kind}/start`, callbacks — 26 Oct (verified on the live server)

@@ -44,7 +44,7 @@ Tests: API 280, web 229, agent 105, all green. `make smoke-agent` checks that ev
 Keys in the repo-root `.env` (the user set them; never read the file): ANTHROPIC_API_KEY, TAVILY_API_KEY, COMPANIES_HOUSE_API_KEY. The user edited `.env.example` themselves; it's uncommitted and left for them.
 
 ## 5. Exact next step
-Pages **6.12 Screen a teaser** (needs 7.5), **6.13 Research** (needs 7.6) and **6.14 IC memo** (needs 7.7), then Phase 8. Commands: `screenTeaser`, `startMarketResearch`, `draftMemo`; jobs carry `usage` for showing cost. Backlog: the Linden seed-data contradiction in `docs/TODO.md`.
+Pages 6.12–6.14 are done (27 Oct, browser-reviewed with live runs). Next: **Phase 8** (Playwright E2E and the rest of quality), per the plan. Commands: `screenTeaser`, `startMarketResearch`, `draftMemo`; jobs carry `usage` for showing cost. Backlog: the Linden seed-data contradiction in `docs/TODO.md`.
 
 Gotchas from Phase 7:
 - **Restart the agent server after editing `.env`.** Env loads once, by searching up from `.mastra/output` (`envFilesUpward`).

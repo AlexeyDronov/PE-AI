@@ -1,0 +1,36 @@
+.root {
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 22px;
+}
+
+.root h2,
+.root h3 {
+  margin: var(--space-4) 0 var(--space-2);
+  font-family: var(--font-serif);
+  font-weight: 600;
+}
+
+.root h2 {
+  font-size: 18px;
+  line-height: 26px;
+}
+
+.root h3 {
+  font-size: 15px;
+  line-height: 22px;
+}
+
+.root p {
+  margin: 0 0 var(--space-3);
+}
+
+.root ul,
+.root ol {
+  margin: 0 0 var(--space-3);
+  padding-left: var(--space-5);
+}
+
+.root em {
+  font-style: italic;
+}

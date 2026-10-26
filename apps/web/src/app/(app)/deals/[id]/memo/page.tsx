@@ -1,5 +1,11 @@
-import { EmptyState } from "@/components/ui";
+import { Suspense } from "react";
+import { DealMemo } from "@/features/deal/DealMemo";
 
-export default function MemoPage() {
-  return <EmptyState title="The IC memo is being built" body="What do we recommend to the committee?" />;
+export default async function MemoPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  return (
+    <Suspense>
+      <DealMemo dealId={id} />
+    </Suspense>
+  );
 }

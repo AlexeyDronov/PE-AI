@@ -3,6 +3,8 @@ export { Badge, type Tone } from "./Badge";
 export { Breadcrumb, type Crumb } from "./Breadcrumb";
 export { Button, ButtonLink, type ButtonProps } from "./Button";
 export { Card } from "./Card";
+export { Checkbox } from "./Checkbox";
+export { Markdown } from "./Markdown";
 export { FileButton } from "./FileButton";
 export { type Column, DataTable } from "./DataTable";
 export { DotRating } from "./DotRating";
