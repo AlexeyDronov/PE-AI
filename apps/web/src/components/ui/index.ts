@@ -13,6 +13,7 @@ export { PageHeader } from "./PageHeader";
 export { PageSection } from "./PageSection";
 export { type Step, ProgressSteps } from "./ProgressSteps";
 export { ScoreBar } from "./ScoreBar";
+export { type SelectOption, Select } from "./Select";
 export { type SegmentedOption, SegmentedControl } from "./SegmentedControl";
 export { type SidebarGroup, type SidebarIcon, type SidebarItem, Sidebar } from "./Sidebar";
 export { Slider } from "./Slider";

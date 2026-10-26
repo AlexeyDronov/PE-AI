@@ -1,0 +1,34 @@
+.sections {
+  display: grid;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.progress {
+  margin-top: var(--space-4);
+}
+
+.grid {
+  display: grid;
+  gap: var(--space-6);
+  min-width: 0;
+}
+
+.grid > * {
+  min-width: 0;
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: var(--space-6);
+  }
+
+  .left {
+    grid-column: span 4;
+  }
+
+  .right {
+    grid-column: span 8;
+  }
+}

@@ -1,5 +1,10 @@
-import { PlaceholderPage } from "@/components/shell/PlaceholderPage";
+import { Suspense } from "react";
+import { ResearchView } from "@/features/research/ResearchView";
 
 export default function ResearchPage() {
-  return <PlaceholderPage title="Research" question="What does the evidence say?" />;
+  return (
+    <Suspense>
+      <ResearchView />
+    </Suspense>
+  );
 }

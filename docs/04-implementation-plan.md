@@ -92,7 +92,9 @@ Each page gets domain components (props only), a view that calls hooks, page tes
   - Also: API read endpoints for 6.13/6.14 (`research-reports/{id}` with numbered sources, `memos/{id}`, `memo-outline`); shared `JobProgress` domain component (steps, error/retry, cost) now also used by segment Evidence; `FileButton` primitive
   - Review fixes: a live teaser was cut off at 2,000 tokens, so caps are now teaser 6,000 / research 8,000 (adaptive thinking counts); button disabled while a screen runs; duplicate "Teaser" heading removed; styled upload button; progress scrolls into view
   - Live rerun (Project Kestrel, TIC): $0.0009 with the cached prompt; figures, scorecard (63, Watch) and 5 flags correct
-- [ ] 6.13 **Research** `/research`: needs 7.6
+- [x] 6.13 **Research** `/research`: needs 7.6 — 27 Oct (browser-reviewed with a live run)
+  - New research form (question, segment), live progress with cost, report list newest first, report detail with findings table and numbered sources; `Select` ui primitive
+  - Live run (TIC deal multiples): $0.0029, 3 verified findings, report opened on completion; the honest "not found" answer exposed that gap-fill only triggered on finding count (fixed next)
 - [ ] 6.14 **IC memo** `/deals/[id]/memo`: needs 7.7
 
 ## Phase 7 — Agent service (arch §8, amended by `05-agent-cost-design.md`)

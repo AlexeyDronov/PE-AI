@@ -42,6 +42,13 @@ function usd(v: Missing): string {
   return `$${group(v, Math.abs(v) < 0.01 ? 4 : 2)}`;
 }
 
+/** A plain number with thousands separators, keeping up to two decimals (4,738.7; 10.9; 12). */
+function num(v: Missing): string {
+  if (missing(v)) return DASH;
+  const body = new Intl.NumberFormat("en-GB", { maximumFractionDigits: 2 }).format(Math.abs(v));
+  return v < 0 ? `${MINUS}${body}` : body;
+}
+
 function bn(v: Missing, opts: { dp?: number } = {}): string {
   return missing(v) ? DASH : `£${group(v, opts.dp ?? 0)}bn`;
 }
@@ -71,4 +78,4 @@ function quarter(key: string | null | undefined): string {
   return m && m[1] ? `Q${m[2]} ${m[1].slice(2)}` : DASH;
 }
 
-export const fmt = { money, multiple, pct, usd, bn, bp, int, date, quarter };
+export const fmt = { money, multiple, pct, usd, num, bn, bp, int, date, quarter };
