@@ -141,3 +141,41 @@ describe("Screen a teaser review fixes", () => {
     expect(screen.getAllByRole("heading", { name: "Teaser" })).toHaveLength(1);
   });
 });
+
+// Feedback round 8.4 (user note on /deals/new): upload PDF, Word and PowerPoint teasers too; the API extracts the text.
+describe("Screen a teaser document uploads", () => {
+  it("accepts PDF, Word and PowerPoint files as well as text", async () => {
+    renderWithApi(<TeaserScreenView />);
+    const input = await screen.findByLabelText(/upload/i);
+    for (const ext of [".pdf", ".docx", ".pptx", ".txt", ".md"]) expect(input.getAttribute("accept")).toContain(ext);
+  });
+
+  it("sends a document to the API for text extraction and fills the teaser box", async () => {
+    const uploads: { name: string | null }[] = [];
+    server.use(
+      http.post(`${API}/api/extract-text`, async ({ request }) => {
+        const form = await request.formData();
+        const file = form.get("file");
+        uploads.push({ name: file instanceof File ? file.name : null });
+        return HttpResponse.json({ filename: "birch.pdf", text: TEASER, pages: 2 });
+      }),
+    );
+    const user = userEvent.setup();
+    renderWithApi(<TeaserScreenView />);
+    await user.upload(await screen.findByLabelText(/upload/i), new File(["%PDF-1.4"], "birch.pdf", { type: "application/pdf" }));
+    await waitFor(() => expect(screen.getByLabelText(/teaser text/i)).toHaveValue(TEASER));
+    expect(uploads).toEqual([{ name: "birch.pdf" }]);
+  });
+
+  it("explains when a document has no readable text", async () => {
+    server.use(
+      http.post(`${API}/api/extract-text`, () =>
+        HttpResponse.json({ error: { code: "no_text", message: "No readable text in birch.pdf; it may be a scanned image." } }, { status: 422 }),
+      ),
+    );
+    const user = userEvent.setup();
+    renderWithApi(<TeaserScreenView />);
+    await user.upload(await screen.findByLabelText(/upload/i), new File(["%PDF-1.4"], "birch.pdf", { type: "application/pdf" }));
+    expect(await screen.findByText(/no readable text/i)).toBeInTheDocument();
+  });
+});

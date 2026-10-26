@@ -115,6 +115,25 @@ describe("FeedbackOverlay", () => {
     expect(within(dialog).getByRole("button", { name: /save note/i })).toBeDisabled();
   });
 
+  // Feedback round 8.4 (user request): each note in the drawer shows the same number as its pin on the page.
+  it("numbers the notes in the drawer to match their pins", async () => {
+    notes = [
+      { id: "a1", note: "Too dense", route: "/deals", selector: '[data-testid="pipeline-table"]', status: "open" },
+      { id: "a2", note: "Rename the column", route: "/deals", selector: '[data-testid="pipeline-table"]', status: "open" },
+    ];
+    const user = userEvent.setup();
+    renderWithApi(<Page />);
+    await user.click(await screen.findByRole("button", { name: /feedback notes \(2\)/i }));
+    const drawer = await screen.findByRole("dialog", { name: /feedback notes/i });
+    const items = within(drawer).getAllByRole("listitem");
+    expect(within(items[0]!).getByTestId("note-number")).toHaveTextContent("1");
+    expect(within(items[0]!).getByTestId("note-number")).toHaveAccessibleName("Note 1");
+    expect(items[0]).toHaveTextContent("Too dense");
+    expect(within(items[1]!).getByTestId("note-number")).toHaveTextContent("2");
+    expect(items[1]).toHaveTextContent("Rename the column");
+    expect(screen.getByRole("button", { name: "Note 2: Rename the column" })).toBeInTheDocument();
+  });
+
   it("lists open notes for this page and resolves them", async () => {
     notes = [
       { id: "a1", note: "Too dense", route: "/deals", selector: '[data-testid="pipeline-table"]', status: "open" },

@@ -86,3 +86,11 @@ def install_error_handlers(app: FastAPI) -> None:
     @app.exception_handler(RequestValidationError)
     async def _validation_error(_: Request, exc: RequestValidationError) -> JSONResponse:
         return error_response(422, "validation_error", "Request validation failed", exc.errors())
+
+
+class ExtractionFailed(AppError):
+    status = 422
+
+    def __init__(self, code: str, message: str) -> None:
+        super().__init__(message)
+        self.code = code

@@ -12,7 +12,7 @@ from app.core.events import EventBus
 from app.jobs.agent_client import AgentClient
 from app.jobs.registry import JOB_KINDS
 from app.resources import RESOURCES
-from app.routers import commands, compute, exports, internal, overview, pipeline, portfolio
+from app.routers import commands, compute, documents, exports, internal, overview, pipeline, portfolio
 from app.routers.events import stream_events
 from app.routers.factory import make_resource_router
 
@@ -47,7 +47,7 @@ def create_app(settings: Settings | None = None, agent_client: Any = None) -> Fa
     for spec in RESOURCES:
         app.include_router(make_resource_router(spec))
     app.add_api_route("/api/events", stream_events, tags=["events"])
-    for module in (commands, compute, exports, internal, overview, pipeline, portfolio):
+    for module in (commands, compute, documents, exports, internal, overview, pipeline, portfolio):
         app.include_router(module.router)
 
     base_openapi = app.openapi

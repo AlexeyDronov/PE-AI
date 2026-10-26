@@ -73,30 +73,19 @@ describe("AppShell", () => {
     expect(screen.getByRole("navigation", { name: "Breadcrumb" })).toHaveTextContent("Northvale Compliance");
   });
 
-  it("shows running Copilot jobs live", async () => {
+  // Feedback round 8.4 (user note on /): the top-bar jobs widget ("Idle") is removed; each page shows its own job.
+  it("has no jobs widget in the top bar", async () => {
     jobs = [{ id: "j1", kind: "market_research", status: "running", progress: [{ step: "search", message: "6 queries" }] }];
     renderWithApi(
       <AppShell>
         <p>x</p>
       </AppShell>,
     );
-    const indicator = await screen.findByRole("button", { name: /1 copilot job running/i });
-    jobs = [];
-    act(() => FakeEventSource.last?.emit("changed", { type: "changed", resources: ["jobs"], ids: ["j1"] }));
-    await waitFor(() => expect(indicator).toHaveAccessibleName(/no copilot jobs running/i));
+    await waitFor(() => expect(screen.getByText("Harrowgate Fund VII")).toBeInTheDocument());
+    expect(screen.queryByRole("button", { name: /copilot job/i })).not.toBeInTheDocument();
+    expect(screen.queryByText("Idle")).not.toBeInTheDocument();
   });
 
-  it("lists running jobs in a popover", async () => {
-    jobs = [{ id: "j1", kind: "market_research", status: "running", progress: [{ step: "search", message: "6 queries" }] }];
-    renderWithApi(
-      <AppShell>
-        <p>x</p>
-      </AppShell>,
-    );
-    await userEvent.click(await screen.findByRole("button", { name: /1 copilot job running/i }));
-    expect(await screen.findByText(/market research/i)).toBeInTheDocument();
-    expect(screen.getByText("6 queries")).toBeInTheDocument();
-  });
 
   it("toggles the theme", async () => {
     renderWithApi(

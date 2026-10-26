@@ -193,8 +193,11 @@ export function FeedbackOverlay() {
           <Dialog.Content className={styles.drawer} aria-describedby={undefined} {...{ [UI_ATTR]: "" }}>
             <Dialog.Title className={styles.title}>Feedback notes</Dialog.Title>
             <ul className={styles.list}>
-              {notes.map((n) => (
+              {notes.map((n, i) => (
                 <li key={n.id} className={styles.item}>
+                  <span className={styles.number} data-testid="note-number" aria-label={`Note ${i + 1}`}>
+                    {i + 1}
+                  </span>
                   <div>{n.note}</div>
                   <div className={styles.meta}>
                     {n.route} · {n.selector} · {n.status}

@@ -197,3 +197,13 @@
   color: var(--ink-3);
   word-break: break-all;
 }
+
+.number {
+  display: inline-grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  font-size: 12px;
+  background: var(--line-strong);
+}

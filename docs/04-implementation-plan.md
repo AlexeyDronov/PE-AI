@@ -130,4 +130,5 @@ Each page gets domain components (props only), a view that calls hooks, page tes
 - [ ] 8.2 Visual baselines: gallery and each page, light theme, 1440px and 390px
 - [x] 8.3 Accessibility pass (keyboard, focus, contrast, table views for charts) — 27 Oct (`e2e/tests/a11y.spec.ts`: axe WCAG 2.1 AA on every page, one h1 + main, skip link, visible focus, chart table views; `--ink-3` darkened to #656d7a for 4.5:1 on accent-soft)
 - [ ] 8.4 Rounds of fixes from your feedback notes
+  - Round 1 — 27 Oct: feedback drawer numbers match the pins; Overview subtitle "Fund at a glance", AUM (NAV + dry powder) and fund lifecycle added, Copilot activity and the top-bar jobs widget removed, no coloured strip on alerts; teaser upload accepts PDF, Word and PowerPoint (API text extraction: pypdf 6.20.1, python-docx 1.2.0, python-pptx 1.0.2)
 - [ ] 8.5 ⧗ Dark-mode rework (deferred by product owner)

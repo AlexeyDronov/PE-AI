@@ -29,5 +29,10 @@ def overview_summary(session: Annotated[Session, Depends(get_read_session)]) -> 
     deals = enrichers.deals(session, Repository(m.Deal, session).list(limit=MAX_ROWS).items, False)
     alerts = Repository(m.Alert, session).list(limit=MAX_ROWS).items
     return overview.summarise_overview(
-        fund.committed, metrics, [d.stage for d in deals], [a.severity for a in alerts]
+        fund.committed,
+        fund.vintage,
+        fund.as_of.year,
+        metrics,
+        [d.stage for d in deals],
+        [a.severity for a in alerts],
     )

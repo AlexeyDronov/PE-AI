@@ -59,7 +59,10 @@ beforeEach(() => {
     }),
     http.get(`${API}/api/jobs/j1`, () => HttpResponse.json({ id: "j1", kind: "market_research", status: "queued", progress: [], input: {}, result_ref: null, error: null, created_at: "", updated_at: "", source: "user" })),
     http.get(`${API}/api/overview-summary`, () =>
-      HttpResponse.json({ nav: 1182, net_irr: 0.126, tvpi: 1.46, dpi: 0.38, dry_powder: 412, in_diligence: 3, pipeline_total: 8, alerts: { bad: 1, warn: 2, acc: 2 } }),
+      HttpResponse.json({
+        nav: 1182, net_irr: 0.126, tvpi: 1.46, dpi: 0.38, dry_powder: 412, aum: 1594, in_diligence: 3, pipeline_total: 8, alerts: { bad: 1, warn: 2, acc: 2 },
+        lifecycle: { vintage: 2019, year: 8, term_years: 10, phase: "Harvesting" },
+      }),
     ),
     http.get(`${API}/api/alerts`, () =>
       HttpResponse.json({ items: [{ id: "a1", company_id: "c", severity: "bad", label: "Action", text: "Covenant headroom is 7%.", action: "Open lender dialogue.", company: { name: "Orbis Language Tech" } }], total: 1 }),
@@ -156,11 +159,29 @@ describe("OverviewView (6.11)", () => {
     expect(within(n).getByRole("link", { name: /Northvale Compliance/ })).toHaveAttribute("href", "/deals/d1");
   });
 
-  it("shows Copilot activity live", async () => {
+  // Feedback round 8.4 (user notes on /): no Copilot activity section; the subtitle is "Fund at a glance".
+  it("has no Copilot activity section", async () => {
     renderWithApi(<OverviewView />);
-    const a = await screen.findByRole("region", { name: "Copilot activity" });
-    await waitFor(() => expect(a).toHaveTextContent("Running 6 queries"));
-    expect(a).toHaveTextContent(/market research/i);
-    act(() => FakeEventSource.last?.emit("job", { type: "job", id: "j9", kind: "market_research", status: "succeeded" }));
+    await screen.findByRole("region", { name: "Needs attention" });
+    expect(screen.queryByRole("region", { name: "Copilot activity" })).not.toBeInTheDocument();
+    expect(screen.queryByText(/copilot activity/i)).not.toBeInTheDocument();
+  });
+
+  it("uses 'Fund at a glance' as the page subtitle instead of a question or a second heading", async () => {
+    renderWithApi(<OverviewView />);
+    const header = await screen.findByTestId("page-header");
+    expect(header).toHaveTextContent("Fund at a glance");
+    expect(screen.queryByText(/what needs your attention today/i)).not.toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Fund at a glance" })).not.toBeInTheDocument();
+  });
+
+  it("adds AUM and the fund's lifecycle to the fund at a glance", async () => {
+    renderWithApi(<OverviewView />);
+    const f = await screen.findByRole("region", { name: "Fund at a glance" });
+    await waitFor(() => expect(f).toHaveTextContent("£1.6bn"));
+    expect(f).toHaveTextContent(/AUM/i);
+    expect(f).toHaveTextContent("Year 8 of 10");
+    expect(f).toHaveTextContent("Harvesting");
+    expect(f).toHaveTextContent("2019");
   });
 });

@@ -243,6 +243,20 @@
         "title": "Benchmark",
         "type": "object"
       },
+      "Body_extract_text_api_extract_text_post": {
+        "properties": {
+          "file": {
+            "contentMediaType": "application/octet-stream",
+            "title": "File",
+            "type": "string"
+          }
+        },
+        "required": [
+          "file"
+        ],
+        "title": "Body_extract_text_api_extract_text_post",
+        "type": "object"
+      },
       "BridgeItem": {
         "properties": {
           "label": {
@@ -1209,6 +1223,35 @@
         "title": "ExitSummary",
         "type": "object"
       },
+      "ExtractedText": {
+        "properties": {
+          "filename": {
+            "title": "Filename",
+            "type": "string"
+          },
+          "pages": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pages"
+          },
+          "text": {
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "filename",
+          "text"
+        ],
+        "title": "ExtractedText",
+        "type": "object"
+      },
       "FacilityWithHeadroom": {
         "properties": {
           "actual": {
@@ -1543,6 +1586,34 @@
           "nav"
         ],
         "title": "FundCashflow",
+        "type": "object"
+      },
+      "FundLifecycle": {
+        "properties": {
+          "phase": {
+            "title": "Phase",
+            "type": "string"
+          },
+          "term_years": {
+            "title": "Term Years",
+            "type": "integer"
+          },
+          "vintage": {
+            "title": "Vintage",
+            "type": "integer"
+          },
+          "year": {
+            "title": "Year",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "vintage",
+          "year",
+          "term_years",
+          "phase"
+        ],
+        "title": "FundLifecycle",
         "type": "object"
       },
       "FundMetrics": {
@@ -2733,6 +2804,10 @@
             "title": "Alerts",
             "type": "object"
           },
+          "aum": {
+            "title": "Aum",
+            "type": "number"
+          },
           "dpi": {
             "title": "Dpi",
             "type": "number"
@@ -2744,6 +2819,9 @@
           "in_diligence": {
             "title": "In Diligence",
             "type": "integer"
+          },
+          "lifecycle": {
+            "$ref": "#/components/schemas/FundLifecycle"
           },
           "nav": {
             "title": "Nav",
@@ -2768,6 +2846,8 @@
           "tvpi",
           "dpi",
           "dry_powder",
+          "aum",
+          "lifecycle",
           "in_diligence",
           "pipeline_total",
           "alerts"
@@ -7382,6 +7462,47 @@
         "summary": "Export Lbo",
         "tags": [
           "exports"
+        ]
+      }
+    },
+    "/api/extract-text": {
+      "post": {
+        "operationId": "extract_text_api_extract_text_post",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_extract_text_api_extract_text_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExtractedText"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Extract Text",
+        "tags": [
+          "documents"
         ]
       }
     },

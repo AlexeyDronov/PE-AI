@@ -602,6 +602,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/extract-text": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Extract Text */
+        post: operations["extract_text_api_extract_text_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/fund-cashflows": {
         parameters: {
             query?: never;
@@ -1528,6 +1545,11 @@ export interface components {
             /** Unit */
             unit: string;
         };
+        /** Body_extract_text_api_extract_text_post */
+        Body_extract_text_api_extract_text_post: {
+            /** File */
+            file: string;
+        };
         /** BridgeItem */
         BridgeItem: {
             /** Label */
@@ -1917,6 +1939,15 @@ export interface components {
                 [key: string]: number;
             };
         };
+        /** ExtractedText */
+        ExtractedText: {
+            /** Filename */
+            filename: string;
+            /** Pages */
+            pages?: number | null;
+            /** Text */
+            text: string;
+        };
         /** FacilityWithHeadroom */
         FacilityWithHeadroom: {
             /** Actual */
@@ -2046,6 +2077,17 @@ export interface components {
             nav: number;
             /** Period */
             period: number;
+        };
+        /** FundLifecycle */
+        FundLifecycle: {
+            /** Phase */
+            phase: string;
+            /** Term Years */
+            term_years: number;
+            /** Vintage */
+            vintage: number;
+            /** Year */
+            year: number;
         };
         /** FundMetrics */
         FundMetrics: {
@@ -2497,12 +2539,15 @@ export interface components {
             alerts: {
                 [key: string]: number;
             };
+            /** Aum */
+            aum: number;
             /** Dpi */
             dpi: number;
             /** Dry Powder */
             dry_powder: number;
             /** In Diligence */
             in_diligence: number;
+            lifecycle: components["schemas"]["FundLifecycle"];
             /** Nav */
             nav: number;
             /** Net Irr */
@@ -4697,6 +4742,39 @@ export interface operations {
                 };
                 content: {
                     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": string;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    extract_text_api_extract_text_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["Body_extract_text_api_extract_text_post"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExtractedText"];
                 };
             };
             /** @description Validation Error */

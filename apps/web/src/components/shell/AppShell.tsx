@@ -8,7 +8,6 @@ import { FeedbackOverlay } from "@/features/feedback/FeedbackOverlay";
 import { useResource } from "@/hooks/useResource";
 import { fmt } from "@/lib/format";
 import { BreadcrumbSetter } from "./BreadcrumbContext";
-import { JobsIndicator } from "./JobsIndicator";
 import { ThemeToggle } from "./ThemeToggle";
 import styles from "./AppShell.module.css";
 
@@ -27,7 +26,6 @@ export function AppShell({ children, breadcrumb }: { children: ReactNode; breadc
       <div className={styles.column}>
         <header className={styles.header}>
           {crumbs.length ? <Breadcrumb items={crumbs} /> : <span />}
-          <JobsIndicator />
         </header>
         <main id={MAIN_ID} tabIndex={-1} className={styles.main}>
           <BreadcrumbSetter.Provider value={setOverride}>{children}</BreadcrumbSetter.Provider>
