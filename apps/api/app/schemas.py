@@ -248,6 +248,7 @@ class JobRead(BaseModel):
     progress: list[JobProgress]
     result_ref: str | None
     error: str | None
+    usage: dict[str, Any] | None = None
 
 
 class LboScenarioRead(BaseModel):

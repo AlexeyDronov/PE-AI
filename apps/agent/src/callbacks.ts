@@ -1,5 +1,6 @@
 import type { Config } from "./config";
 import { CallbackError } from "./errors";
+import type { Usage } from "./llm";
 
 const MAX_ATTEMPTS = 3;
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -23,12 +24,12 @@ export class ApiCallbacks {
     return this.post(jobId, "progress", { step, message });
   }
 
-  result(jobId: string, payload: Record<string, unknown>): Promise<void> {
-    return this.post(jobId, "result", { payload });
+  result(jobId: string, payload: Record<string, unknown>, usage?: Usage): Promise<void> {
+    return this.post(jobId, "result", usage ? { payload, usage } : { payload });
   }
 
-  fail(jobId: string, error: string): Promise<void> {
-    return this.post(jobId, "fail", { error });
+  fail(jobId: string, error: string, usage?: Usage): Promise<void> {
+    return this.post(jobId, "fail", usage ? { error, usage } : { error });
   }
 
   private async post(jobId: string, action: string, body: unknown): Promise<void> {

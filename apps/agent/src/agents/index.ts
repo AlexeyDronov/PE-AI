@@ -1,12 +1,13 @@
 import { Agent } from "@mastra/core/agent";
-import type { Config, ModelRole } from "../config";
-import { modelFor } from "../llm";
+import type { Config } from "../config";
+import { studioModel } from "../llm";
 import { buildInstructions, type SkillName } from "../skills";
 import { buildTools } from "../tools";
 import { createSourceRegistry } from "../tools/recordSource";
 
+/** Definitions back the Mastra Studio agents only; app jobs call Claude through src/llm.ts. */
 export interface AgentDefinition {
-  role: ModelRole;
+  role: "research" | "extract";
   instructions: string;
   tools: Record<string, ReturnType<typeof buildTools>[keyof ReturnType<typeof buildTools>]>;
 }
@@ -40,7 +41,7 @@ function toAgent(id: string, name: string, def: AgentDefinition, config: Config)
     id,
     name,
     instructions: def.instructions,
-    model: () => modelFor(def.role, config),
+    model: studioModel(config),
     tools: def.tools,
   });
 }

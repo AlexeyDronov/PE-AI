@@ -98,7 +98,9 @@ Each page gets domain components (props only), a view that calls hooks, page tes
   - Live check fixes: real ECB feed format, proper HTML parser (node-html-parser 9.0.4) for real pages
 - [x] 7.3 Query templates, skill playbooks, agents — 26 Oct
   - Live check fix: playbooks load in the bundled server (`make smoke-agent`)
-- [ ] 7.4 Provider switch to Anthropic: `@anthropic-ai/sdk`, `claude-haiku-5-5`, effort `medium`; one `callClaude` helper (cached system prefix, structured output, max_tokens per job, usage capture); cache probe script; tool-result cache; usage stored on jobs
+- [x] 7.4 Provider switch to Anthropic: `@anthropic-ai/sdk`, `claude-haiku-5-5`, effort `medium`; one `callClaude` helper (cached system prefix, structured output, max_tokens per job, usage capture); cache probe script; tool-result cache; usage stored on jobs — 27 Oct
+  - Review fix: output schema goes through the SDK's `zodOutputFormat` transform, so range/length constraints don't break structured outputs (zod still enforces them)
+  - `.env.example` not updated: blocked by the user's permission rules; new keys are `ANTHROPIC_API_KEY`, `MODEL`, `EFFORT`, `TOOL_CACHE_HOURS`
 - [ ] 7.5 `teaserScreen` workflow (1 call) + API `screen-teaser` command and persist (new deal appears live) — live run with approval
 - [ ] 7.6 `marketResearch` workflow (≤2 calls: deterministic search → fetch → passage filter → extract; code verifies cited figures); `confidence` becomes a string enum — live run with approval
 - [ ] 7.7 `memoDraft` workflow (1 call, all sections) + API `draft-memo` command and persist — live run with approval

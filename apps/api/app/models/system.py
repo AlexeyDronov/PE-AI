@@ -15,6 +15,7 @@ class Job(Writable, table=True):
     progress: list[Any] = Field(default_factory=list, sa_column=Column(JSON))
     result_ref: str | None = None
     error: str | None = None
+    usage: dict[str, Any] | None = Field(default=None, sa_column=Column(JSON))
     updated_at: datetime = Field(default_factory=utcnow)
 
 

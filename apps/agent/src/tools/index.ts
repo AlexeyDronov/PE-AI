@@ -7,6 +7,7 @@ import { extractTables } from "./extractTables";
 import { fetchHtml, fetchPage } from "./fetchPage";
 import { convertCurrency } from "./fxRates";
 import { readInternal } from "./internalData";
+import { type ToolCache, createToolCache } from "../toolCache";
 import type { SourceRegistry } from "./recordSource";
 import { searchFilings } from "./secFilings";
 import { MAX_SEARCH_RESULTS, TavilyProvider, searchWeb } from "./webSearch";
@@ -18,8 +19,12 @@ const calcInput = z.discriminatedUnion("op", [
   z.object({ op: z.literal("share"), part: z.number(), whole: z.number() }),
 ]);
 
+let sharedCache: ToolCache | undefined;
+/** One process-wide cache, so repeated searches and fetches across jobs cost nothing. */
+const processCache = (config: Config) => (sharedCache ??= createToolCache({ ttlMs: config.toolCacheHours * 3_600_000 }));
+
 /** Build the agent's tools; config and the per-job source registry are captured by closure. */
-export function buildTools({ config, sources }: { config: Config; sources: SourceRegistry }) {
+export function buildTools({ config, sources, cache = processCache(config) }: { config: Config; sources: SourceRegistry; cache?: ToolCache }) {
   const provider = config.keys.tavily ? new TavilyProvider(config.keys.tavily) : null;
 
   const calculator = createTool({
@@ -40,7 +45,7 @@ export function buildTools({ config, sources }: { config: Config; sources: Sourc
         z.object({ title: z.string(), url: z.string(), snippet: z.string(), publishedDate: z.string().nullable(), score: z.number() }),
       ),
     }),
-    execute: async (input) => searchWeb(input, provider),
+    execute: cache.wrap("webSearch", async (input) => searchWeb(input, provider)),
   });
 
   const fetchPageTool = createTool({
@@ -49,7 +54,7 @@ export function buildTools({ config, sources }: { config: Config; sources: Sourc
       "Fetch a public web page (http/https HTML only) and return its readable text with scripts and navigation removed. Respects robots.txt; refuses private addresses and non-HTML files. Output is truncated to maxChars (flagged by truncated).",
     inputSchema: z.object({ url: z.string().min(1), maxChars: z.number().int().min(100).max(50_000).default(12_000) }),
     outputSchema: z.object({ url: z.string(), title: z.string(), text: z.string(), truncated: z.boolean() }),
-    execute: async (input) => fetchPage(input),
+    execute: cache.wrap("fetchPage", async (input) => fetchPage(input)),
   });
 
   const extractTablesTool = createTool({
@@ -60,7 +65,7 @@ export function buildTools({ config, sources }: { config: Config; sources: Sourc
     outputSchema: z.object({
       tables: z.array(z.object({ caption: z.string().nullable(), headers: z.array(z.string()), rows: z.array(z.array(z.string())) })),
     }),
-    execute: async ({ url }) => ({ tables: extractTables(await fetchHtml(url)) }),
+    execute: cache.wrap("extractTables", async ({ url }) => ({ tables: extractTables(await fetchHtml(url)) })),
   });
 
   const companyRegistry = createTool({

@@ -189,3 +189,46 @@ def test_unreachable_agent_fails_the_job_cleanly(settings):
         stored = c.get(f"/api/jobs/{job['id']}").json()
         assert stored["status"] == "failed"
         assert c.get("/api/jobs", params={"status": "queued"}).json()["total"] == 0
+
+
+# ---------- 7.4: each job records what its model calls cost ----------
+
+USAGE = {
+    "calls": 2,
+    "inputTokens": 9000,
+    "cacheWriteTokens": 0,
+    "cacheReadTokens": 3000,
+    "outputTokens": 1500,
+    "costUsd": 0.00168,
+}
+
+
+def test_result_records_usage_on_the_job(client, auth):
+    job = start(client)
+    r = client.post(
+        f"/internal/jobs/{job['id']}/result", headers=auth, json={"payload": REPORT, "usage": USAGE}
+    )
+    assert r.status_code == 204, r.text
+    assert client.get(f"/api/jobs/{job['id']}").json()["usage"] == USAGE
+
+
+def test_failure_records_usage_on_the_job(client, auth):
+    job = start(client)
+    r = client.post(
+        f"/internal/jobs/{job['id']}/fail", headers=auth, json={"error": "Claude declined", "usage": USAGE}
+    )
+    assert r.status_code == 204
+    assert client.get(f"/api/jobs/{job['id']}").json()["usage"] == USAGE
+
+
+def test_usage_is_optional(client, auth):
+    job = start(client)
+    client.post(f"/internal/jobs/{job['id']}/fail", headers=auth, json={"error": "x"})
+    assert client.get(f"/api/jobs/{job['id']}").json()["usage"] is None
+
+
+def test_malformed_usage_is_rejected(client, auth):
+    job = start(client)
+    bad = {**USAGE, "outputTokens": -1}
+    r = client.post(f"/internal/jobs/{job['id']}/fail", headers=auth, json={"error": "x", "usage": bad})
+    assert r.status_code == 422

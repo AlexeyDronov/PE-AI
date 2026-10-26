@@ -1249,6 +1249,16 @@
           "error": {
             "title": "Error",
             "type": "string"
+          },
+          "usage": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Usage"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         },
         "required": [
@@ -1649,6 +1659,18 @@
             "format": "date-time",
             "title": "Updated At",
             "type": "string"
+          },
+          "usage": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Usage"
           }
         },
         "required": [
@@ -3487,6 +3509,16 @@
             "additionalProperties": true,
             "title": "Payload",
             "type": "object"
+          },
+          "usage": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Usage"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         },
         "required": [
@@ -4422,6 +4454,51 @@
           "status"
         ],
         "title": "UpdateAnnotationInput",
+        "type": "object"
+      },
+      "Usage": {
+        "description": "Model-call usage the agent reports for a job.",
+        "properties": {
+          "cacheReadTokens": {
+            "minimum": 0.0,
+            "title": "Cachereadtokens",
+            "type": "integer"
+          },
+          "cacheWriteTokens": {
+            "minimum": 0.0,
+            "title": "Cachewritetokens",
+            "type": "integer"
+          },
+          "calls": {
+            "minimum": 0.0,
+            "title": "Calls",
+            "type": "integer"
+          },
+          "costUsd": {
+            "minimum": 0.0,
+            "title": "Costusd",
+            "type": "number"
+          },
+          "inputTokens": {
+            "minimum": 0.0,
+            "title": "Inputtokens",
+            "type": "integer"
+          },
+          "outputTokens": {
+            "minimum": 0.0,
+            "title": "Outputtokens",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "calls",
+          "inputTokens",
+          "cacheWriteTokens",
+          "cacheReadTokens",
+          "outputTokens",
+          "costUsd"
+        ],
+        "title": "Usage",
         "type": "object"
       },
       "ValidationError": {

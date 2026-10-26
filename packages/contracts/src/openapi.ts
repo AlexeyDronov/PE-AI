@@ -1887,6 +1887,7 @@ export interface components {
         FailBody: {
             /** Error */
             error: string;
+            usage?: components["schemas"]["Usage"] | null;
         };
         /** FundCashflow */
         FundCashflow: {
@@ -2048,6 +2049,10 @@ export interface components {
              * Format: date-time
              */
             updated_at: string;
+            /** Usage */
+            usage?: {
+                [key: string]: unknown;
+            } | null;
         };
         /** KpiPointListItem */
         KpiPointListItem: {
@@ -2732,6 +2737,7 @@ export interface components {
             payload: {
                 [key: string]: unknown;
             };
+            usage?: components["schemas"]["Usage"] | null;
         };
         /** Returns */
         Returns: {
@@ -3123,6 +3129,24 @@ export interface components {
              * @enum {string}
              */
             status: "open" | "resolved";
+        };
+        /**
+         * Usage
+         * @description Model-call usage the agent reports for a job.
+         */
+        Usage: {
+            /** Cachereadtokens */
+            cacheReadTokens: number;
+            /** Cachewritetokens */
+            cacheWriteTokens: number;
+            /** Calls */
+            calls: number;
+            /** Costusd */
+            costUsd: number;
+            /** Inputtokens */
+            inputTokens: number;
+            /** Outputtokens */
+            outputTokens: number;
         };
         /** ValidationError */
         ValidationError: {

@@ -1,33 +1,34 @@
+import { existsSync, readFileSync } from "node:fs";
+import { parseEnv } from "node:util";
 import { z } from "zod";
 
-const model = z.string().min(1).default("anthropic/claude-sonnet-5.5");
 const optionalKey = z.string().min(1).optional();
 
 const envSchema = z.object({
   API_URL: z.string().min(1, "API_URL is required"),
   AGENT_SERVICE_TOKEN: z.string().min(1, "AGENT_SERVICE_TOKEN is required"),
   PORT: z.coerce.number().int().positive().default(4111),
-  MODEL_RESEARCH: model,
-  MODEL_EXTRACT: model,
-  MODEL_DRAFT: model,
-  MAX_TOOL_CALLS: z.coerce.number().int().positive().default(40),
+  MODEL: z.string().min(1).default("claude-haiku-5-5"),
+  EFFORT: z.enum(["low", "medium", "high", "xhigh", "max"]).default("medium"),
   MAX_SECONDS: z.coerce.number().positive().default(300),
-  MAX_OUTPUT_TOKENS: z.coerce.number().int().positive().default(8000),
-  OPENROUTER_API_KEY: optionalKey,
+  TOOL_CACHE_HOURS: z.coerce.number().min(0).default(24),
+  ANTHROPIC_API_KEY: optionalKey,
   TAVILY_API_KEY: optionalKey,
   COMPANIES_HOUSE_API_KEY: optionalKey,
   SEC_USER_AGENT: z.string().min(1).default("Harrowgate Deal Copilot research@harrowgate.example"),
 });
 
-export type ModelRole = "research" | "extract" | "draft";
+export type Effort = z.infer<typeof envSchema>["EFFORT"];
 
 export interface Config {
   apiUrl: string;
   serviceToken: string;
   port: number;
-  models: Record<ModelRole, string>;
-  budgets: { maxToolCalls: number; maxSeconds: number; maxOutputTokens: number };
-  keys: { openrouter?: string; tavily?: string; companiesHouse?: string };
+  model: string;
+  effort: Effort;
+  budgets: { maxSeconds: number };
+  toolCacheHours: number;
+  keys: { anthropic?: string; tavily?: string; companiesHouse?: string };
   secUserAgent: string;
 }
 
@@ -43,9 +44,21 @@ export function loadConfig(env: Record<string, string | undefined> = process.env
     apiUrl: e.API_URL.replace(/\/$/, ""),
     serviceToken: e.AGENT_SERVICE_TOKEN,
     port: e.PORT,
-    models: { research: e.MODEL_RESEARCH, extract: e.MODEL_EXTRACT, draft: e.MODEL_DRAFT },
-    budgets: { maxToolCalls: e.MAX_TOOL_CALLS, maxSeconds: e.MAX_SECONDS, maxOutputTokens: e.MAX_OUTPUT_TOKENS },
-    keys: { openrouter: e.OPENROUTER_API_KEY, tavily: e.TAVILY_API_KEY, companiesHouse: e.COMPANIES_HOUSE_API_KEY },
+    model: e.MODEL,
+    effort: e.EFFORT,
+    budgets: { maxSeconds: e.MAX_SECONDS },
+    toolCacheHours: e.TOOL_CACHE_HOURS,
+    keys: { anthropic: e.ANTHROPIC_API_KEY, tavily: e.TAVILY_API_KEY, companiesHouse: e.COMPANIES_HOUSE_API_KEY },
     secUserAgent: e.SEC_USER_AGENT,
   };
+}
+
+/** Fill variables from the .env files that exist, never overriding ones already set. */
+export function loadEnvFiles(paths: string[], env: Record<string, string | undefined> = process.env): void {
+  for (const path of paths) {
+    if (!existsSync(path)) continue;
+    for (const [key, value] of Object.entries(parseEnv(readFileSync(path, "utf8")))) {
+      if (env[key] === undefined) env[key] = value;
+    }
+  }
 }

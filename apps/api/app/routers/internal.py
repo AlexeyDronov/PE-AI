@@ -1,7 +1,7 @@
 from typing import Annotated, Any
 
 from fastapi import APIRouter, Depends, Header, Request, Response
-from pydantic import BaseModel, ValidationError
+from pydantic import BaseModel, NonNegativeFloat, NonNegativeInt, ValidationError
 from sqlmodel import Session
 
 from app.core.db import write_session
@@ -26,12 +26,29 @@ class Progress(BaseModel):
     message: str
 
 
+class Usage(BaseModel):
+    """Model-call usage the agent reports for a job."""
+
+    calls: NonNegativeInt
+    inputTokens: NonNegativeInt  # noqa: N815
+    cacheWriteTokens: NonNegativeInt  # noqa: N815
+    cacheReadTokens: NonNegativeInt  # noqa: N815
+    outputTokens: NonNegativeInt  # noqa: N815
+    costUsd: NonNegativeFloat  # noqa: N815
+
+
 class ResultBody(BaseModel):
     payload: dict[str, Any]
+    usage: Usage | None = None
 
 
 class FailBody(BaseModel):
     error: str
+    usage: Usage | None = None
+
+
+def usage_of(body: ResultBody | FailBody) -> dict[str, Any] | None:
+    return body.usage.model_dump() if body.usage else None
 
 
 def open_job(session: Session, job_id: str) -> Job:
@@ -67,7 +84,7 @@ async def fail(job_id: str, body: FailBody, request: Request) -> Response:
     app = request.app
     with write_session(app.state.settings.database_path) as session:
         job = open_job(session, job_id)
-        set_status(job, "failed", error=body.error)
+        set_status(job, "failed", error=body.error, usage=usage_of(body))
         session.add(job)
         session.commit()
     await publish_job(app, job)
@@ -84,7 +101,7 @@ async def result(job_id: str, body: ResultBody, request: Request) -> Response:
             parsed = kind.result_schema.model_validate(body.payload)
         except ValidationError as exc:
             invalid = InvalidInput.from_pydantic(exc)
-            set_status(job, "failed", error=f"Invalid result: {invalid.message}")
+            set_status(job, "failed", error=f"Invalid result: {invalid.message}", usage=usage_of(body))
             session.add(job)
             session.commit()
             await publish_job(app, job)
@@ -93,7 +110,7 @@ async def result(job_id: str, body: ResultBody, request: Request) -> Response:
             written = kind.persist(session, job, parsed)
         except NotImplementedError as exc:
             raise NotImplementedYet(str(exc)) from exc
-        set_status(job, "succeeded", result_ref=written.id)
+        set_status(job, "succeeded", result_ref=written.id, usage=usage_of(body))
         session.add(job)
         session.commit()
     await publish_job(app, job)

@@ -51,7 +51,7 @@ The prototype (`reference/prototype.html`) is used for direction only. No code i
                                    start job      │            │ job events + result
                                                   ▼            │ (service token)
                                             ┌─────────────────────────────┐
-                                            │  agent (Mastra, Node)       │──▶ OpenRouter (LLMs)
+                                            │  agent (Mastra, Node)       │──▶ Anthropic API
                                             │  agents · workflows · tools │──▶ Web search API
                                             └─────────────────────────────┘
 ```
@@ -386,7 +386,7 @@ Tables: **TanStack Table** (headless, MIT) under `DataTable` — fits our tokens
 ```
 src/
 ├── mastra/index.ts              Mastra instance, server (Hono), auth middleware (service token)
-├── llm.ts                       OpenRouter provider (@openrouter/ai-sdk-provider); model per role from env
+├── llm.ts                       Anthropic SDK (`callClaude`); one model from env (see 05-agent-cost-design.md)
 ├── agents/
 │   ├── marketResearcher.ts      autonomous: plans, searches, reads, extracts, cites
 │   └── analyst.ts               structured extraction / drafting (teasers, memo sections)
@@ -416,8 +416,8 @@ src/
 - Workflow inputs/outputs use the **Zod schemas generated from OpenAPI** (`packages/contracts/schemas.ts`) — the agent cannot invent shape.
 - Every numeric finding must carry ≥1 `source_id` recorded via `recordSource`; the API rejects uncited findings.
 - Arithmetic goes through `calculator`, never free-text LLM maths.
-- Budgets per job: max tool calls, max tokens, wall-clock timeout — configured in env.
-- Model choice per role via env (`MODEL_RESEARCH`, `MODEL_EXTRACT`, `MODEL_DRAFT`) so models can change without code changes.
+- Budgets per job: per-call `max_tokens`, wall-clock timeout — configured in env.
+- Anthropic direct, `claude-haiku-5-5` at effort `medium`, set via env (`MODEL`, `EFFORT`, `TOOL_CACHE_HOURS`) so they can change without code changes. See `docs/05-agent-cost-design.md`.
 
 ---
 
@@ -467,7 +467,7 @@ Test files are additionally protected by a pre-commit hook during subagent runs.
 |---|---|---|
 | D1 | Charting library | **Apache ECharts** + TanStack Table |
 | D2 | Agent web-search provider | **Tavily**, behind the `webSearch` adapter so it can be swapped |
-| D3 | Where LLM calls live | **All in the Mastra service**; FastAPI never calls OpenRouter |
+| D3 | Where LLM calls live | **All in the Mastra service**, calling Anthropic directly (`claude-haiku-5-5`, effort medium; see `05-agent-cost-design.md`); FastAPI never calls the model |
 | D4 | LBO maths location | **Backend** compute endpoint, debounced 150 ms from sliders, **results cached** (see below) |
 | D5 | Auth | None for v1 (single-user local tool); structure leaves room for it — *still open, defaulting to none* |
 
@@ -477,7 +477,7 @@ Test files are additionally protected by a pre-commit hook during subagent runs.
 
 ## 12. Environment and prerequisites
 
-This machine currently has Python 3.9 and no Node. Required: **Node 22 LTS + pnpm**, **Python 3.12 via uv**, and keys in `.env`: `OPENROUTER_API_KEY`, `SEARCH_API_KEY`, `AGENT_SERVICE_TOKEN`. `make dev` starts api (:8000), agent (:4111) and web (:3000).
+This machine currently has Python 3.9 and no Node. Required: **Node 22 LTS + pnpm**, **Python 3.12 via uv**, and keys in `.env`: `ANTHROPIC_API_KEY`, `SEARCH_API_KEY`, `AGENT_SERVICE_TOKEN`. `make dev` starts api (:8000), agent (:4111) and web (:3000).
 
 ## 13. Build order after sign-off
 

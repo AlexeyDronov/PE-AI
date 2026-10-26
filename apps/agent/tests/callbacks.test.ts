@@ -34,6 +34,17 @@ describe("ApiCallbacks", () => {
     expect(f[0]?.body).toEqual({ error: "Search quota exceeded" });
   });
 
+  // 7.4: every job reports what its model calls cost, on success and on failure.
+  it("attaches usage to results and failures when given", async () => {
+    const usage = { calls: 1, inputTokens: 10, cacheWriteTokens: 0, cacheReadTokens: 5, outputTokens: 7, costUsd: 0.0001 };
+    const r = capture("/internal/jobs/j1/result");
+    const f = capture("/internal/jobs/j2/fail");
+    await cb().result("j1", { summary: "x" }, usage);
+    await cb().fail("j2", "Claude declined", usage);
+    expect(r[0]?.body).toEqual({ payload: { summary: "x" }, usage });
+    expect(f[0]?.body).toEqual({ error: "Claude declined", usage });
+  });
+
   it("retries transient server errors, then gives up with the status", async () => {
     let n = 0;
     server.use(http.post(`${API}/internal/jobs/j1/progress`, () => (++n < 3 ? new HttpResponse(null, { status: 503 }) : new HttpResponse(null, { status: 204 }))));
