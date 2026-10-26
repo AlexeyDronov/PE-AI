@@ -1,0 +1,15 @@
+# Build context for the agent image (repo root). Never send secrets, databases or local builds.
+.env
+.env.*
+!.env.example
+.git
+**/node_modules
+**/.next*
+**/.mastra
+**/.venv
+apps/api/data
+e2e/.tmp
+playwright-report
+test-results
+reference
+docs

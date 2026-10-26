@@ -1,0 +1,13 @@
+# Agent on Fly: one always-on machine, private only (no public URL); the API calls it over Fly's private network.
+# Deploy from the repo root:  fly deploy . --config apps/agent/fly.toml --dockerfile apps/agent/Dockerfile
+# Secrets (set with `fly secrets set`): AGENT_SERVICE_TOKEN, ANTHROPIC_API_KEY, TAVILY_API_KEY
+app = "harrowgate-agent"
+primary_region = "lhr"
+
+[env]
+  API_URL = "http://harrowgate-api.internal:8000"
+
+# No [http_service]: nothing outside the private network can reach the agent, and Fly never stops it.
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "512mb"

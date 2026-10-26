@@ -22,5 +22,5 @@ const agents: Record<string, Agent> = config
 export const mastra = new Mastra({
   agents,
   workflows: {},
-  server: { port: config?.port ?? 4111, apiRoutes },
+  server: { host: config?.host ?? "localhost", port: config?.port ?? 4111, apiRoutes },
 });

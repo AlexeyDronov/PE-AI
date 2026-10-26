@@ -146,3 +146,7 @@ Each page gets domain components (props only), a view that calls hooks, page tes
   - Web overlay, registry entries, API command/resource/model/schema and E2E flow removed; contracts regenerated. The `annotations` table is not dropped from existing DBs
   - Tests that used annotations as the example command now use `save-scenario` / `lbo-scenarios`; feedback-only tests deleted (listed to the user)
 - [x] 8.9 One command for the whole system: `make dev` (or `pnpm dev` at the root) runs API, agent and web with `concurrently` — 26 Oct
+- [ ] 8.10 Hosting: web on Vercel, API and agent on Fly (London, always on); config ready, deploy pending the user's steps in `docs/06-deployment.md`
+  - API image runs from `/srv/app` (config.py looks two folders up for the repo root; `/app` would crash at import); seeds only when the volume is empty
+  - Agent listens on `HOST` (`::` in the container) and ships the `mastra build` output; the image copies `packages/contracts` for the `@contracts/*` alias
+  - Both images replayed locally step by step (no Docker on this machine): agent smoke 8/8 with no `.env`; API seeded a fresh DB, served over IPv6, CORS honoured `CORS_ORIGINS`

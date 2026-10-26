@@ -21,6 +21,12 @@ describe("loadConfig", () => {
     expect(c.secUserAgent).toMatch(/Harrowgate/);
   });
 
+  // Hosting (Fly): the server must listen on all interfaces in a container, but stays on localhost by default.
+  it("listens on localhost unless HOST says otherwise", () => {
+    expect(loadConfig(base).host).toBe("localhost");
+    expect(loadConfig({ ...base, HOST: "::" }).host).toBe("::");
+  });
+
   it("lets env override the model, effort, budgets and port", () => {
     const c = loadConfig({ ...base, MODEL: "claude-sonnet-5-5", EFFORT: "low", MAX_SECONDS: "60", PORT: "4200", TOOL_CACHE_HOURS: "0" });
     expect(c.model).toBe("claude-sonnet-5-5");

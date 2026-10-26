@@ -9,6 +9,7 @@ const optionalKey = z.preprocess((v) => (typeof v === "string" && !v.trim() ? un
 const envSchema = z.object({
   API_URL: z.string().min(1, "API_URL is required"),
   AGENT_SERVICE_TOKEN: z.string().min(1, "AGENT_SERVICE_TOKEN is required"),
+  HOST: z.string().min(1).default("localhost"),
   PORT: z.coerce.number().int().positive().default(4111),
   MODEL: z.string().min(1).default("claude-haiku-5-5"),
   EFFORT: z.enum(["low", "medium", "high", "xhigh", "max"]).default("medium"),
@@ -25,6 +26,7 @@ export type Effort = z.infer<typeof envSchema>["EFFORT"];
 export interface Config {
   apiUrl: string;
   serviceToken: string;
+  host: string;
   port: number;
   model: string;
   effort: Effort;
@@ -45,6 +47,7 @@ export function loadConfig(env: Record<string, string | undefined> = process.env
   return {
     apiUrl: e.API_URL.replace(/\/$/, ""),
     serviceToken: e.AGENT_SERVICE_TOKEN,
+    host: e.HOST,
     port: e.PORT,
     model: e.MODEL,
     effort: e.EFFORT,
