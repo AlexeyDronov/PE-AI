@@ -3389,7 +3389,7 @@
         "properties": {
           "confidence": {
             "title": "Confidence",
-            "type": "number"
+            "type": "string"
           },
           "created_at": {
             "format": "date-time",

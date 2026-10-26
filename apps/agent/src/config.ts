@@ -3,7 +3,8 @@ import { dirname, join } from "node:path";
 import { parseEnv } from "node:util";
 import { z } from "zod";
 
-const optionalKey = z.string().min(1).optional();
+// Blank `KEY=` lines (as in .env.example) mean "not set".
+const optionalKey = z.preprocess((v) => (typeof v === "string" && !v.trim() ? undefined : v), z.string().min(1).optional());
 
 const envSchema = z.object({
   API_URL: z.string().min(1, "API_URL is required"),

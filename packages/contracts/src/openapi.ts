@@ -2697,7 +2697,7 @@ export interface components {
         /** ResearchFinding */
         ResearchFinding: {
             /** Confidence */
-            confidence: number;
+            confidence: string;
             /**
              * Created At
              * Format: date-time

@@ -65,7 +65,7 @@ class ResearchFinding(Writable, table=True):
     value: float
     unit: str
     period: str
-    confidence: float
+    confidence: str  # low | medium | high, as the agent reported it
     source_ids: list[str] = Field(default_factory=list, sa_column=Column(JSON))
 
 

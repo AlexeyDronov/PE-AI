@@ -23,6 +23,15 @@ let sharedCache: ToolCache | undefined;
 /** One process-wide cache, so repeated searches and fetches across jobs cost nothing. */
 const processCache = (config: Config) => (sharedCache ??= createToolCache({ ttlMs: config.toolCacheHours * 3_600_000 }));
 
+/** Search and page fetch behind the process-wide cache, for workflows that call tools directly instead of through an agent. */
+export function cachedFetchers(config: Config, cache: ToolCache = processCache(config)) {
+  const provider = config.keys.tavily ? new TavilyProvider(config.keys.tavily) : null;
+  return {
+    search: cache.wrap("webSearch", async (input: { query: string; maxResults: number }) => searchWeb(input, provider)),
+    fetchPage: cache.wrap("fetchPage", async (input: { url: string; maxChars: number }) => fetchPage(input)),
+  };
+}
+
 /** Build the agent's tools; config and the per-job source registry are captured by closure. */
 export function buildTools({ config, sources, cache = processCache(config) }: { config: Config; sources: SourceRegistry; cache?: ToolCache }) {
   const provider = config.keys.tavily ? new TavilyProvider(config.keys.tavily) : null;

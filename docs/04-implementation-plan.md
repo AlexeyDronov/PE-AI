@@ -105,7 +105,10 @@ Each page gets domain components (props only), a view that calls hooks, page tes
 - [x] 7.5 `teaserScreen` workflow (1 call) + API `screen-teaser` command and persist (new deal appears live) — live run with approval — 27 Oct
   - Live run (Project Juniper, managed IT): 1 call, 332 in + 3,496 cache-write + 1,543 out tokens, $0.0012; deal scored 65 / Pass (EBITDA below the £10m floor) and renders on the deal page
   - Live-run fixes: the bundler dropped the side-effect import that registers runners (explicit `registerJobRunners()`; `make smoke-agent` now checks each job kind is routable); `mastra dev` runs from `.mastra/output`, so `.env` is found by searching up to the workspace root (`envFilesUpward`, tested)
-- [ ] 7.6 `marketResearch` workflow (≤2 calls: deterministic search → fetch → passage filter → extract; code verifies cited figures); `confidence` becomes a string enum — live run with approval
+- [x] 7.6 `marketResearch` workflow (≤2 calls: deterministic search → fetch → passage filter → extract; code verifies cited figures); `confidence` becomes a string enum — live run with approval — 27 Oct
+  - Live run (UK compliance outsourcing size and growth): 1 call, 6,898 in + 3,119 cache-write + 3,493 out tokens, $0.0028 plus Tavily basic searches; 7 findings, each code-verified against a quote in its cited source; the summary flags that sources only give proxy markets
+  - Review fix: one failed search (e.g. a rate limit) is skipped; the job fails with the real error only if every search fails (tested)
+  - Live-run fix: blank `KEY=` lines in `.env` now mean "not set" instead of failing config (tested)
 - [ ] 7.7 `memoDraft` workflow (1 call, all sections) + API `draft-memo` command and persist — live run with approval
 
 ## Phase 8 — Quality

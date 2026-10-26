@@ -44,6 +44,12 @@ describe("loadConfig", () => {
     expect(loadConfig({ ...base, ANTHROPIC_API_KEY: "sk-test" }).keys.anthropic).toBe("sk-test");
   });
 
+  // Found in the live run: a blank `KEY=` line in .env (as in .env.example) must mean "not set", not crash startup.
+  it("treats blank keys as unset", () => {
+    const c = loadConfig({ ...base, COMPANIES_HOUSE_API_KEY: "", TAVILY_API_KEY: "  ", ANTHROPIC_API_KEY: "" });
+    expect(c.keys).toEqual({ anthropic: undefined, tavily: undefined, companiesHouse: undefined });
+  });
+
   it("no longer reads OpenRouter settings", () => {
     const c = loadConfig({ ...base, OPENROUTER_API_KEY: "or-secret" });
     expect(JSON.stringify(c)).not.toContain("or-secret");

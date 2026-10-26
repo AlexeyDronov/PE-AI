@@ -6,8 +6,6 @@ from sqlmodel import Session, SQLModel
 from app.models import Job, ResearchFinding, ResearchReport, Source
 from app.models.base import utcnow
 
-CONFIDENCE = {"low": 0.3, "medium": 0.6, "high": 0.9}
-
 
 class MarketResearchInput(BaseModel):
     question: str = Field(min_length=1)
@@ -65,8 +63,7 @@ def persist_market_research(session: Session, job: Job, result: MarketResearchRe
             source="agent",
             report_id=report.id,
             source_ids=[sources[r].id for r in f.source_refs],
-            confidence=CONFIDENCE[f.confidence],
-            **f.model_dump(exclude={"source_refs", "confidence"}),
+            **f.model_dump(exclude={"source_refs"}),
         )
         for f in result.findings
     )
