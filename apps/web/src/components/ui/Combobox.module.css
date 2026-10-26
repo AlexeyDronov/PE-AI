@@ -1,0 +1,6 @@
+.root { position: relative; display: flex; flex-direction: column; gap: 4px; }
+.label { font-size: 12px; color: var(--ink-2); }
+.input { height: 32px; padding: 0 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); }
+.list { position: absolute; top: 100%; left: 0; right: 0; margin: 2px 0 0; padding: 4px; list-style: none; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; z-index: 30; }
+.option { padding: 6px 8px; border-radius: 4px; cursor: pointer; }
+.option:hover { background: var(--surface-sunk); }

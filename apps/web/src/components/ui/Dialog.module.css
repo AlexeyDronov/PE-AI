@@ -1,0 +1,5 @@
+.overlay { position: fixed; inset: 0; background: rgb(0 0 0 / 0.3); z-index: 40; }
+.dialog, .drawer { position: fixed; background: var(--surface); color: var(--ink); padding: 20px; z-index: 41; box-shadow: 0 8px 32px rgb(0 0 0 / 0.2); }
+.dialog { top: 50%; left: 50%; transform: translate(-50%, -50%); width: min(480px, calc(100vw - 32px)); border-radius: 8px; }
+.drawer { top: 0; right: 0; bottom: 0; width: min(400px, 100vw); }
+.title { margin: 0 0 12px; font-size: 16px; }

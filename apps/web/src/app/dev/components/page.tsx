@@ -50,6 +50,13 @@ import {
   Button,
   Card,
   Checkbox,
+  Combobox,
+  Dialog,
+  Drawer,
+  NumberField,
+  Sparkline,
+  Toast,
+  Tooltip,
   type Column,
   DataTable,
   DotRating,
@@ -464,6 +471,7 @@ export default function ComponentGallery() {
       <ExitsFundGroup />
       <MarketsGroup />
       <OverviewGroup />
+        <MiscPrimitives />
       <ModelGroup />
 
       <Group title="Page layout">
@@ -541,6 +549,26 @@ function MarketsGroup() {
             <ResearchEvidence reports={[]} job={job} onRun={() => undefined} />
           </Variant>
         </div>
+      </div>
+    </PageSection>
+  );
+}
+
+function MiscPrimitives() {
+  const [n, setN] = useState(12);
+  const [seg, setSeg] = useState("");
+  const [dlg, setDlg] = useState(false);
+  const [drw, setDrw] = useState(false);
+  return (
+    <PageSection id="misc" title="Other primitives">
+      <div className={styles.grid}>
+        <Variant name="Tooltip"><Tooltip content="Net of fees"><Button variant="secondary">IRR</Button></Tooltip></Variant>
+        <Variant name="NumberField"><NumberField label="Entry multiple" value={n} onChange={setN} step={0.5} /></Variant>
+        <Variant name="Toast"><Toast message="Scenario saved" /></Variant>
+        <Variant name="Dialog"><Button variant="secondary" onClick={() => setDlg(true)}>Open dialog</Button><Dialog open={dlg} onOpenChange={setDlg} title="Confirm">Body</Dialog></Variant>
+        <Variant name="Drawer"><Button variant="secondary" onClick={() => setDrw(true)}>Open drawer</Button><Drawer open={drw} onOpenChange={setDrw} title="Notes">Side</Drawer></Variant>
+        <Variant name="Combobox"><Combobox label="Segment" options={[{ value: "s1", label: "TIC" }, { value: "s2", label: "Compliance" }]} value={seg} onChange={setSeg} /></Variant>
+        <Variant name="Sparkline"><Sparkline label="EBITDA trend" values={[1, 3, 2, 4]} /></Variant>
       </div>
     </PageSection>
   );

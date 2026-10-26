@@ -61,7 +61,7 @@ Status at last audit: **25 Oct 2026**. ☑ done and verified · ☐ to do · ⧗
 - [x] 4.4 Charts: one `Chart` wrapper, theme hook, option builders (bar, stacked, waterfall, line, scatter, heatmap, range bar), checked in real ECharts and the browser
 - [x] 4.5 App shell: sidebar in lifecycle order, breadcrumbs, jobs indicator, theme toggle, 14 routes
 - [x] 4.6 Component gallery `/dev/components`
-- [ ] 4.7 Remaining primitives from arch §7.3 (built when their first page needs them; each added to the gallery):
+- [x] 4.7 Remaining primitives from arch §7.3 — 27 Oct (minimal Tooltip, NumberField, Toast, Dialog/Drawer, Combobox, Sparkline; each in the gallery) (built when their first page needs them; each added to the gallery):
   - `useUrlState` (Pipeline)
   - ~~OnThisPage~~ (done with 6.2); Select, Tooltip when first needed
   - NumberField, Toast (Model)
@@ -128,6 +128,8 @@ Each page gets domain components (props only), a view that calls hooks, page tes
   - Found by E2E: the pipeline table never showed a deal's code name (now `code · segment · hq`)
   - `next-env.d.ts` is untracked (generated); `tsconfig.json` includes both build dirs' types so Next stops rewriting it
 - [ ] 8.2 Visual baselines: gallery and each page, light theme, 1440px and 390px
+  - PAUSED 27 Oct (handed over): `e2e/tests/visual.spec.ts` is in place and the phone-width no-sideways-scroll test passes, but the baseline PNGs are NOT committed — a regeneration from the production build was interrupted. Next: `make e2e E2E_ARGS="tests/visual.spec.ts --update-snapshots=all"`, run it twice more to prove stability, commit `e2e/tests/visual.spec.ts-snapshots/`
+  - Bug fixed on the way: a second Next server (E2E) rewrote the shared `apps/web/tsconfig.json`, restarting the :3000 dev server in a loop (≈150% CPU, slow builds). E2E Next now uses its own `tsconfig-e2e.json` and runs a production build (`next build && next start`); flows pass in 2.4 min
 - [x] 8.3 Accessibility pass (keyboard, focus, contrast, table views for charts) — 27 Oct (`e2e/tests/a11y.spec.ts`: axe WCAG 2.1 AA on every page, one h1 + main, skip link, visible focus, chart table views; `--ink-3` darkened to #656d7a for 4.5:1 on accent-soft)
 - [ ] 8.4 Rounds of fixes from your feedback notes
   - Round 1 — 27 Oct: feedback drawer numbers match the pins; Overview subtitle "Fund at a glance", AUM (NAV + dry powder) and fund lifecycle added, Copilot activity and the top-bar jobs widget removed, no coloured strip on alerts; teaser upload accepts PDF, Word and PowerPoint (API text extraction: pypdf 6.20.1, python-docx 1.2.0, python-pptx 1.0.2)

@@ -19,6 +19,8 @@ export default defineConfig({
   workers: 1,
   retries: 0,
   timeout: 90_000,
+  // Full-page screenshots of long pages (the gallery) need longer than the 5s default to compare.
+  expect: { toHaveScreenshot: { timeout: 30_000 } },
   use: {
     baseURL: "http://localhost:3100",
     viewport: { width: 1440, height: 900 },
@@ -46,7 +48,8 @@ export default defineConfig({
       timeout: TIMEOUT,
     },
     {
-      command: "pnpm exec next dev -p 3100",
+      // Production build + start: no on-demand compiling or file watching, so runs are fast and never disturb the dev server.
+      command: "pnpm exec next build && pnpm exec next start -p 3100",
       cwd: `${repo}apps/web`,
       env: { NEXT_PUBLIC_API_URL: "http://localhost:8100", NEXT_DIST_DIR: ".next-e2e" },
       url: "http://localhost:3100",
