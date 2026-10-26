@@ -48,12 +48,12 @@ Done: 3.5, 4.7, 6.12–6.14, 8.1, 8.3, 8.4 round 1. **All servers are stopped.**
 
 Open items:
 - **8.2:** generate and commit the visual baselines (see the plan note).
-- **8.4:** further feedback rounds. Six user notes are still open in the dev DB, awaiting the user's review.
+- **8.4:** closed. The feedback tool was removed in 8.8; the one note still marked open (teaser document upload) was built in round 1.
 - **8.5:** dark mode, deferred by the user.
 
 The user is handing optimisation and the rest of the plan to the build/performance agent.
 
-**Never run `make seed` on the dev DB:** it wipes the user's feedback notes. E2E uses its own throwaway DB on :8100. Commands: `screenTeaser`, `startMarketResearch`, `draftMemo`; jobs carry `usage` for showing cost. Backlog: the Linden seed-data contradiction in `docs/TODO.md`.
+**Never run `make seed` on the dev DB:** it wipes agent-created deals, reports and memos (and the old feedback notes, still in the `annotations` table). E2E uses its own throwaway DB on :8100. Commands: `screenTeaser`, `startMarketResearch`, `draftMemo`; jobs carry `usage` for showing cost. Backlog: the Linden seed-data contradiction in `docs/TODO.md`.
 
 Gotchas from Phase 7:
 - **Restart the agent server after editing `.env`.** Env loads once, by searching up from `.mastra/output` (`envFilesUpward`).

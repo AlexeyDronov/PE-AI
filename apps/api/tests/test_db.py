@@ -6,7 +6,7 @@ from sqlalchemy.exc import OperationalError
 from sqlmodel import Session, select
 
 from app.core.db import WRITABLE_TABLES, ReadOnlyViolation, read_engine, write_engine
-from app.models import Annotation, Deal, PortfolioCompany, Segment
+from app.models import Deal, PortfolioCompany, Segment, Teaser
 
 
 def test_read_engine_refuses_writes(db_path):
@@ -16,7 +16,6 @@ def test_read_engine_refuses_writes(db_path):
 
 def test_writable_tables_cover_user_and_agent_data_only():
     assert {
-        "annotations",
         "jobs",
         "teasers",
         "deals",
@@ -54,19 +53,10 @@ def test_writable_tables_cover_user_and_agent_data_only():
 
 def test_write_session_inserts_into_writable_table(db_path):
     with Session(write_engine(db_path)) as s:
-        s.add(
-            Annotation(
-                route="/deals",
-                selector="[data-testid=x]",
-                note="Too dense",
-                viewport_w=1440,
-                viewport_h=900,
-                theme="light",
-            )
-        )
+        s.add(Teaser(raw_text="Project Linden: UK compliance software, £20m EBITDA"))
         s.commit()
     with Session(read_engine(db_path)) as s:
-        assert len(s.exec(select(Annotation)).all()) == 1
+        assert len(s.exec(select(Teaser)).all()) == 1
 
 
 def test_write_session_refuses_reference_tables(db_path):

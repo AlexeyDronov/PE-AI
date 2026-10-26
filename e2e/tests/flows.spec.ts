@@ -73,18 +73,3 @@ test("IC memo: drafting fills the memo document", async ({ page }) => {
   await expect(doc).toContainText("E2E draft for Project Linden", { timeout: 20_000 });
   await expect(doc.getByRole("heading", { name: "Recommendation" })).toBeVisible();
 });
-
-test("feedback: a note left on an element persists across a reload", async ({ page }) => {
-  await page.goto("/markets");
-  await expect(page.getByRole("button", { name: "Feedback notes (0)" })).toBeVisible();
-  await page.getByRole("button", { name: "Leave feedback" }).click();
-  await expect(page.getByRole("status", { name: "Feedback mode" })).toBeVisible();
-  await page.getByRole("heading", { level: 1 }).click();
-  await page.getByLabel("Note").fill("E2E: title should say which fund");
-  await page.getByRole("button", { name: "Save note" }).click();
-  await expect(page.getByRole("button", { name: "Feedback notes (1)" })).toBeVisible();
-
-  await page.reload();
-  await expect(page.getByRole("button", { name: "Feedback notes (1)" })).toBeVisible();
-  await expect(page.getByRole("button", { name: /Note 1: E2E: title should say which fund/ })).toBeVisible();
-});

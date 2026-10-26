@@ -34,14 +34,14 @@ describe("apiFetch", () => {
   it("POSTs JSON", async () => {
     let body: unknown;
     server.use(
-      http.post(`${API}/api/commands/create-annotation`, async ({ request }) => {
+      http.post(`${API}/api/commands/save-scenario`, async ({ request }) => {
         body = await request.json();
-        return HttpResponse.json({ id: "a1" }, { status: 201 });
+        return HttpResponse.json({ id: "s1" }, { status: 201 });
       }),
     );
-    const out = await apiFetch(API, "/commands/create-annotation", { method: "POST", body: { note: "hi" } });
-    expect(body).toEqual({ note: "hi" });
-    expect(out).toEqual({ id: "a1" });
+    const out = await apiFetch(API, "/commands/save-scenario", { method: "POST", body: { name: "hi" } });
+    expect(body).toEqual({ name: "hi" });
+    expect(out).toEqual({ id: "s1" });
   });
 
   it("returns undefined for 204", async () => {

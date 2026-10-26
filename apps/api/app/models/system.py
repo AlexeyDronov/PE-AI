@@ -17,19 +17,3 @@ class Job(Writable, table=True):
     error: str | None = None
     usage: dict[str, Any] | None = Field(default=None, sa_column=Column(JSON))
     updated_at: datetime = Field(default_factory=utcnow)
-
-
-class Annotation(Writable, table=True):
-    __tablename__ = "annotations"
-    route: str = Field(index=True)
-    selector: str
-    note: str
-    rect_x: float | None = None
-    rect_y: float | None = None
-    rect_w: float | None = None
-    rect_h: float | None = None
-    viewport_w: int
-    viewport_h: int
-    theme: str
-    status: str = Field(default="open", index=True)
-    screenshot_path: str | None = None

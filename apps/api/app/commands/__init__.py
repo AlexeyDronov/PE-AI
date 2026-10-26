@@ -1,9 +1,3 @@
-from app.commands.annotations import (
-    CreateAnnotationInput,
-    UpdateAnnotationInput,
-    create_annotation,
-    update_annotation,
-)
 from app.commands.memos import draft_memo
 from app.commands.research import screen_teaser, start_market_research
 from app.commands.scenarios import SaveScenarioInput, save_scenario
@@ -12,15 +6,9 @@ from app.commands.watchlist import SetWatchlistInput, WatchlistState, set_watchl
 from app.jobs.market_research import MarketResearchInput
 from app.jobs.memo_draft import MemoDraftInput
 from app.jobs.teaser_screen import TeaserScreenInput
-from app.schemas import AnnotationRead, JobRead, LboScenarioRead
+from app.schemas import JobRead, LboScenarioRead
 
 COMMANDS: list[CommandSpec] = [
-    CommandSpec(
-        "create-annotation", CreateAnnotationInput, AnnotationRead, create_annotation, ("annotations",), 201
-    ),
-    CommandSpec(
-        "update-annotation", UpdateAnnotationInput, AnnotationRead, update_annotation, ("annotations",)
-    ),
     CommandSpec(
         "start-market-research",
         MarketResearchInput,

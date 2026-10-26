@@ -34,7 +34,6 @@ export const resources = {
   memoOutline: { path: "/memo-outline", resource: "memos" },
   job: { path: "/jobs/{id}", resource: "jobs" },
   jobs: { path: "/jobs", resource: "jobs" },
-  annotations: { path: "/annotations", resource: "annotations" },
   pipelineSummary: { path: "/pipeline-summary", resource: "deals" },
   lbo: { path: "/compute/lbo", resource: "deals", method: "POST" },
   lboSensitivity: { path: "/compute/lbo-sensitivity", resource: "deals", method: "POST" },
@@ -44,8 +43,6 @@ export const resources = {
 } as const satisfies Record<string, ResourceDef>;
 
 export const commands = {
-  createAnnotation: "/commands/create-annotation",
-  updateAnnotation: "/commands/update-annotation",
   startMarketResearch: "/commands/start-market-research",
   setWatchlist: "/commands/set-watchlist",
   saveScenario: "/commands/save-scenario",

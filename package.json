@@ -2,5 +2,13 @@
   "name": "harrowgate",
   "private": true,
   "packageManager": "pnpm@12.15.0",
-  "engines": { "node": ">=22" }
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "concurrently --kill-others --names api,agent,web --prefix-colors blue,magenta,green \"make dev-api\" \"make dev-agent\" \"make dev-web\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.5"
+  }
 }

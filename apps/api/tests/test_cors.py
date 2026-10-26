@@ -3,7 +3,7 @@
 
 def test_preflight_from_web_app_is_allowed(client):
     r = client.options(
-        "/api/commands/create-annotation",
+        "/api/commands/save-scenario",
         headers={
             "Origin": "http://localhost:3000",
             "Access-Control-Request-Method": "POST",

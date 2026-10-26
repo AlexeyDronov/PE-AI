@@ -187,8 +187,8 @@ def test_writes_invalidate_the_cache(client):
     lbo(client)
     assert lbo(client).headers["x-cache"] == "hit"
     client.post(
-        "/api/commands/create-annotation",
-        json={"route": "/", "selector": "#x", "note": "n", "viewport": {"w": 1, "h": 1}, "theme": "light"},
+        "/api/commands/save-scenario",
+        json={"deal_id": deal_id(client), "name": "n", "case": "base", "overrides": {}},
     )
     assert lbo(client).headers["x-cache"] == "miss"
 

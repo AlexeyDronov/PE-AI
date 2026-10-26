@@ -42,6 +42,15 @@ export function ThemeToggle() {
 
   const target = theme === "dark" ? "light" : "dark";
   return (
-    <Button variant="ghost" size="sm" aria-label={`Switch to ${target} theme`} icon={theme === "dark" ? <Sun size={16} strokeWidth={1.5} /> : <Moon size={16} strokeWidth={1.5} />} onClick={toggle} testId="theme-toggle" />
+    <Button
+      variant="ghost"
+      size="sm"
+      aria-label={`Switch to ${target} theme`}
+      icon={theme === "dark" ? <Sun size={16} strokeWidth={1.5} /> : <Moon size={16} strokeWidth={1.5} />}
+      onClick={toggle}
+      testId="theme-toggle"
+    >
+      {target === "dark" ? "Dark theme" : "Light theme"}
+    </Button>
   );
 }

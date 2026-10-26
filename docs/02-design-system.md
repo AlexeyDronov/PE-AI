@@ -205,8 +205,8 @@ Cross-links carry the story forward. A segment's white space links to matching p
 └────────────┴─────────────────────────────────────────────────────────────┘
 ```
 
-- **Sidebar**: 232px wide, `--surface-sunk`, with a hairline right border. Group labels use the eyebrow style. Items are 32px tall with a 16px icon and a label. The active item gets `--accent-soft` background, `--accent` text and icon, and a 2px accent marker on the left (white marker in dark mode, with `--ink` text). The footer holds the theme toggle, feedback toggle and user. Below 1024px it collapses to a 56px icon rail, and below 768px it becomes a drawer behind a menu button.
-- **Header**: breadcrumb on the left; the running-jobs indicator on the right (a `JobStatus` popover).
+- **Sidebar**: 232px wide, `--surface-sunk`, with a hairline right border. Group labels use the eyebrow style. Items are 32px tall with a 16px icon and a label. The active item gets `--accent-soft` background and `--accent` text and icon, with no side marker (removed 26 Oct at the user's request). Only the most specific matching link is active, so a child page such as Screen a teaser or Covenants never lights up its section's link too. Below 1024px it collapses to a 56px icon rail, and below 768px it becomes a drawer behind a menu button.
+- **Header**: breadcrumb on the left; the labelled light/dark theme switch on the right.
 - **Page header**: title, description, page actions (at most one primary), and tabs for entity pages.
 - Content max-width **1280px** inside the main column; side padding 32 / 24 / 16px.
 - 12-column grid, 24px gutter.
@@ -354,6 +354,8 @@ Every component exposes `data-testid` and appears in `/dev/components` with all 
 - **Toasts**: for command completion only, bottom-right, 4s, at most 3.
 
 ## 10. Feedback annotation overlay
+
+> **Removed on 26 Oct 2026 (plan step 8.8), at the user's request.** Kept as history.
 
 - A 36px round toggle in the bottom-right corner (`--accent`) and the `Shift+F` shortcut.
 - Annotation mode shows a crosshair cursor and a 2px dashed `--accent` outline on the hovered element.

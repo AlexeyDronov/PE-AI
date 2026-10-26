@@ -135,5 +135,4 @@ RESOURCES: list[ResourceSpec] = [
     ),
     ResourceSpec("fund-cashflows", m.FundCashflow, filters=("period",)),
     ResourceSpec("jobs", m.Job, filters=("kind", "status"), read_schema=s.JobRead),
-    ResourceSpec("annotations", m.Annotation, filters=("status", "route"), read_schema=s.AnnotationRead),
 ]

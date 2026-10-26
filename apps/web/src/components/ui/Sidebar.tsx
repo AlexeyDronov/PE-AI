@@ -29,11 +29,20 @@ type Props = {
   testId?: string;
 };
 
-function isActive(href: string, activeHref: string): boolean {
+function matches(href: string, activeHref: string): boolean {
   return href === "/" ? activeHref === "/" : activeHref === href || activeHref.startsWith(`${href}/`);
 }
 
+/** The longest matching link, so a child page's own link (e.g. /deals/new) wins over its section's. */
+function activeLink(groups: SidebarGroup[], activeHref: string): string | undefined {
+  return groups
+    .flatMap((group) => group.items.map((item) => item.href))
+    .filter((href) => matches(href, activeHref))
+    .sort((a, b) => b.length - a.length)[0];
+}
+
 export function Sidebar({ fund, groups, activeHref, footer, onIntent, testId = "sidebar" }: Props) {
+  const active = activeLink(groups, activeHref);
   return (
     <aside className={styles.root} data-testid={testId}>
       <div className={styles.brand}>
@@ -56,7 +65,7 @@ export function Sidebar({ fund, groups, activeHref, footer, onIntent, testId = "
                   key={item.href}
                   href={item.href}
                   className={styles.item}
-                  aria-current={isActive(item.href, activeHref) ? "page" : undefined}
+                  aria-current={item.href === active ? "page" : undefined}
                   onMouseEnter={() => onIntent?.(item.href)}
                   onFocus={() => onIntent?.(item.href)}
                 >

@@ -66,7 +66,6 @@
 }
 
 .item {
-  position: relative;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -101,17 +100,6 @@
   color: var(--nav-active-ink);
 }
 
-.item[aria-current="page"]::before {
-  content: "";
-  position: absolute;
-  left: calc(-1 * var(--space-3));
-  top: 7px;
-  bottom: 7px;
-  width: 2px;
-  border-radius: 0 2px 2px 0;
-  background: var(--accent);
-}
-
 .count {
   margin-left: auto;
   color: var(--ink-3);
@@ -143,9 +131,5 @@
   .item {
     justify-content: center;
     padding: 0;
-  }
-
-  .item[aria-current="page"]::before {
-    left: calc(-1 * var(--space-2));
   }
 }

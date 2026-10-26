@@ -213,24 +213,6 @@ class KpiPointListItem(BaseModel):
     company: CompanyRef
 
 
-class AnnotationRead(BaseModel):
-    id: str
-    created_at: datetime
-    source: str
-    route: str
-    selector: str
-    note: str
-    rect_x: float | None
-    rect_y: float | None
-    rect_w: float | None
-    rect_h: float | None
-    viewport_w: int
-    viewport_h: int
-    theme: str
-    status: Literal["open", "resolved"]
-    screenshot_path: str | None
-
-
 class JobProgress(BaseModel):
     step: str
     message: str

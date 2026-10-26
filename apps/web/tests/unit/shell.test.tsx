@@ -26,7 +26,6 @@ beforeEach(() => {
       const items = status ? jobs.filter((j) => j.status === status) : jobs;
       return HttpResponse.json({ items, total: items.length });
     }),
-    http.get(`${API}/api/annotations`, () => HttpResponse.json({ items: [], total: 0 })),
     http.get(`${API}/api/funds`, () =>
       HttpResponse.json({ items: [{ id: "f1", name: "Harrowgate Fund VII", committed: 1400 }], total: 1 }),
     ),
@@ -49,7 +48,7 @@ describe("navigation", () => {
 });
 
 describe("AppShell", () => {
-  it("renders sidebar, breadcrumb, page content and the feedback tool", async () => {
+  it("renders sidebar, breadcrumb and page content, with no feedback tool", async () => {
     renderWithApi(
       <AppShell>
         <h1>Pipeline</h1>
@@ -59,7 +58,7 @@ describe("AppShell", () => {
     expect(within(nav).getByRole("link", { name: /Pipeline/ })).toHaveAttribute("aria-current", "page");
     expect(screen.getByRole("navigation", { name: "Breadcrumb" })).toHaveTextContent("Pipeline");
     expect(screen.getByRole("main")).toHaveTextContent("Pipeline");
-    expect(screen.getByRole("button", { name: /leave feedback/i })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /feedback/i })).not.toBeInTheDocument();
     await waitFor(() => expect(screen.getByText("Harrowgate Fund VII")).toBeInTheDocument());
   });
 
@@ -121,5 +120,17 @@ describe("AppShell", () => {
     expect(document.documentElement.dataset.theme).toBe("dark");
     await userEvent.click(screen.getByRole("button", { name: /switch to light theme/i }));
     expect(document.documentElement.dataset.theme).toBe("light");
+  });
+
+  // User request: the theme switch sits in the top bar, labelled, not in the sidebar.
+  it("shows a labelled theme switch in the top bar", async () => {
+    renderWithApi(
+      <AppShell>
+        <p>x</p>
+      </AppShell>,
+    );
+    const toggle = within(screen.getByRole("banner")).getByRole("button", { name: /switch to (dark|light) theme/i });
+    expect(toggle).toHaveTextContent(/(dark|light) theme/i);
+    expect(within(screen.getByTestId("sidebar")).queryByTestId("theme-toggle")).not.toBeInTheDocument();
   });
 });

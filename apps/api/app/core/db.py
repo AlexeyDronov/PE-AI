@@ -6,7 +6,6 @@ from sqlmodel import Session
 
 WRITABLE_TABLES: frozenset[str] = frozenset(
     {
-        "annotations",
         "jobs",
         "teasers",
         "companies",

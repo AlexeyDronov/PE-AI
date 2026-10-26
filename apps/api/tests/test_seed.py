@@ -54,7 +54,6 @@ def test_screening_weights_sum_to_one(db_path):
 
 def test_writable_tables_start_empty(db_path):
     for table in (
-        "annotations",
         "jobs",
         "teasers",
         "watchlist_entries",

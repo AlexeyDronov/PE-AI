@@ -4,10 +4,14 @@ export COREPACK_ENABLE_DOWNLOAD_PROMPT := 0
 
 API := apps/api
 
-.PHONY: setup seed test test-api lint-api snapshot-tests verify-tests dev-api dev-agent test-agent codegen codegen-check e2e
+.PHONY: dev setup seed test test-api lint-api snapshot-tests verify-tests dev-api dev-agent test-agent codegen codegen-check e2e
+
+# The whole system (API :8000, agent :4111, web :3000) in one terminal; Ctrl-C stops all three.
+dev:
+	pnpm dev
 
 setup:
-	cd $(API) && uv sync
+	cd $(API) && uv sync && cd ../.. && pnpm install
 
 seed:
 	cd $(API) && uv run python -m seed.seed

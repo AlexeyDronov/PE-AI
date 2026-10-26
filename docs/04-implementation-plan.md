@@ -131,7 +131,7 @@ Each page gets domain components (props only), a view that calls hooks, page tes
   - PAUSED 27 Oct (handed over): `e2e/tests/visual.spec.ts` is in place and the phone-width no-sideways-scroll test passes, but the baseline PNGs are NOT committed — a regeneration from the production build was interrupted. Next: `make e2e E2E_ARGS="tests/visual.spec.ts --update-snapshots=all"`, run it twice more to prove stability, commit `e2e/tests/visual.spec.ts-snapshots/`
   - Bug fixed on the way: a second Next server (E2E) rewrote the shared `apps/web/tsconfig.json`, restarting the :3000 dev server in a loop (≈150% CPU, slow builds). E2E Next now uses its own `tsconfig-e2e.json` and runs a production build (`next build && next start`); flows pass in 2.4 min
 - [x] 8.3 Accessibility pass (keyboard, focus, contrast, table views for charts) — 27 Oct (`e2e/tests/a11y.spec.ts`: axe WCAG 2.1 AA on every page, one h1 + main, skip link, visible focus, chart table views; `--ink-3` darkened to #656d7a for 4.5:1 on accent-soft)
-- [ ] 8.4 Rounds of fixes from your feedback notes
+- [x] 8.4 Rounds of fixes from your feedback notes (closed: tool removed in 8.8)
   - Round 1 — 27 Oct: feedback drawer numbers match the pins; Overview subtitle "Fund at a glance", AUM (NAV + dry powder) and fund lifecycle added, Copilot activity and the top-bar jobs widget removed, no coloured strip on alerts; teaser upload accepts PDF, Word and PowerPoint (API text extraction: pypdf 6.20.1, python-docx 1.2.0, python-pptx 1.0.2)
 - [ ] 8.5 ⧗ Dark-mode rework (deferred by product owner)
 - [x] 8.6 Page-load performance: Turbopack dev, slim lazy-loaded ECharts (and no charts on Overview), query cache trusts SSE invalidation, route loading skeleton, hover prefetch from the sidebar, self-hosted fonts, idle feedback overlay ignores scroll — 26 Oct
@@ -139,3 +139,10 @@ Each page gets domain components (props only), a view that calls hooks, page tes
   - `staleTime` 5 min (the SSE stream invalidates changes; a reconnect refetches everything); job reads stay `staleTime: 0` because a command's reply can already be behind
   - `chart-render.test.ts` now runs on the slim build and fails if an option uses an unregistered series, component or marker
   - Fonts: latin woff2 from Fontsource (OFL) in `src/app/fonts`; tokens read the next/font variables with the family names as fallback
+- [x] 8.7 Sidebar and theme (user requests) — 26 Oct
+  - Only the most specific link is active (Screen a teaser vs Pipeline, Covenants vs Platforms); no side marker on the active item, the highlight stays
+  - The theme switch moved from the sidebar footer to the top bar, with a visible "Dark theme" / "Light theme" label. Dark tokens are as they were (8.5 still open)
+- [x] 8.8 Remove the feedback annotation tool entirely (user request) — 26 Oct
+  - Web overlay, registry entries, API command/resource/model/schema and E2E flow removed; contracts regenerated. The `annotations` table is not dropped from existing DBs
+  - Tests that used annotations as the example command now use `save-scenario` / `lbo-scenarios`; feedback-only tests deleted (listed to the user)
+- [x] 8.9 One command for the whole system: `make dev` (or `pnpm dev` at the root) runs API, agent and web with `concurrently` — 26 Oct

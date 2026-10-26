@@ -38,40 +38,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/annotations": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** List Items */
-        get: operations["list_items_api_annotations_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/annotations/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get Item */
-        get: operations["get_item_api_annotations__id__get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/benchmarks": {
         parameters: {
             query?: never;
@@ -100,23 +66,6 @@ export interface paths {
         get: operations["get_item_api_benchmarks__id__get"];
         put?: never;
         post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/commands/create-annotation": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Create-Annotation */
-        post: operations["create_annotation_api_commands_create_annotation_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -202,23 +151,6 @@ export interface paths {
         put?: never;
         /** Start-Market-Research */
         post: operations["start_market_research_api_commands_start_market_research_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/commands/update-annotation": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Update-Annotation */
-        post: operations["update_annotation_api_commands_update_annotation_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1477,45 +1409,6 @@ export interface components {
             /** Text */
             text: string;
         };
-        /** AnnotationRead */
-        AnnotationRead: {
-            /**
-             * Created At
-             * Format: date-time
-             */
-            created_at: string;
-            /** Id */
-            id: string;
-            /** Note */
-            note: string;
-            /** Rect H */
-            rect_h: number | null;
-            /** Rect W */
-            rect_w: number | null;
-            /** Rect X */
-            rect_x: number | null;
-            /** Rect Y */
-            rect_y: number | null;
-            /** Route */
-            route: string;
-            /** Screenshot Path */
-            screenshot_path: string | null;
-            /** Selector */
-            selector: string;
-            /** Source */
-            source: string;
-            /**
-             * Status
-             * @enum {string}
-             */
-            status: "open" | "resolved";
-            /** Theme */
-            theme: string;
-            /** Viewport H */
-            viewport_h: number;
-            /** Viewport W */
-            viewport_w: number;
-        };
         /** Attribute */
         Attribute: {
             /** Attribute */
@@ -1626,19 +1519,6 @@ export interface components {
             /** Next Test Date */
             next_test_date: string | null;
             tightest: components["schemas"]["Tightest"] | null;
-        };
-        /** CreateAnnotationInput */
-        CreateAnnotationInput: {
-            /** Note */
-            note: string;
-            rect?: components["schemas"]["Rect"] | null;
-            /** Route */
-            route: string;
-            /** Selector */
-            selector: string;
-            /** Theme */
-            theme: string;
-            viewport: components["schemas"]["Viewport"];
         };
         /** CreditStats */
         CreditStats: {
@@ -2564,13 +2444,6 @@ export interface components {
             /** Total */
             total: number;
         };
-        /** Page[AnnotationRead] */
-        Page_AnnotationRead_: {
-            /** Items */
-            items: components["schemas"]["AnnotationRead"][];
-            /** Total */
-            total: number;
-        };
         /** Page[Benchmark] */
         Page_Benchmark_: {
             /** Items */
@@ -2922,17 +2795,6 @@ export interface components {
             ebitda_budget: number;
             /** Period */
             period: string;
-        };
-        /** Rect */
-        Rect: {
-            /** H */
-            h: number;
-            /** W */
-            w: number;
-            /** X */
-            x: number;
-            /** Y */
-            y: number;
         };
         /** ResearchFinding */
         ResearchFinding: {
@@ -3483,16 +3345,6 @@ export interface components {
             /** Target */
             target: string;
         };
-        /** UpdateAnnotationInput */
-        UpdateAnnotationInput: {
-            /** Id */
-            id: string;
-            /**
-             * Status
-             * @enum {string}
-             */
-            status: "open" | "resolved";
-        };
         /**
          * Usage
          * @description Model-call usage the agent reports for a job.
@@ -3563,13 +3415,6 @@ export interface components {
             amount: number;
             /** Lever */
             lever: string;
-        };
-        /** Viewport */
-        Viewport: {
-            /** H */
-            h: number;
-            /** W */
-            w: number;
         };
         /** WatchlistEntry */
         WatchlistEntry: {
@@ -3708,72 +3553,6 @@ export interface operations {
             };
         };
     };
-    list_items_api_annotations_get: {
-        parameters: {
-            query?: {
-                sort?: string | null;
-                limit?: number;
-                offset?: number;
-                status?: string;
-                route?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Page_AnnotationRead_"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_item_api_annotations__id__get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AnnotationRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
     list_items_api_benchmarks_get: {
         parameters: {
             query?: {
@@ -3826,39 +3605,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Benchmark"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    create_annotation_api_commands_create_annotation_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateAnnotationInput"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AnnotationRead"];
                 };
             };
             /** @description Validation Error */
@@ -4024,39 +3770,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["JobRead"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    update_annotation_api_commands_update_annotation_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateAnnotationInput"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AnnotationRead"];
                 };
             };
             /** @description Validation Error */

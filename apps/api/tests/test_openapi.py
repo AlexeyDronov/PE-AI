@@ -78,10 +78,10 @@ def test_every_command_has_its_own_typed_route(spec, c):
     assert "$ref" in op["responses"][status]["content"]["application/json"]["schema"]
 
 
-def test_annotation_command_names(spec):
-    op = spec["paths"]["/api/commands/create-annotation"]["post"]
-    assert ref_name(op["requestBody"]["content"]["application/json"]["schema"]) == "CreateAnnotationInput"
-    assert ref_name(op["responses"]["201"]["content"]["application/json"]["schema"]) == "AnnotationRead"
+def test_command_schema_names(spec):
+    op = spec["paths"]["/api/commands/save-scenario"]["post"]
+    assert ref_name(op["requestBody"]["content"]["application/json"]["schema"]) == "SaveScenarioInput"
+    assert ref_name(op["responses"]["201"]["content"]["application/json"]["schema"]) == "LboScenarioRead"
 
 
 def test_unknown_names_still_get_the_error_shape(client):

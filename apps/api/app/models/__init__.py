@@ -29,11 +29,10 @@ from app.models.portfolio import (
     ValueCreationItem,
 )
 from app.models.reference import Benchmark, Fund, MacroRate, ScreeningCriterion
-from app.models.system import Annotation, Job
+from app.models.system import Job
 
 __all__ = [
     "Alert",
-    "Annotation",
     "Benchmark",
     "Company",
     "Deal",

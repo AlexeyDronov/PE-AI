@@ -423,6 +423,8 @@ src/
 
 ## 9. Feedback annotation tool
 
+> **Removed on 26 Oct 2026 (plan step 8.8), at the user's request.** The overlay, the `annotations` resource and the `create-/update-annotation` commands are gone. The table and its rows remain in existing dev databases but are no longer read. The description below is kept as history.
+
 Built immediately after sign-off, before page work, so it is available from the first visible screen.
 
 - Floating toggle (bottom-right) + shortcut `Shift+F` → crosshair mode → click any element → popover with a note field.

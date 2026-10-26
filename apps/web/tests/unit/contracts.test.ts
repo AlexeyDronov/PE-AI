@@ -44,8 +44,8 @@ describe("resource and command types are derived from it", () => {
   });
 
   it("commands take and return generated models", () => {
-    expectTypeOf<CommandInput<"createAnnotation">>().toEqualTypeOf<Schemas["CreateAnnotationInput"]>();
-    expectTypeOf<CommandResult<"createAnnotation">>().toEqualTypeOf<Schemas["AnnotationRead"]>();
+    expectTypeOf<CommandInput<"saveScenario">>().toEqualTypeOf<Schemas["SaveScenarioInput"]>();
+    expectTypeOf<CommandResult<"saveScenario">>().toEqualTypeOf<Schemas["LboScenarioRead"]>();
   });
 
   it("path params are required strings for detail resources", () => {
@@ -53,8 +53,8 @@ describe("resource and command types are derived from it", () => {
   });
 
   it("hook inputs are exactly the contract, not partials", () => {
-    type RunArg = Parameters<ReturnType<typeof useCommand<"createAnnotation">>["run"]>[0];
-    expectTypeOf<RunArg>().toEqualTypeOf<CommandInput<"createAnnotation">>();
+    type RunArg = Parameters<ReturnType<typeof useCommand<"saveScenario">>["run"]>[0];
+    expectTypeOf<RunArg>().toEqualTypeOf<CommandInput<"saveScenario">>();
     type LboParams = NonNullable<Parameters<typeof useResource<"lbo">>[1]>;
     expectTypeOf<LboParams>().toEqualTypeOf<ResourceParams<"lbo">>();
   });

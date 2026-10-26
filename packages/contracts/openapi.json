@@ -49,129 +49,6 @@
         "title": "AlertListItem",
         "type": "object"
       },
-      "AnnotationRead": {
-        "properties": {
-          "created_at": {
-            "format": "date-time",
-            "title": "Created At",
-            "type": "string"
-          },
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "note": {
-            "title": "Note",
-            "type": "string"
-          },
-          "rect_h": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Rect H"
-          },
-          "rect_w": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Rect W"
-          },
-          "rect_x": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Rect X"
-          },
-          "rect_y": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Rect Y"
-          },
-          "route": {
-            "title": "Route",
-            "type": "string"
-          },
-          "screenshot_path": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Screenshot Path"
-          },
-          "selector": {
-            "title": "Selector",
-            "type": "string"
-          },
-          "source": {
-            "title": "Source",
-            "type": "string"
-          },
-          "status": {
-            "enum": [
-              "open",
-              "resolved"
-            ],
-            "title": "Status",
-            "type": "string"
-          },
-          "theme": {
-            "title": "Theme",
-            "type": "string"
-          },
-          "viewport_h": {
-            "title": "Viewport H",
-            "type": "integer"
-          },
-          "viewport_w": {
-            "title": "Viewport W",
-            "type": "integer"
-          }
-        },
-        "required": [
-          "id",
-          "created_at",
-          "source",
-          "route",
-          "selector",
-          "note",
-          "rect_x",
-          "rect_y",
-          "rect_w",
-          "rect_h",
-          "viewport_w",
-          "viewport_h",
-          "theme",
-          "status",
-          "screenshot_path"
-        ],
-        "title": "AnnotationRead",
-        "type": "object"
-      },
       "Attribute": {
         "properties": {
           "attribute": {
@@ -464,49 +341,6 @@
           "tightest"
         ],
         "title": "CovenantSummary",
-        "type": "object"
-      },
-      "CreateAnnotationInput": {
-        "properties": {
-          "note": {
-            "minLength": 1,
-            "title": "Note",
-            "type": "string"
-          },
-          "rect": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/Rect"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "route": {
-            "title": "Route",
-            "type": "string"
-          },
-          "selector": {
-            "title": "Selector",
-            "type": "string"
-          },
-          "theme": {
-            "title": "Theme",
-            "type": "string"
-          },
-          "viewport": {
-            "$ref": "#/components/schemas/Viewport"
-          }
-        },
-        "required": [
-          "route",
-          "selector",
-          "note",
-          "viewport",
-          "theme"
-        ],
-        "title": "CreateAnnotationInput",
         "type": "object"
       },
       "CreditStats": {
@@ -2876,27 +2710,6 @@
         "title": "Page[AlertListItem]",
         "type": "object"
       },
-      "Page_AnnotationRead_": {
-        "properties": {
-          "items": {
-            "items": {
-              "$ref": "#/components/schemas/AnnotationRead"
-            },
-            "title": "Items",
-            "type": "array"
-          },
-          "total": {
-            "title": "Total",
-            "type": "integer"
-          }
-        },
-        "required": [
-          "items",
-          "total"
-        ],
-        "title": "Page[AnnotationRead]",
-        "type": "object"
-      },
       "Page_Benchmark_": {
         "properties": {
           "items": {
@@ -3892,34 +3705,6 @@
           "ebitda_budget"
         ],
         "title": "QuarterPoint",
-        "type": "object"
-      },
-      "Rect": {
-        "properties": {
-          "h": {
-            "title": "H",
-            "type": "number"
-          },
-          "w": {
-            "title": "W",
-            "type": "number"
-          },
-          "x": {
-            "title": "X",
-            "type": "number"
-          },
-          "y": {
-            "title": "Y",
-            "type": "number"
-          }
-        },
-        "required": [
-          "x",
-          "y",
-          "w",
-          "h"
-        ],
-        "title": "Rect",
         "type": "object"
       },
       "ResearchFinding": {
@@ -5262,28 +5047,6 @@
         "title": "Transaction",
         "type": "object"
       },
-      "UpdateAnnotationInput": {
-        "properties": {
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "status": {
-            "enum": [
-              "open",
-              "resolved"
-            ],
-            "title": "Status",
-            "type": "string"
-          }
-        },
-        "required": [
-          "id",
-          "status"
-        ],
-        "title": "UpdateAnnotationInput",
-        "type": "object"
-      },
       "Usage": {
         "description": "Model-call usage the agent reports for a job.",
         "properties": {
@@ -5467,24 +5230,6 @@
           "amount"
         ],
         "title": "ValueCreationPoint",
-        "type": "object"
-      },
-      "Viewport": {
-        "properties": {
-          "h": {
-            "title": "H",
-            "type": "integer"
-          },
-          "w": {
-            "title": "W",
-            "type": "integer"
-          }
-        },
-        "required": [
-          "w",
-          "h"
-        ],
-        "title": "Viewport",
         "type": "object"
       },
       "WatchlistEntry": {
@@ -5764,136 +5509,6 @@
         ]
       }
     },
-    "/api/annotations": {
-      "get": {
-        "operationId": "list_items_api_annotations_get",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "sort",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Sort"
-            }
-          },
-          {
-            "in": "query",
-            "name": "limit",
-            "required": false,
-            "schema": {
-              "default": 200,
-              "maximum": 1000,
-              "minimum": 1,
-              "title": "Limit",
-              "type": "integer"
-            }
-          },
-          {
-            "in": "query",
-            "name": "offset",
-            "required": false,
-            "schema": {
-              "default": 0,
-              "minimum": 0,
-              "title": "Offset",
-              "type": "integer"
-            }
-          },
-          {
-            "in": "query",
-            "name": "status",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "route",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Page_AnnotationRead_"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "List Items",
-        "tags": [
-          "annotations"
-        ]
-      }
-    },
-    "/api/annotations/{id}": {
-      "get": {
-        "operationId": "get_item_api_annotations__id__get",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "title": "Id",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AnnotationRead"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Get Item",
-        "tags": [
-          "annotations"
-        ]
-      }
-    },
     "/api/benchmarks": {
       "get": {
         "operationId": "list_items_api_benchmarks_get",
@@ -6013,47 +5628,6 @@
         "summary": "Get Item",
         "tags": [
           "benchmarks"
-        ]
-      }
-    },
-    "/api/commands/create-annotation": {
-      "post": {
-        "operationId": "create_annotation_api_commands_create_annotation_post",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateAnnotationInput"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "201": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AnnotationRead"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Create-Annotation",
-        "tags": [
-          "commands"
         ]
       }
     },
@@ -6257,47 +5831,6 @@
           }
         },
         "summary": "Start-Market-Research",
-        "tags": [
-          "commands"
-        ]
-      }
-    },
-    "/api/commands/update-annotation": {
-      "post": {
-        "operationId": "update_annotation_api_commands_update_annotation_post",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateAnnotationInput"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AnnotationRead"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Update-Annotation",
         "tags": [
           "commands"
         ]

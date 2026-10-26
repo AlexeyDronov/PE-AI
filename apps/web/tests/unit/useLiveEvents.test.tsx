@@ -25,20 +25,20 @@ describe("live events", () => {
   });
 
   it("refetches resources named in a 'changed' event and leaves others alone", async () => {
-    const annotations = counter("/annotations");
+    const scenarios = counter("/lbo-scenarios");
     const segments = counter("/segments");
     renderHook(
       () => {
-        useResource("annotations", { status: "open" });
+        useResource("lboScenarios");
         useResource("segments");
       },
       { wrapper: Providers },
     );
-    await waitFor(() => expect(annotations).toHaveLength(1));
+    await waitFor(() => expect(scenarios).toHaveLength(1));
     await waitFor(() => expect(segments).toHaveLength(1));
 
-    act(() => FakeEventSource.last?.emit("changed", { type: "changed", resources: ["annotations"], ids: ["a1"] }));
-    await waitFor(() => expect(annotations).toHaveLength(2));
+    act(() => FakeEventSource.last?.emit("changed", { type: "changed", resources: ["lbo-scenarios"], ids: ["s1"] }));
+    await waitFor(() => expect(scenarios).toHaveLength(2));
     expect(segments).toHaveLength(1);
   });
 

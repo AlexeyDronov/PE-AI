@@ -26,7 +26,6 @@ def test_registry_contains_core_resources():
         "exit-plans",
         "research-reports",
         "jobs",
-        "annotations",
     } <= names
 
 

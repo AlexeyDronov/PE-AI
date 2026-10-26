@@ -6,47 +6,41 @@ import { useCommand } from "@/hooks/useCommand";
 import { API, server } from "../setup/server";
 import { FakeEventSource, Providers } from "../setup/render";
 
-const NOTE = {
-  route: "/deals",
-  selector: '[data-testid="pipeline-table"]',
-  note: "Too dense",
-  viewport: { w: 1440, h: 900 },
-  theme: "light",
-};
+const SCENARIO = { deal_id: "d1", name: "Downside", case: "down" as const, overrides: { entry_multiple: 14 } };
 
 describe("useCommand", () => {
   it("posts input to the command endpoint and returns the result", async () => {
     let body: unknown;
     server.use(
-      http.post(`${API}/api/commands/create-annotation`, async ({ request }) => {
+      http.post(`${API}/api/commands/save-scenario`, async ({ request }) => {
         body = await request.json();
-        return HttpResponse.json({ id: "a1", status: "open" }, { status: 201 });
+        return HttpResponse.json({ id: "s1", name: "Downside" }, { status: 201 });
       }),
     );
-    const { result } = renderHook(() => useCommand("createAnnotation"), { wrapper: Providers });
+    const { result } = renderHook(() => useCommand("saveScenario"), { wrapper: Providers });
     expect(result.current.status).toBe("idle");
     let out: unknown;
     await act(async () => {
-      out = await result.current.run(NOTE);
+      out = await result.current.run(SCENARIO);
     });
-    expect(body).toEqual(NOTE);
-    expect(out).toEqual({ id: "a1", status: "open" });
+    expect(body).toEqual(SCENARIO);
+    expect(out).toEqual({ id: "s1", name: "Downside" });
     expect(result.current.status).toBe("success");
-    expect(result.current.result).toEqual({ id: "a1", status: "open" });
+    expect(result.current.result).toEqual({ id: "s1", name: "Downside" });
   });
 
   it("reports validation errors and rejects", async () => {
     server.use(
-      http.post(`${API}/api/commands/create-annotation`, () =>
+      http.post(`${API}/api/commands/save-scenario`, () =>
         HttpResponse.json(
-          { error: { code: "validation_error", message: "Invalid input", details: [{ loc: ["note"] }] } },
+          { error: { code: "validation_error", message: "Invalid input", details: [{ loc: ["name"] }] } },
           { status: 422 },
         ),
       ),
     );
-    const { result } = renderHook(() => useCommand("createAnnotation"), { wrapper: Providers });
+    const { result } = renderHook(() => useCommand("saveScenario"), { wrapper: Providers });
     await act(async () => {
-      await expect(result.current.run({ ...NOTE, note: "" })).rejects.toMatchObject({ code: "validation_error" });
+      await expect(result.current.run({ ...SCENARIO, name: "" })).rejects.toMatchObject({ code: "validation_error" });
     });
     expect(result.current.status).toBe("error");
     expect(result.current.error).toMatchObject({ code: "validation_error" });
@@ -72,11 +66,11 @@ describe("useCommand", () => {
 
   it("can be reset", async () => {
     server.use(
-      http.post(`${API}/api/commands/create-annotation`, () => HttpResponse.json({ id: "a1" }, { status: 201 })),
+      http.post(`${API}/api/commands/save-scenario`, () => HttpResponse.json({ id: "s1" }, { status: 201 })),
     );
-    const { result } = renderHook(() => useCommand("createAnnotation"), { wrapper: Providers });
+    const { result } = renderHook(() => useCommand("saveScenario"), { wrapper: Providers });
     await act(async () => {
-      await result.current.run(NOTE);
+      await result.current.run(SCENARIO);
     });
     act(() => result.current.reset());
     expect(result.current.status).toBe("idle");

@@ -114,6 +114,39 @@ describe("Sidebar", () => {
     expect(screen.getByRole("link", { name: "Pipeline" })).toHaveAttribute("aria-current", "page");
     expect(screen.getByRole("link", { name: "Overview" })).not.toHaveAttribute("aria-current");
   });
+
+  // User request: a child page's own link wins, so only one item is ever selected.
+  it.each([
+    ["/deals/new", "Screen a teaser"],
+    ["/deals", "Pipeline"],
+    ["/deals/d1", "Pipeline"],
+    ["/portfolio/covenants", "Covenants"],
+    ["/portfolio", "Platforms"],
+    ["/portfolio/p1", "Platforms"],
+  ])("marks only the most specific link active on %s", (activeHref, label) => {
+    render(
+      <Sidebar
+        fund={{ name: "Harrowgate", detail: "Fund VII" }}
+        activeHref={activeHref}
+        groups={[
+          {
+            items: [
+              { href: "/deals", label: "Pipeline", icon: "list" },
+              { href: "/deals/new", label: "Screen a teaser", icon: "plus" },
+            ],
+          },
+          {
+            items: [
+              { href: "/portfolio", label: "Platforms", icon: "briefcase" },
+              { href: "/portfolio/covenants", label: "Covenants", icon: "shield" },
+            ],
+          },
+        ]}
+      />,
+    );
+    const current = screen.getAllByRole("link").filter((link) => link.getAttribute("aria-current") === "page");
+    expect(current.map((link) => link.textContent)).toEqual([label]);
+  });
 });
 
 describe("Breadcrumb", () => {
