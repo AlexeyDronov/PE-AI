@@ -4,9 +4,9 @@
 |---|---|---|---|
 | Web (Next.js) | Vercel | `https://<project>.vercel.app` | Built from `apps/web`; talks to the API over HTTPS |
 | API (FastAPI) | Fly app `harrowgate-api`, London | `https://harrowgate-api.fly.dev` | One always-on machine; SQLite on a 1 GB volume at `/data` |
-| Agent (Mastra) | Fly app `harrowgate-agent`, London | private only | One always-on machine; reached by the API at `harrowgate-agent.internal:4111` |
+| Agent (Mastra) | Fly app `harrowgate-agent`, London | private only | One always-on machine (plus a stopped standby Fly keeps for failover); reached by the API at `harrowgate-agent.internal:4111` |
 
-The API and agent call each other over Fly's private network, authenticated with a shared `AGENT_SERVICE_TOKEN`. Only the API is public.
+The API starts agent jobs over Fly's private network. The agent reports back through the API's public HTTPS address, because the API listens on IPv4 only, which is what Fly's proxy uses. Both directions carry the shared `AGENT_SERVICE_TOKEN`. Only the API is public.
 
 Expected cost: two `shared-cpu-1x` / 512 MB machines plus a 1 GB volume, about **$5–10 a month** on Fly. Vercel Hobby is free. Agent jobs bill to your Anthropic and Tavily accounts as they do locally.
 
@@ -168,3 +168,13 @@ fly deploy . --config apps/agent/fly.toml --dockerfile apps/agent/Dockerfile --r
 ```
 
 The database on the volume survives deploys and restarts.
+
+## Troubleshooting
+
+- **`ERR_PNPM_IGNORED_BUILDS` while building the agent:** pnpm fails non-interactive installs when a dependency's install script hasn't been approved. Approved and refused packages are listed under `allowBuilds` in `pnpm-workspace.yaml`; add any new one there.
+- **API deploy times out on health checks, or the URL hangs:** the API must listen on `0.0.0.0` (see `apps/api/docker-entrypoint.sh`). Fly's proxy and health checks connect over IPv4.
+- **`failed to clear lease ... unauthorized`, or flyctl crashes mid-deploy:** an interrupted deploy left a lock on the machine. Clear it, then deploy again:
+
+```bash
+fly machine leases clear <machine id> --app harrowgate-api
+```

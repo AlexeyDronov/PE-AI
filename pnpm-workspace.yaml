@@ -3,3 +3,8 @@ packages:
   - "apps/agent"
   - "e2e"
   - "packages/*"
+
+# Packages allowed to run install scripts. pnpm fails non-interactive installs (CI, Docker) on any it isn't told about.
+allowBuilds:
+  esbuild: true
+  msw: false

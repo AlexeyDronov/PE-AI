@@ -3,7 +3,6 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "cache-probe": "tsx scripts/cache-probe.ts",
     "dev": "mastra dev --dir src/mastra",
     "start": "node --import tsx src/server.ts",
     "test": "vitest run",

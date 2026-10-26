@@ -1,4 +1,4 @@
-/* Design tokens: docs/02-design-system.md §2 and §8. Components reference these only. */
+/* Design tokens. Components reference these only. */
 
 :root {
   color-scheme: light;
@@ -98,7 +98,7 @@
   --ease-chart: cubic-bezier(0.33, 1, 0.68, 1);
 }
 
-/* Dark: wired end to end, polish deferred (docs/TODO.md). */
+/* Dark: wired end to end; the palette is a first pass. */
 :root[data-theme="dark"] {
   color-scheme: dark;
   --bg: #070e26;

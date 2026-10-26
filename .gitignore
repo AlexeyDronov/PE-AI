@@ -21,3 +21,12 @@ scripts/.test-snapshot*.json
 *.tsbuildinfo
 .mastra/
 apps/web/next-env.d.ts
+
+# Kept locally, not published: build-process notes, planning docs, prototypes and one-off tools
+reference/
+docs/preview/
+docs/HANDOFF.md
+docs/TODO.md
+docs/0[1-5]-*.md
+scripts/test_lock.py
+apps/agent/scripts/

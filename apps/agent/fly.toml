@@ -5,7 +5,8 @@ app = "harrowgate-agent"
 primary_region = "lhr"
 
 [env]
-  API_URL = "http://harrowgate-api.internal:8000"
+  # The API listens on IPv4 only, so the agent reaches it through its public HTTPS address (calls carry the service token).
+  API_URL = "https://harrowgate-api.fly.dev"
 
 # No [http_service]: nothing outside the private network can reach the agent, and Fly never stops it.
 [[vm]]
