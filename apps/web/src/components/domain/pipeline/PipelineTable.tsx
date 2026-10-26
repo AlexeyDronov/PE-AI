@@ -19,7 +19,7 @@ type Props = {
 
 export function PipelineTable({ deals, verdict, onVerdictChange, thresholds, onOpen, isRecent, loading, error, onRetry }: Props) {
   const columns: Column<Deal>[] = [
-    { key: "company", header: "Company", render: (d) => d.company.name, sub: (d) => `${d.segment.short} · ${d.company.hq}`, sortValue: (d) => d.company.name },
+    { key: "company", header: "Company", render: (d) => d.company.name, sub: (d) => `${d.code_name} · ${d.segment.short} · ${d.company.hq}`, sortValue: (d) => d.company.name },
     { key: "stage", header: "Stage", render: (d) => d.stage, sortValue: (d) => d.stage },
     { key: "ebitda", header: "EBITDA £m", align: "right", render: (d) => fmt.money(d.financials.ebitda, { style: "financial" }), sortValue: (d) => d.financials.ebitda },
     { key: "recurring", header: "Recurring", align: "right", render: (d) => fmt.pct(d.financials.recurring_pct, { dp: 0 }), sortValue: (d) => d.financials.recurring_pct },

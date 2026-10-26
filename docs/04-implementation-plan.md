@@ -123,7 +123,10 @@ Each page gets domain components (props only), a view that calls hooks, page tes
   - Test fix: the no-context case passed `undefined`, which fell back to the default context
 
 ## Phase 8 — Quality
-- [ ] 8.1 Playwright E2E: screen a teaser → job → deal appears live; slider → LBO updates; research job → report renders; feedback note round trip
+- [x] 8.1 Playwright E2E: screen a teaser → job → deal appears live; slider → LBO updates; research job → report renders; feedback note round trip — 27 Oct
+  - `make e2e` runs against an isolated stack: API on :8100 with a freshly seeded throwaway DB, a fake agent on :4199 (fixed answers, no model calls), web on :3100 (`NEXT_DIST_DIR=.next-e2e`); 5 flows incl. the IC memo, ~1.5 min
+  - Found by E2E: the pipeline table never showed a deal's code name (now `code · segment · hq`)
+  - `next-env.d.ts` is untracked (generated); `tsconfig.json` includes both build dirs' types so Next stops rewriting it
 - [ ] 8.2 Visual baselines: gallery and each page, light theme, 1440px and 390px
 - [ ] 8.3 Accessibility pass (keyboard, focus, contrast, table views for charts)
 - [ ] 8.4 Rounds of fixes from your feedback notes

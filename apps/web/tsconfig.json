@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "lib": ["dom", "dom.iterable", "es2023"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "es2023"
+    ],
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "noEmit": true,
@@ -14,10 +18,34 @@
     "skipLibCheck": true,
     "allowJs": false,
     "esModuleInterop": true,
-    "types": ["vitest/globals", "@testing-library/jest-dom"],
-    "plugins": [{ "name": "next" }],
-    "paths": { "@/*": ["./src/*"], "@contracts/*": ["../../packages/contracts/src/*"] }
+    "types": [
+      "vitest/globals",
+      "@testing-library/jest-dom"
+    ],
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ],
+      "@contracts/*": [
+        "../../packages/contracts/src/*"
+      ]
+    }
   },
-  "include": ["next-env.d.ts", "src/**/*.ts", "src/**/*.tsx", "tests/**/*.ts", "tests/**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    ".next/types/**/*.ts",
+    "next-env.d.ts",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "tests/**/*.ts",
+    "tests/**/*.tsx",
+    ".next-e2e/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

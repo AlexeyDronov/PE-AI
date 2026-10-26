@@ -4,7 +4,7 @@ export COREPACK_ENABLE_DOWNLOAD_PROMPT := 0
 
 API := apps/api
 
-.PHONY: setup seed test test-api lint-api snapshot-tests verify-tests dev-api dev-agent test-agent codegen codegen-check
+.PHONY: setup seed test test-api lint-api snapshot-tests verify-tests dev-api dev-agent test-agent codegen codegen-check e2e
 
 setup:
 	cd $(API) && uv sync
@@ -56,3 +56,7 @@ codegen-check:
 # The running agent server must load both agents with their playbooks (bundled code, which vitest can't exercise).
 smoke-agent:
 	sh scripts/smoke-agent.sh
+
+# Playwright flows against an isolated stack (throwaway DB on :8100, fake agent on :4199, web on :3100).
+e2e:
+	pnpm --filter @harrowgate/e2e exec playwright test $(E2E_ARGS)
