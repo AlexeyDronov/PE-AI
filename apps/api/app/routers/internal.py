@@ -99,15 +99,15 @@ async def result(job_id: str, body: ResultBody, request: Request) -> Response:
         kind = JOB_KINDS[job.kind]
         try:
             parsed = kind.result_schema.model_validate(body.payload)
-        except ValidationError as exc:
-            invalid = InvalidInput.from_pydantic(exc)
+            written = kind.persist(session, job, parsed)
+        except (ValidationError, InvalidInput) as exc:
+            session.rollback()
+            invalid = exc if isinstance(exc, InvalidInput) else InvalidInput.from_pydantic(exc)
             set_status(job, "failed", error=f"Invalid result: {invalid.message}", usage=usage_of(body))
             session.add(job)
             session.commit()
             await publish_job(app, job)
             raise invalid from exc
-        try:
-            written = kind.persist(session, job, parsed)
         except NotImplementedError as exc:
             raise NotImplementedYet(str(exc)) from exc
         set_status(job, "succeeded", result_ref=written.id, usage=usage_of(body))

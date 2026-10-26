@@ -4340,6 +4340,21 @@
         "title": "Teaser",
         "type": "object"
       },
+      "TeaserScreenInput": {
+        "properties": {
+          "text": {
+            "maxLength": 40000,
+            "minLength": 1,
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "text"
+        ],
+        "title": "TeaserScreenInput",
+        "type": "object"
+      },
       "Tier": {
         "properties": {
           "gp": {
@@ -5265,6 +5280,47 @@
           }
         },
         "summary": "Save-Scenario",
+        "tags": [
+          "commands"
+        ]
+      }
+    },
+    "/api/commands/screen-teaser": {
+      "post": {
+        "operationId": "screen_teaser_api_commands_screen_teaser_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TeaserScreenInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobRead"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Screen-Teaser",
         "tags": [
           "commands"
         ]

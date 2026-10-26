@@ -1,14 +1,15 @@
 import { registerApiRoute } from "@mastra/core/server";
 import { ApiCallbacks } from "../callbacks";
 import { loadConfig } from "../config";
-import { handleStartJob, jobRunners } from "../jobs";
+import { handleStartJob } from "../jobs";
+import { registerJobRunners } from "../workflows";
 
 // Built on first request so importing the module never needs the environment.
 let deps: Parameters<typeof handleStartJob>[1] | undefined;
 function getDeps() {
   if (!deps) {
     const config = loadConfig();
-    deps = { config, callbacks: new ApiCallbacks(config), runners: jobRunners };
+    deps = { config, callbacks: new ApiCallbacks(config), runners: registerJobRunners() };
   }
   return deps;
 }

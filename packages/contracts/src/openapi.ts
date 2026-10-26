@@ -140,6 +140,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/commands/screen-teaser": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Screen-Teaser */
+        post: operations["screen_teaser_api_commands_screen_teaser_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/commands/set-watchlist": {
         parameters: {
             query?: never;
@@ -3077,6 +3094,11 @@ export interface components {
              */
             source?: string;
         };
+        /** TeaserScreenInput */
+        TeaserScreenInput: {
+            /** Text */
+            text: string;
+        };
         /** Tier */
         Tier: {
             /** Gp */
@@ -3529,6 +3551,39 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["LboScenarioRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    screen_teaser_api_commands_screen_teaser_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TeaserScreenInput"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JobRead"];
                 };
             };
             /** @description Validation Error */

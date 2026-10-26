@@ -1,4 +1,5 @@
 import { existsSync, readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
 import { parseEnv } from "node:util";
 import { z } from "zod";
 
@@ -60,5 +61,14 @@ export function loadEnvFiles(paths: string[], env: Record<string, string | undef
     for (const [key, value] of Object.entries(parseEnv(readFileSync(path, "utf8")))) {
       if (env[key] === undefined) env[key] = value;
     }
+  }
+}
+
+/** `.env` paths from `start` up to the workspace root (the folder with pnpm-workspace.yaml), nearest first. */
+export function envFilesUpward(start: string = process.cwd()): string[] {
+  const paths: string[] = [];
+  for (let dir = start; ; dir = dirname(dir)) {
+    paths.push(join(dir, ".env"));
+    if (existsSync(join(dir, "pnpm-workspace.yaml")) || dirname(dir) === dir) return paths;
   }
 }

@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 from app.jobs.market_research import (
     MarketResearchInput,
@@ -8,10 +8,7 @@ from app.jobs.market_research import (
     persist_not_built,
 )
 from app.jobs.spec import JobKindSpec
-
-
-class TeaserScreenInput(BaseModel):
-    text: str = Field(min_length=1)
+from app.jobs.teaser_screen import TeaserScreenInput, TeaserScreenResult, persist_teaser_screen
 
 
 class MemoDraftInput(BaseModel):
@@ -29,7 +26,11 @@ JOB_KINDS: dict[str, JobKindSpec] = {
         ("research-reports", "jobs"),
     ),
     "teaser_screen": JobKindSpec(
-        "teaser_screen", TeaserScreenInput, NotBuilt, persist_not_built, ("deals", "jobs")
+        "teaser_screen",
+        TeaserScreenInput,
+        TeaserScreenResult,
+        persist_teaser_screen,
+        ("deals", "companies", "teasers", "jobs"),
     ),
     "memo_draft": JobKindSpec("memo_draft", MemoDraftInput, NotBuilt, persist_not_built, ("memos", "jobs")),
 }

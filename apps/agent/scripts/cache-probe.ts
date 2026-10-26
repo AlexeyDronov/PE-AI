@@ -1,11 +1,10 @@
 /** Sends one representative request twice and fails unless the second reads the prompt cache. Spends real tokens: run by hand. */
-import { resolve } from "node:path";
 import { z } from "zod";
-import { loadConfig, loadEnvFiles } from "../src/config";
+import { envFilesUpward, loadConfig, loadEnvFiles } from "../src/config";
 import { callClaude } from "../src/llm";
 import { buildInstructions } from "../src/skills";
 
-loadEnvFiles([resolve(process.cwd(), "../../.env"), resolve(process.cwd(), ".env")]);
+loadEnvFiles(envFilesUpward()); // mastra dev runs from .mastra/output, so search up to the repo root
 const config = loadConfig({ API_URL: "http://unused", AGENT_SERVICE_TOKEN: "unused", ...process.env });
 
 const system = buildInstructions("You are the research agent for Harrowgate, a mid-market private equity fund.", [

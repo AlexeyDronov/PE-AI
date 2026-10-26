@@ -3,7 +3,7 @@ import { mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { loadConfig, loadEnvFiles } from "@/config";
+import { envFilesUpward, loadConfig, loadEnvFiles } from "@/config";
 import { studioModel } from "@/llm";
 
 const base = { API_URL: "http://api.test", AGENT_SERVICE_TOKEN: "t" };
@@ -70,6 +70,22 @@ describe("loadEnvFiles", () => {
     const env: Record<string, string | undefined> = {};
     expect(() => loadEnvFiles([join(tmpdir(), "nope", ".env")], env)).not.toThrow();
     expect(env).toEqual({});
+  });
+});
+
+describe("envFilesUpward", () => {
+  // Found in the live run: mastra dev runs from apps/agent/.mastra/output, so a fixed ../../.env missed the repo root.
+  it("lists .env candidates from the start folder up to the workspace root, nearest first", () => {
+    const root = mkdtempSync(join(tmpdir(), "hg-ws-"));
+    writeFileSync(join(root, "pnpm-workspace.yaml"), "packages: []\n");
+    const deep = join(root, "apps", "agent", ".mastra", "output");
+    expect(envFilesUpward(deep)).toEqual([
+      join(deep, ".env"),
+      join(root, "apps", "agent", ".mastra", ".env"),
+      join(root, "apps", "agent", ".env"),
+      join(root, "apps", ".env"),
+      join(root, ".env"),
+    ]);
   });
 });
 

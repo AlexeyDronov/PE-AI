@@ -100,8 +100,11 @@ Each page gets domain components (props only), a view that calls hooks, page tes
   - Live check fix: playbooks load in the bundled server (`make smoke-agent`)
 - [x] 7.4 Provider switch to Anthropic: `@anthropic-ai/sdk`, `claude-haiku-5-5`, effort `medium`; one `callClaude` helper (cached system prefix, structured output, max_tokens per job, usage capture); cache probe script; tool-result cache; usage stored on jobs — 27 Oct
   - Review fix: output schema goes through the SDK's `zodOutputFormat` transform, so range/length constraints don't break structured outputs (zod still enforces them)
+  - Live cache probe (27 Oct): call 1 wrote 2,511 cached tokens, call 2 read 2,511 ($0.00032 → $0.00003)
   - `.env.example` not updated: blocked by the user's permission rules; new keys are `ANTHROPIC_API_KEY`, `MODEL`, `EFFORT`, `TOOL_CACHE_HOURS`
-- [ ] 7.5 `teaserScreen` workflow (1 call) + API `screen-teaser` command and persist (new deal appears live) — live run with approval
+- [x] 7.5 `teaserScreen` workflow (1 call) + API `screen-teaser` command and persist (new deal appears live) — live run with approval — 27 Oct
+  - Live run (Project Juniper, managed IT): 1 call, 332 in + 3,496 cache-write + 1,543 out tokens, $0.0012; deal scored 65 / Pass (EBITDA below the £10m floor) and renders on the deal page
+  - Live-run fixes: the bundler dropped the side-effect import that registers runners (explicit `registerJobRunners()`; `make smoke-agent` now checks each job kind is routable); `mastra dev` runs from `.mastra/output`, so `.env` is found by searching up to the workspace root (`envFilesUpward`, tested)
 - [ ] 7.6 `marketResearch` workflow (≤2 calls: deterministic search → fetch → passage filter → extract; code verifies cited figures); `confidence` becomes a string enum — live run with approval
 - [ ] 7.7 `memoDraft` workflow (1 call, all sections) + API `draft-memo` command and persist — live run with approval
 
