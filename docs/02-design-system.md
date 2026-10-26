@@ -48,7 +48,7 @@ Status colours (good / warn / bad) sit **outside** the 70-20-10 split and appear
 | `--line-strong` | `#D0D6E0` | Input borders, axis baseline, header rule |
 | `--ink` | `#0B1B3F` | Primary text and figures (16.9:1) |
 | `--ink-2` | `#3F4A5C` | Labels, secondary text (9.0:1) |
-| `--ink-3` | `#6B7280` | **Muted grey**: comments, hints, footnotes, timestamps, axis ticks, table headers (4.8:1) |
+| `--ink-3` | `#656D7A` | **Muted grey**: comments, hints, footnotes, timestamps, axis ticks, table headers (5.2:1 on white, 4.7:1 on `--accent-soft`) |
 | `--accent` | `#1F45C8` | **Royal blue** (7.7:1) |
 | `--accent-hover` | `#1838A6` | Hover/pressed |
 | `--accent-ink` | `#FFFFFF` | Text on accent |
@@ -363,4 +363,4 @@ Every component exposes `data-testid` and appears in `/dev/components` with all 
 
 ## 11. Accessibility
 
-WCAG 2.2 AA: text ≥ 4.5:1 (3:1 for large figures and non-text marks). Every control is keyboard reachable with a visible focus ring. Colour never carries meaning alone. Charts ship a table view. `aria-live="polite"` announces job completion and new rows.
+WCAG 2.2 AA: text ≥ 4.5:1 (3:1 for large figures and non-text marks). Every control is keyboard reachable with a visible focus ring. Colour never carries meaning alone. Every page starts with a "Skip to main content" link (first tab stop, visible on focus) that moves focus to the single `main` landmark, and has exactly one `h1`. Charts ship a table view. `aria-live="polite"` announces job completion and new rows.

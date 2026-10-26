@@ -23,3 +23,4 @@ export { type StatDelta, type StatProps, Stat, StatStrip } from "./Stat";
 export { EmptyState, ErrorState, Skeleton } from "./States";
 export { type TabItem, Tabs } from "./Tabs";
 export { Textarea, TextField } from "./TextField";
+export { MAIN_ID, SkipLink } from "./SkipLink";

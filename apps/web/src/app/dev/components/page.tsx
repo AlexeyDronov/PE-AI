@@ -1,6 +1,6 @@
 "use client";
 
-import { type ReactNode, useState } from "react";
+import { createContext, type ReactNode, useContext, useState } from "react";
 import { Chart } from "@/components/charts/Chart";
 import {
   barOption,
@@ -49,6 +49,7 @@ import {
   Breadcrumb,
   Button,
   Card,
+  Checkbox,
   type Column,
   DataTable,
   DotRating,
@@ -70,6 +71,8 @@ import {
   Tabs,
   Textarea,
   TextField,
+  MAIN_ID,
+  SkipLink,
 } from "@/components/ui";
 import type { Job } from "@/lib/api/types";
 import { fmt } from "@/lib/format";
@@ -149,7 +152,13 @@ function Group({ title, children }: { title: string; children: ReactNode }) {
   );
 }
 
+/** Skeleton states are off by default so the page settles; the toggle in the header shows them. */
+const LoadingStates = createContext(false);
+
 function Variant({ name, children }: { name: string; children: ReactNode }) {
+  const showLoading = useContext(LoadingStates);
+  const isLoadingState = /loading|^Skeleton$/i.test(name) && !name.startsWith("Button");
+  if (isLoadingState && !showLoading) return null;
   return (
     <div className={styles.variant}>
       <span className={styles.caption}>{name}</span>
@@ -160,6 +169,7 @@ function Variant({ name, children }: { name: string; children: ReactNode }) {
 
 export default function ComponentGallery() {
   const [theme, setTheme] = useState("light");
+  const [showLoading, setShowLoading] = useState(false);
   const [segment, setSegment] = useState("base");
   const [tab, setTab] = useState("chart");
   const [slider, setSlider] = useState(15.5);
@@ -172,11 +182,15 @@ export default function ComponentGallery() {
   }
 
   return (
-    <main className={styles.page}>
+    <>
+    <SkipLink />
+    <main id={MAIN_ID} tabIndex={-1} className={styles.page}>
       <PageHeader
         title="Component gallery"
         description="Every shared UI primitive in its main states. Development only."
         actions={
+          <div className={styles.row}>
+          <Checkbox label="Show loading states" checked={showLoading} onChange={setShowLoading} />
           <SegmentedControl
             label="Theme"
             value={theme}
@@ -186,9 +200,11 @@ export default function ComponentGallery() {
               { value: "dark", label: "Dark" },
             ]}
           />
+          </div>
         }
       />
 
+      <LoadingStates.Provider value={showLoading}>
       <Group title="Buttons and badges">
         <Variant name="Button variants">
           <div className={styles.row}>
@@ -453,6 +469,7 @@ export default function ComponentGallery() {
       <Group title="Page layout">
         <Variant name="PageHeader with meta and tabs">
           <PageHeader
+            headingLevel={2}
             title="Northvale Compliance"
             description="Compliance software, UK and Ireland."
             meta={<Badge tone={VERDICT_TONE.Advance}>Advance</Badge>}
@@ -466,7 +483,9 @@ export default function ComponentGallery() {
       </Group>
 
       <DealGroup />
+      </LoadingStates.Provider>
     </main>
+    </>
   );
 }
 

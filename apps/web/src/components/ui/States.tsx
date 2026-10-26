@@ -29,6 +29,6 @@ export function ErrorState({ message, onRetry, testId = "error-state" }: { messa
   );
 }
 
-export function Skeleton({ width = "100%", height = 16 }: { width?: string | number; height?: string | number }) {
-  return <span className={styles.skeleton} style={{ width, height }} aria-hidden="true" data-testid="skeleton" />;
+export function Skeleton({ width = "100%", height = 16, testId = "skeleton" }: { width?: string | number; height?: string | number; testId?: string }) {
+  return <span className={styles.skeleton} style={{ width, height }} aria-hidden="true" data-testid={testId} />;
 }

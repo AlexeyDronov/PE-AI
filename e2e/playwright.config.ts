@@ -24,7 +24,11 @@ export default defineConfig({
     viewport: { width: 1440, height: 900 },
     trace: "retain-on-failure",
   },
-  projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"], viewport: { width: 1440, height: 900 } } }],
+  // Page checks run first, on the freshly seeded DB; flows write data, so they depend on "pages".
+  projects: [
+    { name: "pages", testMatch: /(a11y|visual)\.spec\.ts/, use: { ...devices["Desktop Chrome"], viewport: { width: 1440, height: 900 } } },
+    { name: "flows", testMatch: /flows\.spec\.ts/, dependencies: ["pages"], use: { ...devices["Desktop Chrome"], viewport: { width: 1440, height: 900 } } },
+  ],
   webServer: [
     {
       command: `rm -f "${db}" "${db}"-* && uv run python -m seed.seed && uv run uvicorn app.main:app --port 8100`,

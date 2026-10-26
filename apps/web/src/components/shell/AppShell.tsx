@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import { type ReactNode, useState } from "react";
 import { breadcrumbFor, NAVIGATION } from "@/app/navigation";
-import { Breadcrumb, type Crumb, Sidebar } from "@/components/ui";
+import { Breadcrumb, type Crumb, MAIN_ID, Sidebar, SkipLink } from "@/components/ui";
 import { FeedbackOverlay } from "@/features/feedback/FeedbackOverlay";
 import { useResource } from "@/hooks/useResource";
 import { fmt } from "@/lib/format";
@@ -22,13 +22,14 @@ export function AppShell({ children, breadcrumb }: { children: ReactNode; breadc
 
   return (
     <div className={styles.root} data-testid="app-shell">
+      <SkipLink />
       <Sidebar fund={{ name, detail: committed }} groups={NAVIGATION} activeHref={pathname} footer={<ThemeToggle />} />
       <div className={styles.column}>
         <header className={styles.header}>
           {crumbs.length ? <Breadcrumb items={crumbs} /> : <span />}
           <JobsIndicator />
         </header>
-        <main className={styles.main}>
+        <main id={MAIN_ID} tabIndex={-1} className={styles.main}>
           <BreadcrumbSetter.Provider value={setOverride}>{children}</BreadcrumbSetter.Provider>
         </main>
       </div>

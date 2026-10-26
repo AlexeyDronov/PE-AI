@@ -128,6 +128,6 @@ Each page gets domain components (props only), a view that calls hooks, page tes
   - Found by E2E: the pipeline table never showed a deal's code name (now `code · segment · hq`)
   - `next-env.d.ts` is untracked (generated); `tsconfig.json` includes both build dirs' types so Next stops rewriting it
 - [ ] 8.2 Visual baselines: gallery and each page, light theme, 1440px and 390px
-- [ ] 8.3 Accessibility pass (keyboard, focus, contrast, table views for charts)
+- [x] 8.3 Accessibility pass (keyboard, focus, contrast, table views for charts) — 27 Oct (`e2e/tests/a11y.spec.ts`: axe WCAG 2.1 AA on every page, one h1 + main, skip link, visible focus, chart table views; `--ink-3` darkened to #656d7a for 4.5:1 on accent-soft)
 - [ ] 8.4 Rounds of fixes from your feedback notes
 - [ ] 8.5 ⧗ Dark-mode rework (deferred by product owner)
