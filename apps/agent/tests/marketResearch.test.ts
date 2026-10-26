@@ -216,3 +216,22 @@ describe("marketResearch search failures", () => {
     expect(calls.fail[0]!.error).toMatch(/rate limit/i);
   });
 });
+
+// Browser review (6.13): three verified findings that don't answer the question must still trigger the one gap-fill.
+describe("marketResearch gap-fill when the question is unanswered", () => {
+  it("does the gap-fill when Claude says the question is not answered, even with 2+ verified findings", async () => {
+    const unanswered = claude({ summary: "Not found.", answered: false, findings: [SIZE, GROWTH], follow_up_queries: ["UK bank compliance outsourcing spend 2025"] });
+    const filled = claude({ summary: "Answered.", answered: true, findings: [SIZE, GROWTH], follow_up_queries: [] });
+    const calls = harness([unanswered, filled], (q) => (q.includes("bank compliance") ? ["/c"] : ["/a", "/b"]));
+    await run("How big is the UK compliance outsourcing market? (case 9)");
+    expect(calls.claude).toHaveLength(2);
+    expect(calls.result[0]!.payload.summary).toBe("Answered.");
+  });
+
+  it("asks Claude to say whether the sources answer the question", async () => {
+    const calls = harness([claude({ summary: "s", findings: [SIZE, GROWTH], follow_up_queries: [] })]);
+    await run("How big is the UK compliance outsourcing market? (case 10)");
+    const format = JSON.stringify((calls.claude[0]!.output_config as { format: unknown }).format);
+    expect(format).toContain("answered");
+  });
+});
