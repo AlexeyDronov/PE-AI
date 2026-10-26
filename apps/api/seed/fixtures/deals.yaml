@@ -22,7 +22,7 @@
   fragmentation: 78
   key_person_risk: false
   risks:
-    - {severity: m, text: Entry multiple above segment median, mitigant: Price protection through earn-out on FY27 EBITDA}
+    - {severity: m, text: Entry multiple close to the segment median leaves little price discount, mitigant: Price protection through earn-out on FY27 EBITDA}
     - {severity: l, text: Founder holds key regulator relationships, mitigant: Two-year rollover and transition plan}
   questions:
     - How much of recurring revenue is multi-year contracted?

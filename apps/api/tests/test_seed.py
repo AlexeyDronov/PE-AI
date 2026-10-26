@@ -111,3 +111,19 @@ def test_criteria_targets_describe_what_is_scored(db_path):
         "buy_and_build": "≥ 70 / 100",
         "entry_price": "At or below segment median",
     }
+
+
+# Found by the 7.7 live memo run: Linden's flag said "above segment median" but its ask was below it.
+def test_flags_about_the_segment_median_match_the_numbers(db_path):
+    flagged = rows(
+        db_path,
+        """select f.text, d.code_name, d.ask_multiple, s.median_multiple
+           from risk_flags f join deals d on d.id = f.deal_id
+           join companies c on c.id = d.company_id join segments s on s.id = c.segment_id
+           where lower(f.text) like '%segment median%'""",
+    )
+    for text, code_name, ask, median in flagged:
+        if "above" in text.lower():
+            assert ask > median, f"{code_name}: '{text}' but ask {ask}x <= median {median}x"
+        if "below" in text.lower():
+            assert ask < median, f"{code_name}: '{text}' but ask {ask}x >= median {median}x"
