@@ -308,3 +308,68 @@ class SegmentDetail(SegmentListItem):
     players: list[Player]
     matching_deals: list[DealListItem]
     reports: list[m.ResearchReport]
+
+
+class SourceRef(BaseModel):
+    ref: int
+    id: str
+    url: str
+    title: str
+    publisher: str
+    excerpt: str
+    retrieved_at: datetime
+
+
+class FindingWithRefs(BaseModel):
+    id: str
+    created_at: datetime
+    source: str
+    report_id: str
+    metric: str
+    value: float
+    unit: str
+    period: str
+    confidence: str
+    refs: list[int]
+
+
+class ResearchReportDetail(BaseModel):
+    id: str
+    created_at: datetime
+    source: str
+    segment_id: str | None
+    question: str
+    summary: str
+    status: str
+    model: str | None
+    findings: list[FindingWithRefs]
+    sources: list[SourceRef]
+
+
+class MemoSectionOutline(BaseModel):
+    key: str
+    label: str
+    description: str
+
+
+class MemoOutline(BaseModel):
+    sections: list[MemoSectionOutline]
+
+
+class MemoSectionRead(BaseModel):
+    id: str
+    key: str
+    label: str
+    status: str
+    markdown: str
+
+
+class MemoDetail(BaseModel):
+    id: str
+    created_at: datetime
+    source: str
+    deal_id: str
+    scenario_id: str | None
+    status: str
+    scenario_name: str | None
+    sections: list[MemoSectionRead]

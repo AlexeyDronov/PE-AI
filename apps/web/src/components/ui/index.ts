@@ -3,6 +3,7 @@ export { Badge, type Tone } from "./Badge";
 export { Breadcrumb, type Crumb } from "./Breadcrumb";
 export { Button, ButtonLink, type ButtonProps } from "./Button";
 export { Card } from "./Card";
+export { FileButton } from "./FileButton";
 export { type Column, DataTable } from "./DataTable";
 export { DotRating } from "./DotRating";
 export { HeadroomMeter } from "./HeadroomMeter";

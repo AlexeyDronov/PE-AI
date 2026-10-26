@@ -15,6 +15,16 @@ MEMO_SECTIONS: dict[str, str] = {
     "recommendation": "Advance, watch or pass, with next steps and diligence priorities",
 }
 
+# Display labels where the capitalised key is not enough.
+MEMO_LABELS: dict[str, str] = {
+    "thesis": "Investment thesis",
+    "valuation": "Valuation and returns",
+}
+
+
+def memo_section_label(key: str) -> str:
+    return MEMO_LABELS.get(key, key.capitalize())
+
 
 def _known(keys: list[str]) -> list[str]:
     for key in keys:

@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { jobKindLabel, JOB_STATUS_TONE } from "@/components/domain/jobs";
-import { Badge, Button, Card, EmptyState, ProgressSteps, Textarea } from "@/components/ui";
+import { JobProgress } from "@/components/domain/JobProgress";
+import { Button, Card, EmptyState, Textarea } from "@/components/ui";
 import type { Job } from "@/lib/api/types";
 import { fmt } from "@/lib/format";
 import styles from "./ResearchEvidence.module.css";
@@ -10,12 +10,8 @@ import type { Report } from "./types";
 
 type Props = { reports: Report[]; job?: Job; starting?: boolean; error?: string; onRun: (question: string) => void };
 
-const STATUS_LABEL: Record<Job["status"], string> = { queued: "Queued", running: "Running", succeeded: "Done", failed: "Failed" };
-
 export function ResearchEvidence({ reports, job, starting, error, onRun }: Props) {
   const [question, setQuestion] = useState("");
-  const steps = job?.progress.map((p) => ({ key: p.step, label: p.message })) ?? [];
-  const current = job?.progress.at(-1)?.step ?? "";
   return (
     <div className={styles.root} data-testid="research-evidence">
       <Card title="Research reports" testId="segment-reports">
@@ -43,11 +39,8 @@ export function ResearchEvidence({ reports, job, starting, error, onRun }: Props
           </div>
         </div>
         {job ? (
-          <div className={styles.job} aria-live="polite">
-            <span>
-              {jobKindLabel(job.kind)} <Badge tone={JOB_STATUS_TONE[job.status]}>{STATUS_LABEL[job.status]}</Badge>
-            </span>
-            {steps.length ? <ProgressSteps steps={steps} current={current} status={job.status === "queued" ? "running" : job.status} error={job.error ?? undefined} /> : null}
+          <div className={styles.job}>
+            <JobProgress job={job} testId="research-job" />
           </div>
         ) : null}
       </Card>

@@ -7,6 +7,7 @@ import { readInternal } from "../tools/internalData";
 import { filterPassages, normalise, planQueries, verifyFindings, type NumberedSource } from "./research";
 
 const MAX_SOURCES = 6;
+const MAX_TOKENS = 8000; // findings ~3.5k tokens plus headroom for adaptive thinking
 const GAP_SOURCES = 3;
 const EXCERPT_CHARS = 600;
 
@@ -118,7 +119,7 @@ export const marketResearch: JobRunner = async (jobId, input, { config, callback
     if (!sources.length) return callbacks.fail(jobId, "No readable sources found for this question.");
 
     await callbacks.progress(jobId, "analyse", "Extracting findings");
-    let call = await callClaude({ config, system: SYSTEM, prompt: sourcesPrompt(question, sources), schema: research, maxTokens: 4000 });
+    let call = await callClaude({ config, system: SYSTEM, prompt: sourcesPrompt(question, sources), schema: research, maxTokens: MAX_TOKENS });
     spent.push(call.usage);
 
     if (verifyFindings(call.data.findings, sources).kept.length < 2 && call.data.follow_up_queries.length) {
@@ -126,7 +127,7 @@ export const marketResearch: JobRunner = async (jobId, input, { config, callback
       const extra = await gather(call.data.follow_up_queries, GAP_SOURCES, sources.length);
       if (extra.length) {
         sources.push(...extra);
-        call = await callClaude({ config, system: SYSTEM, prompt: sourcesPrompt(question, sources), schema: research, maxTokens: 4000 });
+        call = await callClaude({ config, system: SYSTEM, prompt: sourcesPrompt(question, sources), schema: research, maxTokens: MAX_TOKENS });
         spent.push(call.usage);
       }
     }

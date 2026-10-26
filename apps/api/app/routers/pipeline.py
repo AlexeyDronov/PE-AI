@@ -5,8 +5,10 @@ from sqlmodel import Session
 
 from app import enrichers
 from app import models as m
+from app.jobs.memo_draft import MEMO_SECTIONS, memo_section_label
 from app.repositories.repository import Repository
 from app.routers.factory import MAX_ROWS, get_read_session
+from app.schemas import MemoOutline, MemoSectionOutline
 from app.services import pipeline
 
 router = APIRouter(prefix="/api", tags=["pipeline"])
@@ -26,5 +28,15 @@ def pipeline_summary(session: Annotated[Session, Depends(get_read_session)]) -> 
                 verdict=d.screening.verdict,
             )
             for d in deals
+        ]
+    )
+
+
+@router.get("/memo-outline", response_model=MemoOutline)
+def memo_outline() -> MemoOutline:
+    return MemoOutline(
+        sections=[
+            MemoSectionOutline(key=k, label=memo_section_label(k), description=d)
+            for k, d in MEMO_SECTIONS.items()
         ]
     )

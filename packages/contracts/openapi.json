@@ -1267,6 +1267,68 @@
         "title": "FailBody",
         "type": "object"
       },
+      "FindingWithRefs": {
+        "properties": {
+          "confidence": {
+            "title": "Confidence",
+            "type": "string"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "metric": {
+            "title": "Metric",
+            "type": "string"
+          },
+          "period": {
+            "title": "Period",
+            "type": "string"
+          },
+          "refs": {
+            "items": {
+              "type": "integer"
+            },
+            "title": "Refs",
+            "type": "array"
+          },
+          "report_id": {
+            "title": "Report Id",
+            "type": "string"
+          },
+          "source": {
+            "title": "Source",
+            "type": "string"
+          },
+          "unit": {
+            "title": "Unit",
+            "type": "string"
+          },
+          "value": {
+            "title": "Value",
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "created_at",
+          "source",
+          "report_id",
+          "metric",
+          "value",
+          "unit",
+          "period",
+          "confidence",
+          "refs"
+        ],
+        "title": "FindingWithRefs",
+        "type": "object"
+      },
       "FundCashflow": {
         "properties": {
           "calls": {
@@ -2130,6 +2192,72 @@
         "title": "Memo",
         "type": "object"
       },
+      "MemoDetail": {
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "deal_id": {
+            "title": "Deal Id",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "scenario_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Scenario Id"
+          },
+          "scenario_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Scenario Name"
+          },
+          "sections": {
+            "items": {
+              "$ref": "#/components/schemas/MemoSectionRead"
+            },
+            "title": "Sections",
+            "type": "array"
+          },
+          "source": {
+            "title": "Source",
+            "type": "string"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "created_at",
+          "source",
+          "deal_id",
+          "scenario_id",
+          "status",
+          "scenario_name",
+          "sections"
+        ],
+        "title": "MemoDetail",
+        "type": "object"
+      },
       "MemoDraftInput": {
         "properties": {
           "deal_id": {
@@ -2161,6 +2289,22 @@
           "sections"
         ],
         "title": "MemoDraftInput",
+        "type": "object"
+      },
+      "MemoOutline": {
+        "properties": {
+          "sections": {
+            "items": {
+              "$ref": "#/components/schemas/MemoSectionOutline"
+            },
+            "title": "Sections",
+            "type": "array"
+          }
+        },
+        "required": [
+          "sections"
+        ],
+        "title": "MemoOutline",
         "type": "object"
       },
       "MemoSection": {
@@ -2203,6 +2347,62 @@
           "status"
         ],
         "title": "MemoSection",
+        "type": "object"
+      },
+      "MemoSectionOutline": {
+        "properties": {
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "key": {
+            "title": "Key",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          }
+        },
+        "required": [
+          "key",
+          "label",
+          "description"
+        ],
+        "title": "MemoSectionOutline",
+        "type": "object"
+      },
+      "MemoSectionRead": {
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "key": {
+            "title": "Key",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "markdown": {
+            "title": "Markdown",
+            "type": "string"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "key",
+          "label",
+          "status",
+          "markdown"
+        ],
+        "title": "MemoSectionRead",
         "type": "object"
       },
       "Overrides": {
@@ -3536,6 +3736,85 @@
         "title": "ResearchReport",
         "type": "object"
       },
+      "ResearchReportDetail": {
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "findings": {
+            "items": {
+              "$ref": "#/components/schemas/FindingWithRefs"
+            },
+            "title": "Findings",
+            "type": "array"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model"
+          },
+          "question": {
+            "title": "Question",
+            "type": "string"
+          },
+          "segment_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Segment Id"
+          },
+          "source": {
+            "title": "Source",
+            "type": "string"
+          },
+          "sources": {
+            "items": {
+              "$ref": "#/components/schemas/SourceRef"
+            },
+            "title": "Sources",
+            "type": "array"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "created_at",
+          "source",
+          "segment_id",
+          "question",
+          "summary",
+          "status",
+          "model",
+          "findings",
+          "sources"
+        ],
+        "title": "ResearchReportDetail",
+        "type": "object"
+      },
       "ResultBody": {
         "properties": {
           "payload": {
@@ -4246,6 +4525,50 @@
           "excerpt"
         ],
         "title": "Source",
+        "type": "object"
+      },
+      "SourceRef": {
+        "properties": {
+          "excerpt": {
+            "title": "Excerpt",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "publisher": {
+            "title": "Publisher",
+            "type": "string"
+          },
+          "ref": {
+            "title": "Ref",
+            "type": "integer"
+          },
+          "retrieved_at": {
+            "format": "date-time",
+            "title": "Retrieved At",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "url": {
+            "title": "Url",
+            "type": "string"
+          }
+        },
+        "required": [
+          "ref",
+          "id",
+          "url",
+          "title",
+          "publisher",
+          "excerpt",
+          "retrieved_at"
+        ],
+        "title": "SourceRef",
         "type": "object"
       },
       "SourcesUses": {
@@ -7476,6 +7799,27 @@
         ]
       }
     },
+    "/api/memo-outline": {
+      "get": {
+        "operationId": "memo_outline_api_memo_outline_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MemoOutline"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Memo Outline",
+        "tags": [
+          "pipeline"
+        ]
+      }
+    },
     "/api/memo-sections": {
       "get": {
         "operationId": "list_items_api_memo_sections_get",
@@ -7713,7 +8057,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Memo"
+                  "$ref": "#/components/schemas/MemoDetail"
                 }
               }
             },
@@ -8182,7 +8526,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResearchReport"
+                  "$ref": "#/components/schemas/ResearchReportDetail"
                 }
               }
             },

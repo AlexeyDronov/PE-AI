@@ -840,6 +840,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/memo-outline": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Memo Outline */
+        get: operations["memo_outline_api_memo_outline_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/memo-sections": {
         parameters: {
             query?: never;
@@ -1923,6 +1940,32 @@ export interface components {
             error: string;
             usage?: components["schemas"]["Usage"] | null;
         };
+        /** FindingWithRefs */
+        FindingWithRefs: {
+            /** Confidence */
+            confidence: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Id */
+            id: string;
+            /** Metric */
+            metric: string;
+            /** Period */
+            period: string;
+            /** Refs */
+            refs: number[];
+            /** Report Id */
+            report_id: string;
+            /** Source */
+            source: string;
+            /** Unit */
+            unit: string;
+            /** Value */
+            value: number;
+        };
         /** FundCashflow */
         FundCashflow: {
             /** Calls */
@@ -2271,6 +2314,28 @@ export interface components {
             /** Status */
             status: string;
         };
+        /** MemoDetail */
+        MemoDetail: {
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Deal Id */
+            deal_id: string;
+            /** Id */
+            id: string;
+            /** Scenario Id */
+            scenario_id: string | null;
+            /** Scenario Name */
+            scenario_name: string | null;
+            /** Sections */
+            sections: components["schemas"]["MemoSectionRead"][];
+            /** Source */
+            source: string;
+            /** Status */
+            status: string;
+        };
         /** MemoDraftInput */
         MemoDraftInput: {
             /** Deal Id */
@@ -2279,6 +2344,11 @@ export interface components {
             scenario_id?: string | null;
             /** Sections */
             sections: string[];
+        };
+        /** MemoOutline */
+        MemoOutline: {
+            /** Sections */
+            sections: components["schemas"]["MemoSectionOutline"][];
         };
         /** MemoSection */
         MemoSection: {
@@ -2300,6 +2370,28 @@ export interface components {
              * @default user
              */
             source?: string;
+            /** Status */
+            status: string;
+        };
+        /** MemoSectionOutline */
+        MemoSectionOutline: {
+            /** Description */
+            description: string;
+            /** Key */
+            key: string;
+            /** Label */
+            label: string;
+        };
+        /** MemoSectionRead */
+        MemoSectionRead: {
+            /** Id */
+            id: string;
+            /** Key */
+            key: string;
+            /** Label */
+            label: string;
+            /** Markdown */
+            markdown: string;
             /** Status */
             status: string;
         };
@@ -2774,6 +2866,32 @@ export interface components {
             /** Summary */
             summary: string;
         };
+        /** ResearchReportDetail */
+        ResearchReportDetail: {
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Findings */
+            findings: components["schemas"]["FindingWithRefs"][];
+            /** Id */
+            id: string;
+            /** Model */
+            model: string | null;
+            /** Question */
+            question: string;
+            /** Segment Id */
+            segment_id: string | null;
+            /** Source */
+            source: string;
+            /** Sources */
+            sources: components["schemas"]["SourceRef"][];
+            /** Status */
+            status: string;
+            /** Summary */
+            summary: string;
+        };
         /** ResultBody */
         ResultBody: {
             /** Payload */
@@ -3064,6 +3182,26 @@ export interface components {
              * @default user
              */
             source?: string;
+            /** Title */
+            title: string;
+            /** Url */
+            url: string;
+        };
+        /** SourceRef */
+        SourceRef: {
+            /** Excerpt */
+            excerpt: string;
+            /** Id */
+            id: string;
+            /** Publisher */
+            publisher: string;
+            /** Ref */
+            ref: number;
+            /**
+             * Retrieved At
+             * Format: date-time
+             */
+            retrieved_at: string;
             /** Title */
             title: string;
             /** Url */
@@ -4874,6 +5012,26 @@ export interface operations {
             };
         };
     };
+    memo_outline_api_memo_outline_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MemoOutline"];
+                };
+            };
+        };
+    };
     list_items_api_memo_sections_get: {
         parameters: {
             query?: {
@@ -4992,7 +5150,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Memo"];
+                    "application/json": components["schemas"]["MemoDetail"];
                 };
             };
             /** @description Validation Error */
@@ -5252,7 +5410,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ResearchReport"];
+                    "application/json": components["schemas"]["ResearchReportDetail"];
                 };
             };
             /** @description Validation Error */

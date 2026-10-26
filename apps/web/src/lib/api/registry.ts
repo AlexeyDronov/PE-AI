@@ -26,8 +26,12 @@ export const resources = {
   exitSummary: { path: "/exit-summary", resource: "exit-plans" },
   exitRouteMixes: { path: "/exit-route-mixes", resource: "exit-route-mixes" },
   researchReports: { path: "/research-reports", resource: "research-reports" },
+  researchReport: { path: "/research-reports/{id}", resource: "research-reports" },
   researchFindings: { path: "/research-findings", resource: "research-findings" },
   sources: { path: "/sources", resource: "sources" },
+  memos: { path: "/memos", resource: "memos" },
+  memo: { path: "/memos/{id}", resource: "memos" },
+  memoOutline: { path: "/memo-outline", resource: "memos" },
   job: { path: "/jobs/{id}", resource: "jobs" },
   jobs: { path: "/jobs", resource: "jobs" },
   annotations: { path: "/annotations", resource: "annotations" },
@@ -45,6 +49,8 @@ export const commands = {
   startMarketResearch: "/commands/start-market-research",
   setWatchlist: "/commands/set-watchlist",
   saveScenario: "/commands/save-scenario",
+  screenTeaser: "/commands/screen-teaser",
+  draftMemo: "/commands/draft-memo",
 } as const satisfies Record<string, string>;
 
 export type ResourceKey = keyof typeof resources;

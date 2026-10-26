@@ -82,7 +82,7 @@ export const teaserScreen: JobRunner = async (jobId, input, { config, callbacks 
       system: SYSTEM,
       prompt: `Segments (choose exactly one): ${shorts.join(", ")}\n\nTeaser:\n${text}`,
       schema: extraction,
-      maxTokens: 2000,
+      maxTokens: 6000, // output ~1k tokens; the rest is headroom for adaptive thinking
     });
     usage = call.usage;
     const { data } = call;

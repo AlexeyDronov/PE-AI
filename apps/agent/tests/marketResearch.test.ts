@@ -138,7 +138,8 @@ describe("marketResearch workflow", () => {
     const system = (body.system as { text: string }[]).map((b) => b.text).join("");
     expect(system).not.toContain("case 2");
     expect(system.length).toBeGreaterThan(2500);
-    expect(body.max_tokens).toBe(4000);
+    // Raised with the teaser cap: research output plus adaptive thinking needs headroom.
+    expect(body.max_tokens).toBe(8000);
   });
 
   it("searches cheaply: basic depth, 5 results, at most 4 queries, at most 6 pages", async () => {

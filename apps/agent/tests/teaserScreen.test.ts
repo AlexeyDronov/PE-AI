@@ -112,7 +112,8 @@ describe("teaserScreen workflow", () => {
     expect(systemText(a!)).not.toContain("Project Birch");
     expect(JSON.stringify(a!.messages)).toContain("Project Birch");
     expect(JSON.stringify(a!.messages)).toContain("Payroll BPO");
-    expect(a!.max_tokens).toBe(2000);
+    // Browser review: a live teaser was cut off at 2,000 (adaptive thinking counts against the cap).
+    expect(a!.max_tokens).toBe(6000);
     expect(JSON.stringify((a!.output_config as { format: unknown }).format)).toContain("diligence_questions");
   });
 

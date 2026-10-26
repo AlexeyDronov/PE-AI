@@ -88,7 +88,10 @@ Each page gets domain components (props only), a view that calls hooks, page tes
 - [x] 6.9 **Markets** `/markets`: summary · growth vs margin · sponsor attractiveness · valuation charts — 25 Oct
 - [x] 6.10 **Segment** `/markets/[segment]`: profile · landscape and transactions · evidence — 25 Oct ("Run research" works end to end once the agent service exists, step 7.5)
 - [x] 6.11 **Overview** `/`: fund at a glance · needs attention · Copilot activity — 25 Oct
-- [ ] 6.12 **Screen a teaser** `/deals/new`: needs 7.5
+- [x] 6.12 **Screen a teaser** `/deals/new`: needs 7.5 — 27 Oct (browser-reviewed with a live run)
+  - Also: API read endpoints for 6.13/6.14 (`research-reports/{id}` with numbered sources, `memos/{id}`, `memo-outline`); shared `JobProgress` domain component (steps, error/retry, cost) now also used by segment Evidence; `FileButton` primitive
+  - Review fixes: a live teaser was cut off at 2,000 tokens, so caps are now teaser 6,000 / research 8,000 (adaptive thinking counts); button disabled while a screen runs; duplicate "Teaser" heading removed; styled upload button; progress scrolls into view
+  - Live rerun (Project Kestrel, TIC): $0.0009 with the cached prompt; figures, scorecard (63, Watch) and 5 flags correct
 - [ ] 6.13 **Research** `/research`: needs 7.6
 - [ ] 6.14 **IC memo** `/deals/[id]/memo`: needs 7.7
 

@@ -1,0 +1,52 @@
+.form {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.result {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.note {
+  margin: 0;
+  font-size: 13px;
+  color: var(--ink-2);
+}
+
+.pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+
+.verdict {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.score {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--ink-2);
+}
+
+.reason {
+  margin: var(--space-3) 0 0;
+  font-size: 13px;
+  color: var(--ink-2);
+}
+
+@media (max-width: 1023px) {
+  .pair {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

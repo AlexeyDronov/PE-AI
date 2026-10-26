@@ -7,6 +7,7 @@ from sqlmodel import Session, select
 from app import models as m
 from app.compute.lbo import DebtCapacityResponse
 from app.context import DealContext, Reference, by_id, load_deals
+from app.jobs.memo_draft import MEMO_SECTIONS, memo_section_label
 from app.schemas import (
     AlertListItem,
     CompanyRef,
@@ -17,17 +18,22 @@ from app.schemas import (
     ExitPlanSummary,
     ExitRoutePcts,
     FacilityWithHeadroom,
+    FindingWithRefs,
     FundWithMetrics,
+    MemoDetail,
+    MemoSectionRead,
     PlatformRef,
     Player,
     PortfolioCompanyDetail,
     PortfolioCompanyListItem,
     QuarterPoint,
+    ResearchReportDetail,
     ScreeningDetail,
     ScreeningSummary,
     SegmentDetail,
     SegmentListItem,
     SegmentRef,
+    SourceRef,
     ValueCreationPoint,
 )
 from app.services import credit, finance, market, portfolio, screening
@@ -284,6 +290,72 @@ def segments(session: Session, items: list[m.Segment], detail: bool) -> list[Seg
                 reports=list(
                     session.exec(select(m.ResearchReport).where(m.ResearchReport.segment_id == item.id))
                 ),
+            )
+        )
+    return rows
+
+
+def research_reports(session: Session, items: list[m.ResearchReport], detail: bool) -> list[Any]:
+    """Reports as stored; detail adds findings with numbered source refs and the numbered sources."""
+    if not detail:
+        return items
+    rows: list[Any] = []
+    for item in items:
+        findings = session.exec(
+            select(m.ResearchFinding)
+            .where(m.ResearchFinding.report_id == item.id)
+            .order_by(m.ResearchFinding.created_at, m.ResearchFinding.id)  # type: ignore[arg-type]
+        ).all()
+        sources = by_id(session, m.Source, (sid for f in findings for sid in f.source_ids))
+        numbers: dict[str, int] = {}
+        for f in findings:
+            for sid in f.source_ids:
+                numbers.setdefault(sid, len(numbers) + 1)
+        rows.append(
+            ResearchReportDetail(
+                **item.model_dump(),
+                findings=[
+                    FindingWithRefs(
+                        **f.model_dump(exclude={"source_ids"}), refs=[numbers[s] for s in f.source_ids]
+                    )
+                    for f in findings
+                ],
+                sources=[
+                    SourceRef(ref=n, **sources[sid].model_dump(include=set(SourceRef.model_fields) - {"ref"}))
+                    for sid, n in numbers.items()
+                ],
+            )
+        )
+    return rows
+
+
+def memos(session: Session, items: list[m.Memo], detail: bool) -> list[Any]:
+    """Memos as stored; detail adds the scenario name and the sections in outline order."""
+    if not detail:
+        return items
+    scenarios = by_id(session, m.LboScenario, (i.scenario_id for i in items if i.scenario_id))
+    order = list(MEMO_SECTIONS)
+    rows: list[Any] = []
+    for item in items:
+        sections = sorted(
+            session.exec(select(m.MemoSection).where(m.MemoSection.memo_id == item.id)),
+            key=lambda s: order.index(s.key),
+        )
+        scenario = scenarios.get(item.scenario_id) if item.scenario_id else None
+        rows.append(
+            MemoDetail(
+                **item.model_dump(),
+                scenario_name=scenario.name if scenario else None,
+                sections=[
+                    MemoSectionRead(
+                        id=s.id,
+                        key=s.key,
+                        label=memo_section_label(s.key),
+                        status=s.status,
+                        markdown=s.markdown,
+                    )
+                    for s in sections
+                ],
             )
         )
     return rows

@@ -1,5 +1,5 @@
-import { PlaceholderPage } from "@/components/shell/PlaceholderPage";
+import { TeaserScreenView } from "@/features/teaser/TeaserScreenView";
 
 export default function ScreenATeaserPage() {
-  return <PlaceholderPage title="Screen a teaser" question="Does this new opportunity fit the mandate?" />;
+  return <TeaserScreenView />;
 }
