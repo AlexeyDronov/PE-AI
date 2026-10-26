@@ -24,6 +24,7 @@ export { EmptyState, ErrorState, Skeleton } from "./States";
 export { type TabItem, Tabs } from "./Tabs";
 export { Textarea, TextField } from "./TextField";
 export { MAIN_ID, SkipLink } from "./SkipLink";
+export { ReadOnlyContext } from "./ReadOnly";
 export { Tooltip } from "./Tooltip";
 export { NumberField } from "./NumberField";
 export { Toast } from "./Toast";

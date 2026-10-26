@@ -1,3 +1,5 @@
+import { SIGNED_OUT, authHeader, clearSession } from "./session";
+
 export class ApiError extends Error {
   constructor(
     public status: number,
@@ -44,18 +46,24 @@ async function request(
   const url = `${baseUrl}/api${path}${method === "GET" && opts.params ? queryString(opts.params) : ""}`;
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), opts.timeoutMs ?? DEFAULT_TIMEOUT_MS);
+  const auth = authHeader();
   try {
     let res: Response;
     try {
       res = await fetch(url, {
         method,
-        headers: opts.body === undefined ? undefined : { "Content-Type": "application/json" },
+        headers: { ...auth, ...(opts.body === undefined ? {} : { "Content-Type": "application/json" }) },
         body: opts.body === undefined ? undefined : JSON.stringify(opts.body),
         signal: controller.signal,
       });
     } catch {
       if (controller.signal.aborted) throw timeoutError();
       throw new ApiError(0, "network", "Network error: the API is unreachable");
+    }
+    if (res.status === 401 && auth.Authorization) {
+      // The session expired or was revoked: forget it so the app can send the user to sign in.
+      clearSession();
+      window.dispatchEvent(new Event(SIGNED_OUT));
     }
     if (!res.ok) {
       const payload = (await res.json().catch(() => null)) as {

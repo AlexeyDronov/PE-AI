@@ -24,7 +24,7 @@ export function MemoPicker({ sections, selected, onToggle, scenarioId, scenarios
         ))}
       </div>
       <Select label="Scenario" value={scenarioId} onChange={onScenarioChange} options={[{ value: "", label: "Base case" }, ...scenarios]} />
-      <Button variant="primary" disabled={busy || !selected.length} onClick={onDraft}>
+      <Button variant="primary" writes disabled={busy || !selected.length} onClick={onDraft}>
         Draft memo
       </Button>
     </div>

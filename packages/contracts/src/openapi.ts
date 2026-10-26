@@ -38,6 +38,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/auth/login": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Login */
+        post: operations["login_api_auth_login_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Me */
+        get: operations["me_api_auth_me_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/benchmarks": {
         parameters: {
             query?: never;
@@ -2232,6 +2266,13 @@ export interface components {
             /** Source */
             source: string;
         };
+        /** LoginInput */
+        LoginInput: {
+            /** Password */
+            password: string;
+            /** Username */
+            username: string;
+        };
         /** MacroRate */
         MacroRate: {
             /**
@@ -2286,6 +2327,18 @@ export interface components {
             enterprise_value: number;
             /** Multiple */
             multiple: number;
+        };
+        /** MeRead */
+        MeRead: {
+            /** Auth Enabled */
+            auth_enabled: boolean;
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "admin" | "guest";
+            /** Username */
+            username: string;
         };
         /** Memo */
         Memo: {
@@ -3156,6 +3209,23 @@ export interface components {
             /** Short */
             short: string;
         };
+        /** SessionRead */
+        SessionRead: {
+            /**
+             * Expires At
+             * Format: date-time
+             */
+            expires_at: string;
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "admin" | "guest";
+            /** Token */
+            token: string;
+            /** Username */
+            username: string;
+        };
         /** SetWatchlistInput */
         SetWatchlistInput: {
             /** Deal Id */
@@ -3549,6 +3619,59 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    login_api_auth_login_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LoginInput"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SessionRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    me_api_auth_me_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MeRead"];
                 };
             };
         };

@@ -90,12 +90,15 @@ Then open http://localhost:3000.
 | `CORS_ORIGINS` | API | JSON list of web origins allowed to call the API |
 | `NEXT_PUBLIC_API_URL` | web | API base URL, fixed at build time (default `http://localhost:8000`) |
 | `MODEL`, `EFFORT`, `MAX_SECONDS` | agent | Model choice, reasoning effort and per-job time budget |
+| `ADMIN_PASSWORD`, `GUEST_PASSWORD` | API | Sign-in passwords (usernames `admin` and `guest`; rename with `ADMIN_USERNAME`, `GUEST_USERNAME`). Unset means sign-in is off |
+| `AUTH_SECRET` | API | Signs 7-day sessions; changing it signs everyone out |
+| `AUTH_REQUIRED` | API | `true` in production: refuse to start without a password and secret |
 
 ## Deployment
 
 The web app is on **Vercel**, and the API and agent run as containers on **Fly.io** (London) with the database on a Fly volume. The setup steps, secrets, database upload, backups and troubleshooting are in [docs/06-deployment.md](docs/06-deployment.md).
 
-> There's no login yet. Anyone with the site URL can use it and start paid agent jobs.
+Sign-in: an **admin** account (full access) and a **guest** account (view only: no agent jobs or saved changes). The passwords are set as secrets on the API. Locally, with no passwords set, sign-in is off.
 
 ## Repository layout
 

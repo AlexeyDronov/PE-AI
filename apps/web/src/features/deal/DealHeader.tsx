@@ -58,6 +58,7 @@ export function DealHeader({ dealId }: { dealId: string }) {
       actions={
         <>
           <Button
+            writes
             icon={<Bookmark size={16} strokeWidth={1.5} />}
             aria-pressed={data.watchlisted}
             loading={watch.status === "pending"}

@@ -2124,6 +2124,24 @@
         "title": "LboScenarioRead",
         "type": "object"
       },
+      "LoginInput": {
+        "properties": {
+          "password": {
+            "title": "Password",
+            "type": "string"
+          },
+          "username": {
+            "title": "Username",
+            "type": "string"
+          }
+        },
+        "required": [
+          "username",
+          "password"
+        ],
+        "title": "LoginInput",
+        "type": "object"
+      },
       "MacroRate": {
         "properties": {
           "as_of": {
@@ -2260,6 +2278,33 @@
           "enterprise_value"
         ],
         "title": "MaxBid",
+        "type": "object"
+      },
+      "MeRead": {
+        "properties": {
+          "auth_enabled": {
+            "title": "Auth Enabled",
+            "type": "boolean"
+          },
+          "role": {
+            "enum": [
+              "admin",
+              "guest"
+            ],
+            "title": "Role",
+            "type": "string"
+          },
+          "username": {
+            "title": "Username",
+            "type": "string"
+          }
+        },
+        "required": [
+          "username",
+          "role",
+          "auth_enabled"
+        ],
+        "title": "MeRead",
         "type": "object"
       },
       "Memo": {
@@ -4596,6 +4641,39 @@
         "title": "SegmentStrength",
         "type": "object"
       },
+      "SessionRead": {
+        "properties": {
+          "expires_at": {
+            "format": "date-time",
+            "title": "Expires At",
+            "type": "string"
+          },
+          "role": {
+            "enum": [
+              "admin",
+              "guest"
+            ],
+            "title": "Role",
+            "type": "string"
+          },
+          "token": {
+            "title": "Token",
+            "type": "string"
+          },
+          "username": {
+            "title": "Username",
+            "type": "string"
+          }
+        },
+        "required": [
+          "token",
+          "username",
+          "role",
+          "expires_at"
+        ],
+        "title": "SessionRead",
+        "type": "object"
+      },
       "SetWatchlistInput": {
         "properties": {
           "deal_id": {
@@ -5506,6 +5584,68 @@
         "summary": "Get Item",
         "tags": [
           "alerts"
+        ]
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "operationId": "login_api_auth_login_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionRead"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Login",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/auth/me": {
+      "get": {
+        "operationId": "me_api_auth_me_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MeRead"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Me",
+        "tags": [
+          "auth"
         ]
       }
     },

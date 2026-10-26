@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useApiContext } from "@/lib/api/provider";
+import { authHeader } from "@/lib/api/session";
 import { Button, Card, FileButton, Textarea } from "@/components/ui";
 import { fmt } from "@/lib/format";
 import styles from "./Teaser.module.css";
@@ -33,7 +34,7 @@ export function TeaserIntake({ value, onChange, onSubmit, busy, error }: Props) 
     if (!/\.(txt|md)$/i.test(file.name)) {
       const form = new FormData();
       form.append("file", file);
-      void fetch(`${baseUrl}/api/extract-text`, { method: "POST", body: form })
+      void fetch(`${baseUrl}/api/extract-text`, { method: "POST", body: form, headers: authHeader() })
         .then(async (res) => {
           const body = (await res.json().catch(() => null)) as { text?: string; error?: { message?: string } } | null;
           if (!res.ok) throw new Error(body?.error?.message ?? res.statusText);
@@ -54,10 +55,10 @@ export function TeaserIntake({ value, onChange, onSubmit, busy, error }: Props) 
       <div className={styles.form}>
         <Textarea label="Teaser text" rows={10} value={value} onChange={onChange} help={hintFor(length)} error={error ?? (loadError || undefined)} />
         <div className={styles.actions}>
-          <Button variant="primary" disabled={!valid} loading={busy} onClick={onSubmit}>
+          <Button variant="primary" writes disabled={!valid} loading={busy} onClick={onSubmit}>
             Extract and screen
           </Button>
-          <FileButton accept=".pdf,.docx,.pptx,.txt,.md" onFile={load} fileName={fileName} disabled={busy}>
+          <FileButton writes accept=".pdf,.docx,.pptx,.txt,.md" onFile={load} fileName={fileName} disabled={busy}>
             Upload a document
           </FileButton>
         </div>

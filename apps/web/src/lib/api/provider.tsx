@@ -3,6 +3,7 @@
 import { QueryClient, QueryClientProvider, notifyManager } from "@tanstack/react-query";
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { resourceKey, resources, type ResourceKey } from "./registry";
+import { readSession } from "./session";
 
 export const RECENT_MS = 1600;
 
@@ -80,7 +81,9 @@ export function ApiProvider({
   const [recent] = useState(() => new RecentStore());
 
   useEffect(() => {
-    const es = eventSourceFactory(`${baseUrl}/api/events`);
+    // EventSource can't send headers, so the session token rides in the query string.
+    const token = readSession()?.token;
+    const es = eventSourceFactory(`${baseUrl}/api/events${token ? `?access_token=${encodeURIComponent(token)}` : ""}`);
     const parse = <T,>(e: MessageEvent<string>): T => JSON.parse(e.data) as T;
     let connected = false;
     es.addEventListener("open", () => {

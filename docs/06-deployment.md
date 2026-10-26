@@ -10,7 +10,7 @@ The API starts agent jobs over Fly's private network. The agent reports back thr
 
 Expected cost: two `shared-cpu-1x` / 512 MB machines plus a 1 GB volume, about **$5–10 a month** on Fly. Vercel Hobby is free. Agent jobs bill to your Anthropic and Tavily accounts as they do locally.
 
-> **Access control is deferred.** Anyone with the Vercel URL can use the app and start paid agent jobs. Keep the URL private until a login or password gate is added.
+Access: two accounts, `admin` (full access) and `guest` (view only: no agent jobs, no saved changes). The passwords are Fly secrets on the API, and sign-ins last 7 days. See step 3.
 
 Run every command below from the repo root unless the step says otherwise.
 
@@ -57,6 +57,18 @@ The agent's model and search keys come from your local `.env`:
 ```bash
 grep -E '^(ANTHROPIC_API_KEY|TAVILY_API_KEY)=' .env | fly secrets import --app harrowgate-agent --stage
 ```
+
+Sign-in: a random secret signs the sessions, and you choose the two passwords. Pick strong passwords and share the guest one only with people who should see the fund's data:
+
+```bash
+fly secrets set AUTH_SECRET="$(openssl rand -hex 32)" --app harrowgate-api --stage
+```
+
+```bash
+fly secrets set ADMIN_PASSWORD='choose-a-strong-one' GUEST_PASSWORD='choose-another' --app harrowgate-api --stage
+```
+
+The API refuses to start without `ADMIN_PASSWORD` and `AUTH_SECRET` (`AUTH_REQUIRED` is set in `apps/api/fly.toml`). To change a password later, run the same command without `--stage`, which restarts the API. Changing `AUTH_SECRET` signs everyone out.
 
 `CORS_ORIGINS` is set in step 8, once Vercel has given the site its address.
 

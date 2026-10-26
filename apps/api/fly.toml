@@ -1,6 +1,6 @@
 # API on Fly: one always-on machine (SQLite and the live-event bus are single-process), public over HTTPS.
 # Deploy from apps/api:  fly deploy
-# Secrets (set with `fly secrets set`): AGENT_SERVICE_TOKEN, CORS_ORIGINS
+# Secrets (set with `fly secrets set`): AGENT_SERVICE_TOKEN, CORS_ORIGINS, ADMIN_PASSWORD, GUEST_PASSWORD, AUTH_SECRET
 app = "harrowgate-api"
 primary_region = "lhr"
 
@@ -10,6 +10,8 @@ primary_region = "lhr"
 [env]
   # The agent is private; Fly's internal DNS reaches it over the private network.
   AGENT_URL = "http://harrowgate-agent.internal:4111"
+  # Refuse to start without ADMIN_PASSWORD and AUTH_SECRET, so production can never run open by mistake.
+  AUTH_REQUIRED = "true"
 
 [mounts]
   source = "harrowgate_data"

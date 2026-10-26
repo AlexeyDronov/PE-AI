@@ -49,6 +49,11 @@ class Unauthorized(AppError):
     status = 401
 
 
+class Forbidden(AppError):
+    code = "forbidden"
+    status = 403
+
+
 class JobFinished(AppError):
     code = "job_finished"
     status = 409

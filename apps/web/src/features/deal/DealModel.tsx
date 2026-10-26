@@ -132,12 +132,12 @@ export function DealModel({ dealId }: { dealId: string }) {
           {naming ? (
             <div className={styles.saveForm}>
               <TextField label="Scenario name" value={name} onChange={setName} />
-              <Button variant="primary" disabled={!name.trim()} loading={save.status === "pending"} onClick={saveScenario}>
+              <Button variant="primary" writes disabled={!name.trim()} loading={save.status === "pending"} onClick={saveScenario}>
                 Save
               </Button>
             </div>
           ) : (
-            <Button onClick={() => setNaming(true)}>Save scenario</Button>
+            <Button writes onClick={() => setNaming(true)}>Save scenario</Button>
           )}
           <Button onClick={exportExcel}>Export Excel</Button>
           <ButtonLink href={`/deals/${dealId}/memo`} variant="primary" icon={<FileText size={16} strokeWidth={1.5} />}>
