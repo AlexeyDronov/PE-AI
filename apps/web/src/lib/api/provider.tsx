@@ -6,6 +6,9 @@ import { resourceKey, resources, type ResourceKey } from "./registry";
 
 export const RECENT_MS = 1600;
 
+/** The event stream invalidates whatever changes, so cached data stays fresh until then (the timer is a backstop). */
+export const STALE_MS = 5 * 60_000;
+
 // React already batches updates; deliver query notifications in the same tick so state is never a timer behind.
 notifyManager.setScheduler((cb) => cb());
 
@@ -68,12 +71,23 @@ export function ApiProvider({
   retry?: number | false;
   children: ReactNode;
 }) {
-  const [queryClient] = useState(() => new QueryClient({ defaultOptions: { queries: { retry } } }));
+  const [queryClient] = useState(() => {
+    const client = new QueryClient({ defaultOptions: { queries: { retry, staleTime: STALE_MS } } });
+    // A job's first state comes from the command's reply and may already be behind, so job reads always go to the server.
+    client.setQueryDefaults(["resource", "job"], { staleTime: 0 });
+    return client;
+  });
   const [recent] = useState(() => new RecentStore());
 
   useEffect(() => {
     const es = eventSourceFactory(`${baseUrl}/api/events`);
     const parse = <T,>(e: MessageEvent<string>): T => JSON.parse(e.data) as T;
+    let connected = false;
+    es.addEventListener("open", () => {
+      // After a reconnect, events sent while we were away are lost: treat everything as changed.
+      if (connected) void queryClient.invalidateQueries({ queryKey: ["resource"] });
+      connected = true;
+    });
     es.addEventListener("changed", (e) => {
       const ev = parse<ChangedEvent>(e);
       const names = new Set(ev.resources ?? []);

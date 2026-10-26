@@ -1,4 +1,6 @@
 import type { Crumb, SidebarGroup } from "@/components/ui";
+import type { ResourceKey } from "@/lib/api/registry";
+import type { ResourceParams } from "@/lib/api/types";
 
 export const NAVIGATION: SidebarGroup[] = [
   { items: [{ href: "/", label: "Overview", icon: "home" }] },
@@ -26,6 +28,19 @@ export const NAVIGATION: SidebarGroup[] = [
   },
   { label: "Fund", items: [{ href: "/fund", label: "Performance", icon: "trending" }] },
 ];
+
+type PageQuery = { [K in ResourceKey]: [K] | [K, ResourceParams<K>] }[ResourceKey];
+
+/** What each page reads first, keyed and parameterised exactly as its view does, so hovering a link can warm the cache. */
+export const PAGE_DATA: Record<string, PageQuery[]> = {
+  "/": [["overviewSummary"], ["alerts"], ["deals", { verdict: "Advance", sort: "-score" }]],
+  "/markets": [["segments", { sort: "-attractiveness" }], ["marketSummary"], ["exitRouteMixes"]],
+  "/research": [["segments"], ["researchReports", { sort: "-created_at" }]],
+  "/deals": [["pipelineSummary"], ["deals", { sort: "-score" }]],
+  "/portfolio": [["portfolioCompanies"], ["portfolioSummary"]],
+  "/portfolio/covenants": [["debtFacilities"], ["covenantSummary"]],
+  "/exits": [["exitPlans"], ["exitSummary"], ["exitRouteMixes"]],
+};
 
 /** Group label then page label; deeper routes link back to their nearest known parent. */
 export function breadcrumbFor(pathname: string): Crumb[] {

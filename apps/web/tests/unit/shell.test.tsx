@@ -73,6 +73,30 @@ describe("AppShell", () => {
     expect(screen.getByRole("navigation", { name: "Breadcrumb" })).toHaveTextContent("Northvale Compliance");
   });
 
+  it("starts loading a page's data when its sidebar link is hovered, once", async () => {
+    const requests: string[] = [];
+    server.use(
+      http.get(`${API}/api/portfolio-companies`, ({ request }) => {
+        requests.push(request.url);
+        return HttpResponse.json({ items: [], total: 0 });
+      }),
+      http.get(`${API}/api/portfolio-summary`, () => HttpResponse.json({})),
+    );
+    const user = userEvent.setup();
+    renderWithApi(
+      <AppShell>
+        <p>x</p>
+      </AppShell>,
+    );
+    const link = within(screen.getByRole("navigation", { name: "Main" })).getByRole("link", { name: /Platforms/ });
+    await user.hover(link);
+    await waitFor(() => expect(requests).toHaveLength(1));
+    await user.unhover(link);
+    await user.hover(link);
+    await new Promise((r) => setTimeout(r, 50));
+    expect(requests).toHaveLength(1);
+  });
+
   // Feedback round 8.4 (user note on /): the top-bar jobs widget ("Idle") is removed; each page shows its own job.
   it("has no jobs widget in the top bar", async () => {
     jobs = [{ id: "j1", kind: "market_research", status: "running", progress: [{ step: "search", message: "6 queries" }] }];

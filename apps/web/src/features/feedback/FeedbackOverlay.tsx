@@ -55,14 +55,26 @@ export function FeedbackOverlay() {
     return () => document.removeEventListener("keydown", onKey);
   }, []);
 
+  // Pins follow their elements; with no pins on this page, scrolling needn't re-render the overlay.
+  const hasPins = notes.length > 0;
   useEffect(() => {
-    window.addEventListener("scroll", relayout, true);
-    window.addEventListener("resize", relayout);
-    return () => {
-      window.removeEventListener("scroll", relayout, true);
-      window.removeEventListener("resize", relayout);
+    if (!hasPins) return;
+    let frame = 0;
+    const schedule = () => {
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        relayout();
+      });
     };
-  }, []);
+    window.addEventListener("scroll", schedule, true);
+    window.addEventListener("resize", schedule);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", schedule, true);
+      window.removeEventListener("resize", schedule);
+    };
+  }, [hasPins]);
 
   useEffect(() => {
     if (!active) {

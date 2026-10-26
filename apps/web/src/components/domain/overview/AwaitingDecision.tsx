@@ -1,4 +1,5 @@
-import { DealLinks, type Deal } from "@/components/domain/pipeline";
+import { DealLinks } from "@/components/domain/pipeline/DealLinks";
+import type { Deal } from "@/components/domain/pipeline/types";
 import { Card, Skeleton } from "@/components/ui";
 
 type Props = { deals: Deal[]; thresholds: { good: number; warn: number }; loading?: boolean };

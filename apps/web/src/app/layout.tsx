@@ -1,13 +1,21 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Mono, IBM_Plex_Sans, Source_Serif_4 } from "next/font/google";
+import localFont from "next/font/local";
 import type { ReactNode } from "react";
 import { THEME_STORAGE_KEY } from "@/components/shell/theme-storage";
 import { Providers } from "./providers";
 import "@/styles/globals.css";
 
-const serif = Source_Serif_4({ subsets: ["latin"], weight: "600", variable: "--font-serif" });
-const sans = IBM_Plex_Sans({ subsets: ["latin"], weight: ["400", "500", "600"], variable: "--font-sans" });
-const mono = IBM_Plex_Mono({ subsets: ["latin"], weight: "400", variable: "--font-mono" });
+// Self-hosted (latin subsets from Fontsource, OFL) so dev start-up and builds never wait on Google Fonts.
+const sourceSerif = localFont({ src: "./fonts/source-serif-4-latin-600-normal.woff2", weight: "600", variable: "--font-source-serif" });
+const plexSans = localFont({
+  src: [
+    { path: "./fonts/ibm-plex-sans-latin-400-normal.woff2", weight: "400" },
+    { path: "./fonts/ibm-plex-sans-latin-500-normal.woff2", weight: "500" },
+    { path: "./fonts/ibm-plex-sans-latin-600-normal.woff2", weight: "600" },
+  ],
+  variable: "--font-plex-sans",
+});
+const plexMono = localFont({ src: "./fonts/ibm-plex-mono-latin-400-normal.woff2", weight: "400", variable: "--font-plex-mono" });
 
 export const metadata: Metadata = { title: "Harrowgate Deal Copilot" };
 
@@ -15,7 +23,7 @@ const themeScript = `try{var t=localStorage.getItem(${JSON.stringify(THEME_STORA
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={`${serif.variable} ${sans.variable} ${mono.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${sourceSerif.variable} ${plexSans.variable} ${plexMono.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>

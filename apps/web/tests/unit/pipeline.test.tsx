@@ -13,7 +13,7 @@ vi.mock("next/navigation", () => ({
   useRouter: () => ({ push: nav.push, replace: nav.replace, prefetch: vi.fn() }),
 }));
 const echartsInstance = { setOption: vi.fn(), resize: vi.fn(), dispose: vi.fn(), on: vi.fn(), off: vi.fn() };
-vi.mock("echarts", () => ({ init: vi.fn(() => echartsInstance), default: { init: vi.fn(() => echartsInstance) } }));
+vi.mock("@/components/charts/loadEcharts", () => ({ loadEcharts: async () => ({ init: vi.fn(() => echartsInstance) }) }));
 
 const { useUrlState } = await import("@/hooks/useUrlState");
 const { PipelineView } = await import("@/features/pipeline/PipelineView");

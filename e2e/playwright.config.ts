@@ -46,7 +46,7 @@ export default defineConfig({
       timeout: TIMEOUT,
     },
     {
-      command: "pnpm exec next dev -p 3100",
+      command: "pnpm exec next dev --turbopack -p 3100",
       cwd: `${repo}apps/web`,
       env: { NEXT_PUBLIC_API_URL: "http://localhost:8100", NEXT_DIST_DIR: ".next-e2e" },
       url: "http://localhost:3100",

@@ -60,6 +60,34 @@ describe("live events", () => {
     await waitFor(() => expect(result.current).toBe(false), { timeout: RECENT_MS + 1000 });
   });
 
+  it("serves a page revisit from cache, since 'changed' events keep it fresh", async () => {
+    const segments = counter("/segments");
+    function Page({ show }: { show: boolean }) {
+      return show ? <Segments /> : null;
+    }
+    function Segments() {
+      useResource("segments");
+      return null;
+    }
+    const { rerender } = render(<Page show />, { wrapper: Providers });
+    await waitFor(() => expect(segments).toHaveLength(1));
+    rerender(<Page show={false} />);
+    rerender(<Page show />);
+    await new Promise((r) => setTimeout(r, 50));
+    expect(segments).toHaveLength(1);
+  });
+
+  it("refetches everything when the stream reconnects, as events may have been missed", async () => {
+    const segments = counter("/segments");
+    renderHook(() => useResource("segments"), { wrapper: Providers });
+    await waitFor(() => expect(segments).toHaveLength(1));
+    act(() => FakeEventSource.last?.emit("open", {}));
+    await new Promise((r) => setTimeout(r, 50));
+    expect(segments).toHaveLength(1);
+    act(() => FakeEventSource.last?.emit("open", {}));
+    await waitFor(() => expect(segments).toHaveLength(2));
+  });
+
   it("closes the stream on unmount", () => {
     const { unmount } = render(<div />, { wrapper: Providers });
     const es = FakeEventSource.last;
