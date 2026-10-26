@@ -123,6 +123,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/commands/draft-memo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Draft-Memo */
+        post: operations["draft_memo_api_commands_draft_memo_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/commands/save-scenario": {
         parameters: {
             query?: never;
@@ -2254,6 +2271,15 @@ export interface components {
             /** Status */
             status: string;
         };
+        /** MemoDraftInput */
+        MemoDraftInput: {
+            /** Deal Id */
+            deal_id: string;
+            /** Scenario Id */
+            scenario_id?: string | null;
+            /** Sections */
+            sections: string[];
+        };
         /** MemoSection */
         MemoSection: {
             /**
@@ -3518,6 +3544,39 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["AnnotationRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    draft_memo_api_commands_draft_memo_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MemoDraftInput"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JobRead"];
                 };
             };
             /** @description Validation Error */

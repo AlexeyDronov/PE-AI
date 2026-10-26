@@ -2130,6 +2130,39 @@
         "title": "Memo",
         "type": "object"
       },
+      "MemoDraftInput": {
+        "properties": {
+          "deal_id": {
+            "title": "Deal Id",
+            "type": "string"
+          },
+          "scenario_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Scenario Id"
+          },
+          "sections": {
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "title": "Sections",
+            "type": "array"
+          }
+        },
+        "required": [
+          "deal_id",
+          "sections"
+        ],
+        "title": "MemoDraftInput",
+        "type": "object"
+      },
       "MemoSection": {
         "properties": {
           "created_at": {
@@ -5239,6 +5272,47 @@
           }
         },
         "summary": "Create-Annotation",
+        "tags": [
+          "commands"
+        ]
+      }
+    },
+    "/api/commands/draft-memo": {
+      "post": {
+        "operationId": "draft_memo_api_commands_draft_memo_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MemoDraftInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobRead"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Draft-Memo",
         "tags": [
           "commands"
         ]

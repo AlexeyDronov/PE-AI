@@ -393,7 +393,7 @@ src/
 ├── workflows/                   one per JobKind; each step reports progress to the API
 │   ├── teaserScreen.ts          extract → validate ranges → classify segment → flags & questions
 │   ├── marketResearch.ts        plan queries → search → read → extract findings → synthesise → cite
-│   └── memoDraft.ts             per-section drafting from deal + LBO result
+│   └── memoDraft.ts             one call drafts all requested sections from a compact deal + LBO context
 ├── tools/                       hand-made tools, each with Zod input/output
 │   ├── webSearch.ts             provider adapter — Tavily (D2); one interface, swappable backends
 │   ├── fetchPage.ts             fetch + readability extraction, size-capped, robots-aware

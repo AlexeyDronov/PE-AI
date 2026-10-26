@@ -22,7 +22,7 @@ Mastra stays the server and workflow engine (steps, retries, progress), and the 
    - Teasers pass a token-count gate first.
    - Deal and LBO context is sent as a compact JSON summary, not full API objects.
 5. **Bounded output.**
-   - `max_tokens` per job type: teaser 2,000; research 4,000; memo 6,000.
+   - `max_tokens` per job type: teaser 2,000; research 4,000; memo 10,000 (raised from 6,000 after the live run: thinking tokens count against the cap; the prompt sets a 120–250 word budget per section).
    - Every field in the schema has a length limit.
    - The prompt specifies the exact output shape.
 6. **No model arithmetic or verification calls.** Code checks every cited figure: the number must appear in the cited source excerpt, otherwise the finding is dropped. Unit and currency conversion use the calculator and FX tools in code.

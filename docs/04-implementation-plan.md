@@ -109,7 +109,10 @@ Each page gets domain components (props only), a view that calls hooks, page tes
   - Live run (UK compliance outsourcing size and growth): 1 call, 6,898 in + 3,119 cache-write + 3,493 out tokens, $0.0028 plus Tavily basic searches; 7 findings, each code-verified against a quote in its cited source; the summary flags that sources only give proxy markets
   - Review fix: one failed search (e.g. a rate limit) is skipped; the job fails with the real error only if every search fails (tested)
   - Live-run fix: blank `KEY=` lines in `.env` now mean "not set" instead of failing config (tested)
-- [ ] 7.7 `memoDraft` workflow (1 call, all sections) + API `draft-memo` command and persist — live run with approval
+- [x] 7.7 `memoDraft` workflow (1 call, all sections) + API `draft-memo` command and persist — live run with approval — 27 Oct
+  - Live run (Project Linden, all 7 sections): first attempt cut off at the 6,000-token cap (thinking counts); fixed with a 120–250 word budget per section and a 10,000 cap (tested). Rerun: 1 call, 1,826 in + 2,178 cache-write + 5,670 out tokens, $0.0033; figures match the context
+  - The memo surfaced a seed-data contradiction for Linden: its risk flag says the entry multiple is above the segment median, but the ask (15.5x) is below it (16.0x) — logged in TODO.md
+  - Test fix: the no-context case passed `undefined`, which fell back to the default context
 
 ## Phase 8 — Quality
 - [ ] 8.1 Playwright E2E: screen a teaser → job → deal appears live; slider → LBO updates; research job → report renders; feedback note round trip

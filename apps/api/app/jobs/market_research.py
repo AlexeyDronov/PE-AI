@@ -1,7 +1,7 @@
 from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
-from sqlmodel import Session, SQLModel
+from sqlmodel import Session
 
 from app.models import Job, ResearchFinding, ResearchReport, Source
 from app.models.base import utcnow
@@ -68,11 +68,3 @@ def persist_market_research(session: Session, job: Job, result: MarketResearchRe
         for f in result.findings
     )
     return report
-
-
-class NotBuilt(BaseModel):
-    """Placeholder result contract for kinds whose agent workflow is a later task."""
-
-
-def persist_not_built(session: Session, job: Job, result: BaseModel) -> SQLModel:
-    raise NotImplementedError(f"Results for '{job.kind}' jobs are not implemented yet")
