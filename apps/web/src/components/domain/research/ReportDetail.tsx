@@ -1,3 +1,4 @@
+import { Badge } from "@/components/ui";
 import { FindingsTable } from "./FindingsTable";
 import styles from "./Research.module.css";
 import { SourceList } from "./SourceList";
@@ -8,6 +9,11 @@ export function ReportDetail({ report }: { report: ReportDetailData }) {
     <div className={styles.detail} data-testid="report-detail">
       <div>
         <h3 className={styles.heading}>{report.question}</h3>
+        {report.status === "partial" && (
+          <p className={styles.summary}>
+            <Badge tone="warn">Partial answer</Badge> The sources did not directly answer this question; the findings below are the closest evidence.
+          </p>
+        )}
         <p className={styles.summary}>{report.summary}</p>
       </div>
       <div>

@@ -2260,8 +2260,18 @@ export interface components {
         };
         /** MarketResearchResult */
         MarketResearchResult: {
+            /**
+             * Answered
+             * @default null
+             */
+            answered?: boolean | null;
             /** Findings */
             findings: components["schemas"]["FindingIn"][];
+            /**
+             * Model
+             * @default null
+             */
+            model?: string | null;
             /** Sources */
             sources: components["schemas"]["SourceIn"][];
             /** Summary */

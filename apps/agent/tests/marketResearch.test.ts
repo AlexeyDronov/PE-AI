@@ -142,14 +142,14 @@ describe("marketResearch workflow", () => {
     expect(body.max_tokens).toBe(8000);
   });
 
-  it("searches cheaply: basic depth, 5 results, at most 4 queries, at most 6 pages", async () => {
+  it("searches thoroughly but bounded: advanced depth, 8 results, at most 4 queries, at most 8 pages", async () => {
     const many = [["/a", "/b", "/c", "/d", "/e"], ["/f", "/g", "/a"], ["/h"], ["/i"]];
     const calls = harness([claude({ summary: "s", findings: [SIZE, GROWTH], follow_up_queries: [] })], (_q, n) => many[Math.min(n, 3)]!);
     await run("How big is the UK compliance outsourcing market and how fast is it growing? (case 3)");
     expect(calls.tavily.length).toBeGreaterThan(0);
     expect(calls.tavily.length).toBeLessThanOrEqual(4);
-    for (const body of calls.tavily) expect(body).toMatchObject({ search_depth: "basic", max_results: 5 });
-    expect(new Set(calls.pages).size).toBeLessThanOrEqual(6);
+    for (const body of calls.tavily) expect(body).toMatchObject({ search_depth: "advanced", max_results: 8 });
+    expect(new Set(calls.pages).size).toBeLessThanOrEqual(8);
   });
 
   it("does one bounded gap-fill when evidence is thin, then stops", async () => {

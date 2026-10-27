@@ -2184,12 +2184,36 @@
       },
       "MarketResearchResult": {
         "properties": {
+          "answered": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Answered"
+          },
           "findings": {
             "items": {
               "$ref": "#/components/schemas/FindingIn"
             },
             "title": "Findings",
             "type": "array"
+          },
+          "model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Model"
           },
           "sources": {
             "items": {

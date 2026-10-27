@@ -1,4 +1,4 @@
-import { EmptyState } from "@/components/ui";
+import { Badge, EmptyState } from "@/components/ui";
 import { fmt } from "@/lib/format";
 import styles from "./Research.module.css";
 import type { ReportSummary } from "./types";
@@ -14,6 +14,11 @@ export function ReportList({ reports, selectedId, onSelect }: Props) {
           <button type="button" className={styles.item} aria-pressed={r.id === selectedId} onClick={() => onSelect(r.id ?? "")}>
             <b>{r.question}</b>
             <span className={styles.snippet}>{r.summary}</span>
+            {r.status === "partial" && (
+              <span className={styles.flag}>
+                <Badge tone="warn">Partial answer</Badge>
+              </span>
+            )}
             <span className={styles.meta}>{fmt.date(r.created_at ?? undefined)}</span>
           </button>
         </li>

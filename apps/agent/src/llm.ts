@@ -4,9 +4,13 @@ import { z } from "zod";
 import type { Config } from "./config";
 import { AgentError, MissingKeyError } from "./errors";
 
-// Haiku 5.5 list prices, USD per million tokens.
-const INPUT_PER_M = 0.1;
-const OUTPUT_PER_M = 0.5;
+// List prices, USD per million tokens, by model.
+const PRICES: Record<string, { input: number; output: number }> = {
+  "claude-haiku-5-5": { input: 0.1, output: 0.5 },
+  "claude-sonnet-5-5": { input: 2, output: 10 },
+  "claude-opus-5-5": { input: 4, output: 20 },
+};
+const DEFAULT_PRICE = PRICES["claude-sonnet-5-5"]!;
 const CACHE_WRITE_MULTIPLIER = 1.25;
 const CACHE_READ_MULTIPLIER = 0.1;
 
@@ -21,9 +25,10 @@ export interface Usage {
 
 export type TokenCounts = Pick<Usage, "inputTokens" | "cacheWriteTokens" | "cacheReadTokens" | "outputTokens">;
 
-export function estimateCostUsd(t: TokenCounts): number {
+export function estimateCostUsd(t: TokenCounts, model: string): number {
+  const price = PRICES[model] ?? DEFAULT_PRICE;
   const input = t.inputTokens + t.cacheWriteTokens * CACHE_WRITE_MULTIPLIER + t.cacheReadTokens * CACHE_READ_MULTIPLIER;
-  return (input * INPUT_PER_M + t.outputTokens * OUTPUT_PER_M) / 1_000_000;
+  return (input * price.input + t.outputTokens * price.output) / 1_000_000;
 }
 
 /** Total usage across the calls of one job. */
@@ -57,14 +62,14 @@ export function studioModel(config: Config): string {
   return `anthropic/${config.model}`;
 }
 
-function toUsage(raw: Anthropic.Usage): Usage {
+function toUsage(raw: Anthropic.Usage, model: string): Usage {
   const counts = {
     inputTokens: raw.input_tokens ?? 0,
     cacheWriteTokens: raw.cache_creation_input_tokens ?? 0,
     cacheReadTokens: raw.cache_read_input_tokens ?? 0,
     outputTokens: raw.output_tokens ?? 0,
   };
-  return { calls: 1, ...counts, costUsd: estimateCostUsd(counts) };
+  return { calls: 1, ...counts, costUsd: estimateCostUsd(counts, model) };
 }
 
 export interface ClaudeRequest<T> {
@@ -89,7 +94,7 @@ export async function callClaude<T>({ config, system, prompt, schema, maxTokens 
     messages: [{ role: "user", content: prompt }],
     output_config: { effort: config.effort, format: { type, schema: jsonSchema } },
   });
-  const usage = toUsage(response.usage);
+  const usage = toUsage(response.usage, config.model);
   if (response.stop_reason === "refusal") throw new LlmError("refusal", "Claude declined this request.", usage);
   if (response.stop_reason === "max_tokens") throw new LlmError("truncated", "Claude's answer was cut off before it finished.", usage);
   const text = response.content.flatMap((b) => (b.type === "text" ? [b.text] : [])).join("");

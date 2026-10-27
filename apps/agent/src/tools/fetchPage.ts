@@ -1,5 +1,6 @@
 import { lookup } from "node:dns/promises";
 import { isIP } from "node:net";
+import { extractText, getDocumentProxy } from "unpdf";
 import { ToolError } from "../errors";
 import { extractTitle, readableText } from "./html";
 
@@ -74,8 +75,10 @@ export interface FetchedPage {
   truncated: boolean;
 }
 
-/** Fetch raw HTML from a public page; SSRF-guarded, robots-aware, redirects re-validated. */
-export async function fetchHtml(target: string): Promise<string> {
+type Fetched = { kind: "html"; body: string } | { kind: "pdf"; body: Uint8Array };
+
+/** Fetch a public HTML page or PDF; SSRF-guarded, robots-aware, redirects re-validated. */
+async function fetchPublic(target: string): Promise<Fetched> {
   let url: URL;
   try {
     url = new URL(target);
@@ -90,7 +93,7 @@ export async function fetchHtml(target: string): Promise<string> {
     }
     const res = await fetch(url, {
       redirect: "manual",
-      headers: { "user-agent": USER_AGENT, accept: "text/html,application/xhtml+xml" },
+      headers: { "user-agent": USER_AGENT, accept: "text/html,application/xhtml+xml,application/pdf" },
       signal: AbortSignal.timeout(20_000),
     });
     const location = res.headers.get("location");
@@ -102,14 +105,34 @@ export async function fetchHtml(target: string): Promise<string> {
     if (res.status === 429) throw new ToolError("rate_limited", `${url.origin} rate limited the request`);
     if (!res.ok) throw new ToolError("upstream_error", `${url.href} returned HTTP ${res.status}`);
     const type = res.headers.get("content-type") ?? "";
-    if (!/html/i.test(type)) throw new ToolError("unsupported_content", `Unsupported content type "${type}"; only HTML pages can be read`);
-    return (await res.text()).slice(0, MAX_BYTES);
+    if (/html/i.test(type)) return { kind: "html", body: (await res.text()).slice(0, MAX_BYTES) };
+    if (/application\/pdf/i.test(type)) return { kind: "pdf", body: new Uint8Array(await res.arrayBuffer()).slice(0, MAX_BYTES) };
+    throw new ToolError("unsupported_content", `Unsupported content type "${type}"; only HTML pages and PDFs can be read`);
   }
 }
 
-/** Fetch a public web page and return its readable text. */
+/** Fetch raw HTML from a public page. */
+export async function fetchHtml(target: string): Promise<string> {
+  const page = await fetchPublic(target);
+  if (page.kind !== "html") throw new ToolError("unsupported_content", "Expected an HTML page but the URL is a PDF");
+  return page.body;
+}
+
+/** Fetch a public web page or PDF and return its readable text. */
 export async function fetchPage(input: { url: string; maxChars: number }): Promise<FetchedPage> {
-  const html = await fetchHtml(input.url);
-  const text = readableText(html);
-  return { url: input.url, title: extractTitle(html), text: text.slice(0, input.maxChars), truncated: text.length > input.maxChars };
+  const page = await fetchPublic(input.url);
+  let title: string;
+  let text: string;
+  if (page.kind === "html") {
+    text = readableText(page.body);
+    title = extractTitle(page.body);
+  } else {
+    try {
+      ({ text } = await extractText(await getDocumentProxy(page.body), { mergePages: true }));
+    } catch {
+      throw new ToolError("upstream_error", `${input.url} could not be read as a PDF`);
+    }
+    title = text.split("\n").find((l) => l.trim())?.trim() ?? new URL(input.url).pathname.split("/").filter(Boolean).pop() ?? "";
+  }
+  return { url: input.url, title, text: text.slice(0, input.maxChars), truncated: text.length > input.maxChars };
 }

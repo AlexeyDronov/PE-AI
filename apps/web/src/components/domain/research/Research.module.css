@@ -99,3 +99,7 @@
 .link {
   color: var(--accent);
 }
+
+.flag {
+  justify-self: start;
+}

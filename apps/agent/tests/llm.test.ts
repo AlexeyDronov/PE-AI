@@ -48,7 +48,7 @@ describe("callClaude", () => {
     const { data, usage } = await call();
     expect(data).toEqual({ answer: "yes", score: 3 });
     expect(usage).toMatchObject({ calls: 1, inputTokens: 200, cacheReadTokens: 1500, cacheWriteTokens: 0, outputTokens: 300 });
-    expect(usage.costUsd).toBeCloseTo(0.000185, 9);
+    expect(usage.costUsd).toBeCloseTo(0.0037, 9); // Sonnet 5.5: 200 × $2/M + 1500 × $0.20/M + 300 × $10/M
   });
 
   it("sends the cost-design request shape: cached frozen system prompt, medium effort, JSON schema, max_tokens", async () => {
@@ -57,7 +57,7 @@ describe("callClaude", () => {
     expect(requests).toHaveLength(1);
     const { headers, body } = requests[0]!;
     expect(headers.get("x-api-key")).toBe("sk-test");
-    expect(body.model).toBe("claude-haiku-5-5");
+    expect(body.model).toBe("claude-sonnet-5-5");
     expect(body.max_tokens).toBe(2000);
     const system = body.system as { type: string; text: string; cache_control?: unknown }[];
     expect(Array.isArray(system)).toBe(true);
@@ -73,8 +73,8 @@ describe("callClaude", () => {
 
   it("uses the configured model and effort", async () => {
     const requests = mockClaude(reply());
-    await call(testConfig({ MODEL: "claude-sonnet-5-5", EFFORT: "low" }));
-    expect(requests[0]!.body.model).toBe("claude-sonnet-5-5");
+    await call(testConfig({ MODEL: "claude-haiku-5-5", EFFORT: "low" }));
+    expect(requests[0]!.body.model).toBe("claude-haiku-5-5");
     expect((requests[0]!.body.output_config as { effort: string }).effort).toBe("low");
   });
 
@@ -104,10 +104,19 @@ describe("callClaude", () => {
 
 describe("usage accounting", () => {
   it("prices Haiku 5.5 tokens: input $0.10/M, cache write 1.25x, cache read 0.1x, output $0.50/M", () => {
-    expect(estimateCostUsd({ inputTokens: 1_000_000, cacheWriteTokens: 0, cacheReadTokens: 0, outputTokens: 0 })).toBeCloseTo(0.1, 9);
-    expect(estimateCostUsd({ inputTokens: 0, cacheWriteTokens: 1_000_000, cacheReadTokens: 0, outputTokens: 0 })).toBeCloseTo(0.125, 9);
-    expect(estimateCostUsd({ inputTokens: 0, cacheWriteTokens: 0, cacheReadTokens: 1_000_000, outputTokens: 0 })).toBeCloseTo(0.01, 9);
-    expect(estimateCostUsd({ inputTokens: 0, cacheWriteTokens: 0, cacheReadTokens: 0, outputTokens: 1_000_000 })).toBeCloseTo(0.5, 9);
+    const haiku = "claude-haiku-5-5";
+    expect(estimateCostUsd({ inputTokens: 1_000_000, cacheWriteTokens: 0, cacheReadTokens: 0, outputTokens: 0 }, haiku)).toBeCloseTo(0.1, 9);
+    expect(estimateCostUsd({ inputTokens: 0, cacheWriteTokens: 1_000_000, cacheReadTokens: 0, outputTokens: 0 }, haiku)).toBeCloseTo(0.125, 9);
+    expect(estimateCostUsd({ inputTokens: 0, cacheWriteTokens: 0, cacheReadTokens: 1_000_000, outputTokens: 0 }, haiku)).toBeCloseTo(0.01, 9);
+    expect(estimateCostUsd({ inputTokens: 0, cacheWriteTokens: 0, cacheReadTokens: 0, outputTokens: 1_000_000 }, haiku)).toBeCloseTo(0.5, 9);
+  });
+
+  it("prices Sonnet 5.5 tokens: input $2/M, cache write 1.25x, cache read 0.1x, output $10/M", () => {
+    const sonnet = "claude-sonnet-5-5";
+    expect(estimateCostUsd({ inputTokens: 1_000_000, cacheWriteTokens: 0, cacheReadTokens: 0, outputTokens: 0 }, sonnet)).toBeCloseTo(2, 9);
+    expect(estimateCostUsd({ inputTokens: 0, cacheWriteTokens: 1_000_000, cacheReadTokens: 0, outputTokens: 0 }, sonnet)).toBeCloseTo(2.5, 9);
+    expect(estimateCostUsd({ inputTokens: 0, cacheWriteTokens: 0, cacheReadTokens: 1_000_000, outputTokens: 0 }, sonnet)).toBeCloseTo(0.2, 9);
+    expect(estimateCostUsd({ inputTokens: 0, cacheWriteTokens: 0, cacheReadTokens: 0, outputTokens: 1_000_000 }, sonnet)).toBeCloseTo(10, 9);
   });
 
   it("sums the usage of several calls in one job", () => {
