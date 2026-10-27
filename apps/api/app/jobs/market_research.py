@@ -33,6 +33,8 @@ class MarketResearchResult(BaseModel):
     summary: str
     findings: list[FindingIn]
     sources: list[SourceIn]
+    answered: bool | None = None
+    model: str | None = None
 
     @model_validator(mode="after")
     def _refs_resolve(self) -> "MarketResearchResult":
@@ -50,7 +52,8 @@ def persist_market_research(session: Session, job: Job, result: MarketResearchRe
         segment_id=job_input.get("segment_id"),
         question=job_input["question"],
         summary=result.summary,
-        status="complete",
+        status="partial" if result.answered is False else "complete",
+        model=result.model,
     )
     sources = {
         s.ref: Source(source="agent", retrieved_at=utcnow(), **s.model_dump(exclude={"ref"}))

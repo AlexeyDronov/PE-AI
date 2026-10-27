@@ -66,7 +66,9 @@ export const SourceIn = z.object({
 export type SourceIn = z.infer<typeof SourceIn>;
 
 export const MarketResearchResult = z.object({
+  "answered": z.boolean().nullable().optional(),
   "findings": z.array(FindingIn),
+  "model": z.string().nullable().optional(),
   "sources": z.array(SourceIn),
   "summary": z.string(),
 });

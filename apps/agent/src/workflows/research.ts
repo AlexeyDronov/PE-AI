@@ -10,8 +10,8 @@ const INTENTS: [QueryName, RegExp][] = [
   ["aiDisruption", /\bai\b|automation/i],
 ];
 
-/** The question itself, then template queries for the intents it mentions, interleaved and capped. */
-export function planQueries(question: string, { segment, year }: { segment?: string; year: number }): string[] {
+/** The question itself, then template queries for the intents it mentions, interleaved and uncapped. */
+export function allQueries(question: string, { segment, year }: { segment?: string; year: number }): string[] {
   if (!segment) return [question];
   const names = INTENTS.filter(([, re]) => re.test(question)).map(([name]) => name);
   const sets = (names.length ? names : (["marketSize"] as QueryName[])).map((n) => queriesFor(n, { segment, geography: "UK", year }));
@@ -19,8 +19,11 @@ export function planQueries(question: string, { segment, year }: { segment?: str
   for (let i = 0; sets.some((s) => i < s.length); i++) {
     for (const s of sets) if (s[i] && !out.includes(s[i]!)) out.push(s[i]!);
   }
-  return out.slice(0, MAX_QUERIES);
+  return out;
 }
+
+/** The first few planned queries: what the initial search round runs. */
+export const planQueries = (question: string, ctx: { segment?: string; year: number }): string[] => allQueries(question, ctx).slice(0, MAX_QUERIES);
 
 const STOPWORDS = new Set(
   "the and for are was were with that this from have has had how what which who when where why does did can could would should will into over than then them they their there these those about between across been being its our your you not but any all out per via too very more most much many".split(" "),

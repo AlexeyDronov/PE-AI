@@ -11,7 +11,7 @@ const envSchema = z.object({
   AGENT_SERVICE_TOKEN: z.string().min(1, "AGENT_SERVICE_TOKEN is required"),
   HOST: z.string().min(1).default("localhost"),
   PORT: z.coerce.number().int().positive().default(4111),
-  MODEL: z.string().min(1).default("claude-haiku-5-5"),
+  MODEL: z.string().min(1).default("claude-sonnet-5-5"),
   EFFORT: z.enum(["low", "medium", "high", "xhigh", "max"]).default("medium"),
   MAX_SECONDS: z.coerce.number().positive().default(300),
   TOOL_CACHE_HOURS: z.coerce.number().min(0).default(24),

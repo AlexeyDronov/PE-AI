@@ -9,12 +9,12 @@ import { studioModel } from "@/llm";
 const base = { API_URL: "http://api.test", AGENT_SERVICE_TOKEN: "t" };
 
 describe("loadConfig", () => {
-  it("defaults to Claude Haiku 5.5 at medium effort, with a 24h tool cache", () => {
+  it("defaults to Claude Sonnet 5.5 at medium effort, with a 24h tool cache", () => {
     const c = loadConfig(base);
     expect(c.apiUrl).toBe("http://api.test");
     expect(c.serviceToken).toBe("t");
     expect(c.port).toBe(4111);
-    expect(c.model).toBe("claude-haiku-5-5");
+    expect(c.model).toBe("claude-sonnet-5-5");
     expect(c.effort).toBe("medium");
     expect(c.budgets).toEqual({ maxSeconds: 300 });
     expect(c.toolCacheHours).toBe(24);
@@ -28,8 +28,8 @@ describe("loadConfig", () => {
   });
 
   it("lets env override the model, effort, budgets and port", () => {
-    const c = loadConfig({ ...base, MODEL: "claude-sonnet-5-5", EFFORT: "low", MAX_SECONDS: "60", PORT: "4200", TOOL_CACHE_HOURS: "0" });
-    expect(c.model).toBe("claude-sonnet-5-5");
+    const c = loadConfig({ ...base, MODEL: "claude-haiku-5-5", EFFORT: "low", MAX_SECONDS: "60", PORT: "4200", TOOL_CACHE_HOURS: "0" });
+    expect(c.model).toBe("claude-haiku-5-5");
     expect(c.effort).toBe("low");
     expect(c.budgets.maxSeconds).toBe(60);
     expect(c.port).toBe(4200);
@@ -103,6 +103,6 @@ describe("envFilesUpward", () => {
 
 describe("studioModel", () => {
   it("names the Anthropic model for Mastra's model router (Studio-only agents)", () => {
-    expect(studioModel(loadConfig(base))).toBe("anthropic/claude-haiku-5-5");
+    expect(studioModel(loadConfig(base))).toBe("anthropic/claude-sonnet-5-5");
   });
 });

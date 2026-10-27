@@ -51,7 +51,7 @@ export function buildTools({ config, sources, cache = processCache(config) }: { 
     inputSchema: z.object({ query: z.string().min(1), maxResults: z.number().int().min(1).max(MAX_SEARCH_RESULTS).default(5) }),
     outputSchema: z.object({
       results: z.array(
-        z.object({ title: z.string(), url: z.string(), snippet: z.string(), publishedDate: z.string().nullable(), score: z.number() }),
+        z.object({ title: z.string(), url: z.string(), snippet: z.string(), publishedDate: z.string().nullable(), score: z.number(), rawContent: z.string().nullable() }),
       ),
     }),
     execute: cache.wrap("webSearch", async (input) => searchWeb(input, provider)),
@@ -60,7 +60,7 @@ export function buildTools({ config, sources, cache = processCache(config) }: { 
   const fetchPageTool = createTool({
     id: "fetchPage",
     description:
-      "Fetch a public web page (http/https HTML only) and return its readable text with scripts and navigation removed. Respects robots.txt; refuses private addresses and non-HTML files. Output is truncated to maxChars (flagged by truncated).",
+      "Fetch a public web page (http/https HTML or PDF) and return its readable text with scripts and navigation removed. Respects robots.txt; refuses private addresses and other file types. Output is truncated to maxChars (flagged by truncated).",
     inputSchema: z.object({ url: z.string().min(1), maxChars: z.number().int().min(100).max(50_000).default(12_000) }),
     outputSchema: z.object({ url: z.string(), title: z.string(), text: z.string(), truncated: z.boolean() }),
     execute: cache.wrap("fetchPage", async (input) => fetchPage(input)),

@@ -39,7 +39,7 @@ Each agent job costs about $0.001–0.005 in model calls. The page shows the cos
 |---|---|
 | `apps/web` | Next.js 15 (App Router, Turbopack in dev), React 19, TanStack Query and Table, ECharts (slim build, lazy loaded) |
 | `apps/api` | Python 3.12, FastAPI, SQLModel on SQLite, openpyxl for exports, pypdf, python-docx and python-pptx for teaser uploads |
-| `apps/agent` | Node 22, Mastra, Anthropic SDK (`claude-haiku-5-5`), Tavily search |
+| `apps/agent` | Node 22, Mastra, Anthropic SDK (`claude-sonnet-5-5`), Tavily search |
 | `packages/contracts` | Generated OpenAPI, TypeScript and Zod contract |
 | `e2e` | Playwright flows and accessibility checks against an isolated stack |
 

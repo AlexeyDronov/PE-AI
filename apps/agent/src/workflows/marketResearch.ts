@@ -5,17 +5,19 @@ import { callClaude, LlmError, sumUsage, type Usage } from "../llm";
 import { buildInstructions } from "../skills";
 import { cachedFetchers } from "../tools";
 import { readInternal } from "../tools/internalData";
-import { filterPassages, normalise, planQueries, verifyFindings, type NumberedSource } from "./research";
+import { allQueries, filterPassages, normalise, planQueries, verifyFindings, type NumberedSource } from "./research";
 
-const MAX_SOURCES = 6;
+const MAX_SOURCES = 8;
 const MAX_TOKENS = 8000; // findings ~3.5k tokens plus headroom for adaptive thinking
 const GAP_SOURCES = 3;
+const GAP_ROUNDS = 2;
+const GAP_PLANNED_QUERIES = 2;
 const EXCERPT_CHARS = 600;
 
 const BASE = `You are a research analyst at Harrowgate, a UK mid-market buyout investor. Answer the user's research question using only the numbered sources supplied in the user message. Return only the structured record.
 
 Rules:
-- summary: at most 1200 characters of plain British English that answers the question directly, leads with the headline figure, and says what is uncertain or missing. Do not use facts that are not in the sources.
+- summary: at most 1200 characters of plain British English. Lead with the closest evidence the sources actually give (the headline figure that answers the question, or the nearest proxy), then state what is uncertain or missing. Never open the summary with "Not found"; say what was found first and the gap after. Do not use facts that are not in the sources.
 - findings: at most 12 numeric facts that matter to an investment decision, most important first. Each has a short metric name, the value as a plain number, its unit (for example "£bn", "% a year", "x EBITDA"), the period it refers to, and a confidence of low, medium or high.
 - Confidence: high when two or more independent sources agree or the source is an official statistic; medium for a single credible analyst or trade source; low for estimates, forecasts, promotional pages or figures you had to interpret.
 - source_refs: the numbers of the sources that state the figure, at least one.
@@ -76,31 +78,34 @@ export const marketResearch: JobRunner = async (jobId, input, { config, callback
 
   /** Search the queries, then read up to `limit` pages not seen before, as numbered sources continuing from `after`. */
   async function gather(queries: string[], limit: number, after: number): Promise<NumberedSource[]> {
-    const best = new Map<string, { title: string; score: number }>();
+    const best = new Map<string, { title: string; score: number; raw: string | null }>();
     let failure: unknown;
     let searched = 0;
     for (const query of queries) {
       let results: Awaited<ReturnType<typeof tools.search>>["results"];
       try {
-        ({ results } = await tools.search({ query, maxResults: 5 }));
+        ({ results } = await tools.search({ query, maxResults: 8 }));
         searched++;
       } catch (err) {
         failure = err; // one failed query (e.g. a rate limit) shouldn't sink the job
         continue;
       }
-      for (const r of results) if (!seen.has(r.url) && r.score >= (best.get(r.url)?.score ?? -1)) best.set(r.url, { title: r.title, score: r.score });
+      for (const r of results) if (!seen.has(r.url) && r.score >= (best.get(r.url)?.score ?? -1)) best.set(r.url, { title: r.title, score: r.score, raw: r.rawContent });
     }
     if (!searched && failure) throw failure;
     const top = [...best.entries()].sort((a, b) => b[1].score - a[1].score).slice(0, limit);
     for (const [url] of top) seen.add(url);
     const pages = await Promise.all(
       top.map(async ([url, r]) => {
+        let fetched: { title: string; excerpt: string } | null = null;
         try {
           const page = await tools.fetchPage({ url, maxChars: 20_000 });
-          return { url, title: page.title || r.title, excerpt: filterPassages(page.text, question) };
+          fetched = { title: page.title || r.title, excerpt: filterPassages(page.text, question) };
         } catch {
-          return null;
+          // fall back to the text the search provider already returned
         }
+        if (fetched?.excerpt) return { url, ...fetched };
+        return r.raw ? { url, title: r.title, excerpt: filterPassages(r.raw, question) } : null;
       }),
     );
     return pages
@@ -125,15 +130,21 @@ export const marketResearch: JobRunner = async (jobId, input, { config, callback
     let call = await callClaude({ config, system: SYSTEM, prompt: sourcesPrompt(question, sources), schema: research, maxTokens: MAX_TOKENS });
     spent.push(call.usage);
 
-    const thin = verifyFindings(call.data.findings, sources).kept.length < 2 || call.data.answered === false;
-    if (thin && call.data.follow_up_queries.length) {
+    const planned = allQueries(question, { segment, year: new Date().getUTCFullYear() });
+    const searched = new Set(queries.map((q) => q.toLowerCase()));
+    for (let round = 0; round < GAP_ROUNDS; round++) {
+      const thin = verifyFindings(call.data.findings, sources).kept.length < 2 || call.data.answered === false;
+      if (!thin) break;
+      const suggested = call.data.follow_up_queries.filter((q) => !searched.has(q.toLowerCase()));
+      const next = suggested.length ? suggested : planned.filter((q) => !searched.has(q.toLowerCase())).slice(0, GAP_PLANNED_QUERIES);
+      if (!next.length) break;
+      for (const q of next) searched.add(q.toLowerCase());
       await callbacks.progress(jobId, "gap", "Filling an evidence gap");
-      const extra = await gather(call.data.follow_up_queries, GAP_SOURCES, sources.length);
-      if (extra.length) {
-        sources.push(...extra);
-        call = await callClaude({ config, system: SYSTEM, prompt: sourcesPrompt(question, sources), schema: research, maxTokens: MAX_TOKENS });
-        spent.push(call.usage);
-      }
+      const extra = await gather(next, GAP_SOURCES, sources.length);
+      if (!extra.length) break;
+      sources.push(...extra);
+      call = await callClaude({ config, system: SYSTEM, prompt: sourcesPrompt(question, sources), schema: research, maxTokens: MAX_TOKENS });
+      spent.push(call.usage);
     }
 
     await callbacks.progress(jobId, "verify", "Checking quotes against sources");
@@ -141,6 +152,8 @@ export const marketResearch: JobRunner = async (jobId, input, { config, callback
     const cited = new Set(kept.flatMap((f) => f.source_refs));
     const payload = {
       summary: call.data.summary,
+      answered: call.data.answered !== false,
+      model: config.model,
       findings: kept.map(({ quote: _quote, ...f }) => f),
       sources: sources
         .filter((s) => cited.has(s.ref))

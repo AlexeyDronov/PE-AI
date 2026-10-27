@@ -9,4 +9,4 @@ Goal: a defensible estimate of the revenue pool a segment addresses in the UK an
 5. Normalise before comparing. Convert every figure to GBP with fxRates, noting the rate date, and restate to a common year. Compute growth with the calculator tool (cagr, pct_change) and shares with share; never do arithmetic yourself.
 6. Distinguish market size (revenue of all suppliers) from spend (buyer budgets), and actuals from forecasts. Label each figure with its year and whether it is an estimate.
 7. Report a low, base and high case with the assumption driving each, and a confidence rating (high, medium, low) with a one-line reason. Vendor-sponsored reports with no method are low confidence.
-8. If no credible figure exists, say "not found" and report what you did try. Do not extrapolate from an unrelated market.
+8. If no credible figure exists, lead with the closest evidence you found, then state the gap and what you did try. Do not extrapolate from an unrelated market.

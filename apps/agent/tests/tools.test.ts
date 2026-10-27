@@ -62,6 +62,7 @@ describe("webSearch", () => {
       snippet: "The UK compliance outsourcing market reached £9.1bn in 2025 and is forecast to grow 11% a year to 2030.",
       publishedDate: "2026-03-14",
       score: 0.91,
+      rawContent: null,
     });
     expect(out.results[1]?.publishedDate).toBeNull();
   });
@@ -112,13 +113,13 @@ describe("fetchPage", () => {
     await expect(fetchPage({ url, maxChars: 1000 })).rejects.toMatchObject({ code: "blocked_url" });
   });
 
-  it("respects robots.txt and refuses non-HTML content", async () => {
+  it("respects robots.txt and refuses content that is neither HTML nor PDF", async () => {
     server.use(
       http.get("https://example-research.co.uk/robots.txt", () => html(fixture("robots.txt"), 200, "text/plain")),
-      http.get("https://example-research.co.uk/report.pdf", () => new HttpResponse("%PDF", { headers: { "content-type": "application/pdf" } })),
+      http.get("https://example-research.co.uk/chart.png", () => new HttpResponse("PNG", { headers: { "content-type": "image/png" } })),
     );
     await expect(fetchPage({ url: "https://example-research.co.uk/private/x", maxChars: 1000 })).rejects.toMatchObject({ code: "disallowed_by_robots" });
-    await expect(fetchPage({ url: "https://example-research.co.uk/report.pdf", maxChars: 1000 })).rejects.toMatchObject({ code: "unsupported_content" });
+    await expect(fetchPage({ url: "https://example-research.co.uk/chart.png", maxChars: 1000 })).rejects.toMatchObject({ code: "unsupported_content" });
   });
 });
 

@@ -7,6 +7,7 @@ export interface SearchResult {
   snippet: string;
   publishedDate: string | null;
   score: number;
+  rawContent: string | null;
 }
 
 export interface SearchProvider {
@@ -21,6 +22,7 @@ const tavilyResponse = z.object({
       content: z.string(),
       score: z.number().optional(),
       published_date: z.string().nullish(),
+      raw_content: z.string().nullish(),
     }),
   ),
 });
@@ -32,7 +34,7 @@ export class TavilyProvider implements SearchProvider {
     const res = await fetch("https://api.tavily.com/search", {
       method: "POST",
       headers: { "content-type": "application/json", authorization: `Bearer ${this.apiKey}` },
-      body: JSON.stringify({ query, max_results: maxResults, search_depth: "basic" }),
+      body: JSON.stringify({ query, max_results: maxResults, search_depth: "advanced", include_raw_content: true }),
       signal: AbortSignal.timeout(30_000),
     });
     if (res.status === 429) throw new ToolError("rate_limited", "Tavily rate limit reached; retry later or reduce searches");
@@ -45,6 +47,7 @@ export class TavilyProvider implements SearchProvider {
       snippet: r.content,
       publishedDate: r.published_date ?? null,
       score: r.score ?? 0,
+      rawContent: r.raw_content ?? null,
     }));
   }
 }
