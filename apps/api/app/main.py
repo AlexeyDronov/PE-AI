@@ -6,7 +6,7 @@ from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.compute.spec import ComputeCache
-from app.core.auth import current_user, require_admin
+from app.core.auth import current_user
 from app.core.config import Settings
 from app.core.errors import install_error_handlers
 from app.core.events import EventBus
@@ -45,16 +45,14 @@ def create_app(settings: Settings | None = None, agent_client: Any = None) -> Fa
     def health() -> dict[str, str]:
         return {"status": "ok"}
 
-    # Reads need a signed-in user; anything that writes or runs an agent job needs admin. The agent's
-    # callbacks (internal) use the service token instead; health and login stay open.
+    # Reads, agent jobs and document upload need a signed-in user; commands that save changes need admin
+    # (per route). The agent's callbacks (internal) use the service token instead; health and login stay open.
     signed_in = [Depends(current_user)]
     for spec in RESOURCES:
         app.include_router(make_resource_router(spec), dependencies=signed_in)
     app.add_api_route("/api/events", stream_events, tags=["events"], dependencies=signed_in)
-    for module in (compute, exports, overview, pipeline, portfolio):
+    for module in (commands, compute, documents, exports, overview, pipeline, portfolio):
         app.include_router(module.router, dependencies=signed_in)
-    for module in (commands, documents):
-        app.include_router(module.router, dependencies=[Depends(require_admin)])
     app.include_router(internal.router)
     app.include_router(auth.router)
 

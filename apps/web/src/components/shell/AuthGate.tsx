@@ -16,7 +16,7 @@ export function useSession(): Me | null {
 
 const VIEW_ONLY = "View-only account";
 
-/** Shows the app only to a signed-in user (or to everyone when the API has access control off); guest is read-only. */
+/** Shows the app only to a signed-in user (or to everyone when the API has access control off); guest can run agent jobs but not save changes. */
 export function AuthGate({ children }: { children: ReactNode }) {
   const { baseUrl } = useApiContext();
   const pathname = usePathname();

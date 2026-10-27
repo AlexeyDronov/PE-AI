@@ -33,7 +33,7 @@ export function ResearchEvidence({ reports, job, starting, error, onRun }: Props
         <div className={styles.form}>
           <Textarea label="Research question" value={question} onChange={setQuestion} error={error} />
           <div>
-            <Button variant="primary" writes loading={starting} disabled={!question.trim()} onClick={() => onRun(question.trim())}>
+            <Button variant="primary" loading={starting} disabled={!question.trim()} onClick={() => onRun(question.trim())}>
               Run research
             </Button>
           </div>

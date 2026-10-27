@@ -1,4 +1,7 @@
-"""Two accounts set by the admin (admin, guest) and signed, expiring bearer tokens; guest is view-only."""
+"""Two accounts set by the admin (admin, guest) and signed, expiring bearer tokens.
+
+Guest can read and run agent jobs but not save changes.
+"""
 
 import base64
 import hashlib
@@ -96,7 +99,7 @@ def current_user(request: Request) -> User:
 
 
 def require_admin(user: Annotated[User, Depends(current_user)]) -> User:
-    """Route dependency for anything that changes data or runs a paid agent job."""
+    """Route dependency for commands that save changes (agent jobs are open to guests)."""
     if user.role != "admin":
         raise Forbidden("This account is view-only")
     return user

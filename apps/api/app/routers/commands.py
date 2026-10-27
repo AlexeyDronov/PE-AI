@@ -1,12 +1,13 @@
 from collections.abc import Awaitable, Callable
 from typing import Any
 
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Depends, Request
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 
 from app.commands import COMMANDS
 from app.commands.spec import CommandSpec
+from app.core.auth import require_admin
 from app.core.db import write_session
 from app.core.errors import UnknownCommand
 from app.jobs.runner import dispatch_job
@@ -38,6 +39,8 @@ for _spec in COMMANDS:
         response_model=_spec.output_schema,
         status_code=_spec.status_code,
         name=_spec.name,
+        # Agent jobs are open to every signed-in user (guests included); other commands save changes.
+        dependencies=[] if _spec.async_job else [Depends(require_admin)],
     )
 
 

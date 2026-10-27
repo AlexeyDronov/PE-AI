@@ -1,4 +1,7 @@
-"""Access control (user request): two accounts set by the admin; guest is view-only; 7-day sessions."""
+"""Access control (user request): two accounts set by the admin; 7-day sessions.
+
+Guest can read and run agent jobs but not save changes (step 8.13).
+"""
 
 import pytest
 from fastapi.testclient import TestClient
@@ -70,7 +73,7 @@ def test_me_reports_the_signed_in_account(client):
     }
 
 
-def test_guest_can_read_and_model_but_not_write_or_run_agents(client):
+def test_guest_can_read_and_model_but_not_save_changes(client):
     headers = login(client, GUEST)
     assert client.get("/api/deals", headers=headers).status_code == 200
     deal_id = scenario(client, headers)["deal_id"]
@@ -78,10 +81,26 @@ def test_guest_can_read_and_model_but_not_write_or_run_agents(client):
     r = client.post("/api/commands/save-scenario", json=scenario(client, headers), headers=headers)
     assert r.status_code == 403
     assert r.json()["error"]["code"] == "forbidden"
+    r = client.post("/api/commands/set-watchlist", json={"deal_id": deal_id, "on": True}, headers=headers)
+    assert r.status_code == 403
+
+
+# Step 8.13 (user request): guests may run research and the other agent jobs, and upload a teaser to screen.
+def test_guest_can_run_agent_jobs_and_upload_a_teaser(client):
+    headers = login(client, GUEST)
+    r = client.post(
+        "/api/commands/start-market-research", json={"question": "How big is UK TIC?"}, headers=headers
+    )
+    assert r.status_code == 202, r.text
     r = client.post("/api/commands/screen-teaser", json={"text": "Project Linden " * 30}, headers=headers)
-    assert r.status_code == 403
+    assert r.status_code == 202, r.text
+    deal_id = client.get("/api/deals", headers=headers).json()["items"][0]["id"]
+    r = client.post(
+        "/api/commands/draft-memo", json={"deal_id": deal_id, "sections": ["summary"]}, headers=headers
+    )
+    assert r.status_code == 202, r.text
     r = client.post("/api/extract-text", files={"file": ("t.txt", b"hello", "text/plain")}, headers=headers)
-    assert r.status_code == 403
+    assert r.status_code == 200, r.text
 
 
 def test_admin_can_write(client):

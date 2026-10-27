@@ -10,7 +10,7 @@ The API starts agent jobs over Fly's private network. The agent reports back thr
 
 Expected cost: two `shared-cpu-1x` / 512 MB machines plus a 1 GB volume, about **$5–10 a month** on Fly. Vercel Hobby is free. Agent jobs bill to your Anthropic and Tavily accounts as they do locally.
 
-Access: two accounts, `admin` (full access) and `guest` (view only: no agent jobs, no saved changes). The passwords are Fly secrets on the API, and sign-ins last 7 days. See step 3.
+Access: two accounts, `admin` (full access) and `guest` (can read and run agent jobs, including paid research runs; cannot save scenarios or watchlist changes). The passwords are Fly secrets on the API, and sign-ins last 7 days. See step 3.
 
 Run every command below from the repo root unless the step says otherwise.
 

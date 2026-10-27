@@ -55,10 +55,10 @@ export function TeaserIntake({ value, onChange, onSubmit, busy, error }: Props) 
       <div className={styles.form}>
         <Textarea label="Teaser text" rows={10} value={value} onChange={onChange} help={hintFor(length)} error={error ?? (loadError || undefined)} />
         <div className={styles.actions}>
-          <Button variant="primary" writes disabled={!valid} loading={busy} onClick={onSubmit}>
+          <Button variant="primary" disabled={!valid} loading={busy} onClick={onSubmit}>
             Extract and screen
           </Button>
-          <FileButton writes accept=".pdf,.docx,.pptx,.txt,.md" onFile={load} fileName={fileName} disabled={busy}>
+          <FileButton accept=".pdf,.docx,.pptx,.txt,.md" onFile={load} fileName={fileName} disabled={busy}>
             Upload a document
           </FileButton>
         </div>

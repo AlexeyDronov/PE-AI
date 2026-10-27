@@ -98,7 +98,7 @@ Then open http://localhost:3000.
 
 The web app is on **Vercel**, and the API and agent run as containers on **Fly.io** (London) with the database on a Fly volume. The setup steps, secrets, database upload, backups and troubleshooting are in [docs/06-deployment.md](docs/06-deployment.md).
 
-Sign-in: an **admin** account (full access) and a **guest** account (view only: no agent jobs or saved changes). The passwords are set as secrets on the API. Locally, with no passwords set, sign-in is off.
+Sign-in: an **admin** account (full access) and a **guest** account (can read and run agent jobs such as research, teaser screening and memo drafts, but cannot save changes such as scenarios or the watchlist). The passwords are set as secrets on the API. Locally, with no passwords set, sign-in is off.
 
 ## Repository layout
 

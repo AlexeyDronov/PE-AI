@@ -19,7 +19,7 @@ export function ResearchForm({ question, onQuestionChange, segmentId, onSegmentC
         <Textarea label="Research question" value={question} onChange={onQuestionChange} error={error} />
         <Select label="Segment" value={segmentId} onChange={onSegmentChange} options={[{ value: "", label: "All segments" }, ...segments]} />
         <div className={styles.actions}>
-          <Button variant="primary" writes loading={busy} disabled={!question.trim() || busy} onClick={onSubmit}>
+          <Button variant="primary" loading={busy} disabled={!question.trim() || busy} onClick={onSubmit}>
             Run research
           </Button>
         </div>
